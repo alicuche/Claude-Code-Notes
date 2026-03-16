@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1700" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 2050" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
   <defs>
     <style>
       .title { font-size: 28px; font-weight: 700; fill: #fff; }
@@ -12,11 +12,12 @@
       .section-bg { fill: #f97316; rx: 6; }
       .card-bg { fill: #fff; rx: 6; stroke: #e5e7eb; stroke-width: 1; }
       .tip { font-size: 9px; fill: #666; font-style: italic; }
+      .cat { font-size: 10px; font-weight: 700; fill: #f97316; }
     </style>
   </defs>
 
   <!-- Background -->
-  <rect width="1200" height="1700" fill="#f8f9fa"/>
+  <rect width="1200" height="2050" fill="#f8f9fa"/>
 
   <!-- Header -->
   <rect width="1200" height="80" fill="#f97316" rx="0"/>
@@ -63,59 +64,59 @@
   <text x="32" y="510" class="label">Subfolder files extend parent rules, not replace them.</text>
   <text x="32" y="526" class="tip">Use /init to generate a starter CLAUDE.md · /memory to edit</text>
 
-  <!-- Slash Commands -->
-  <rect x="20" y="555" width="570" height="300" class="card-bg"/>
-  <rect x="20" y="555" width="570" height="28" class="section-bg"/>
-  <text x="32" y="574" class="section-title">&#9889; SLASH COMMANDS</text>
-
-  <text x="32" y="600" class="code">/clear</text><text x="180" y="600" class="value">Clear conversation history</text>
-  <text x="32" y="616" class="code">/compact [focus]</text><text x="180" y="616" class="value">Compress conversation to save context</text>
-  <text x="32" y="632" class="code">/config</text><text x="180" y="632" class="value">View/modify settings</text>
-  <text x="32" y="648" class="code">/cost</text><text x="180" y="648" class="value">Show token usage &amp; cost</text>
-  <text x="32" y="664" class="code">/doctor</text><text x="180" y="664" class="value">Run setup diagnostics</text>
-  <text x="32" y="680" class="code">/init</text><text x="180" y="680" class="value">Create CLAUDE.md for project</text>
-  <text x="32" y="696" class="code">/memory</text><text x="180" y="696" class="value">Edit CLAUDE.md memory files</text>
-  <text x="32" y="712" class="code">/model</text><text x="180" y="712" class="value">Switch active model</text>
-  <text x="32" y="728" class="code">/mcp</text><text x="180" y="728" class="value">Manage MCP server connections</text>
-  <text x="32" y="744" class="code">/agents</text><text x="180" y="744" class="value">List available subagents</text>
-  <text x="32" y="760" class="code">/permissions</text><text x="180" y="760" class="value">View/update tool permissions</text>
-  <text x="32" y="776" class="code">/review</text><text x="180" y="776" class="value">Request code review</text>
-  <text x="32" y="792" class="code">/rewind</text><text x="180" y="792" class="value">Roll back to checkpoint</text>
-  <text x="32" y="808" class="code">/sandbox</text><text x="180" y="808" class="value">Toggle sandboxed execution</text>
-  <text x="32" y="824" class="code">/pr_comments</text><text x="180" y="824" class="value">View pull request comments</text>
-  <text x="32" y="840" class="code">/vim</text><text x="180" y="840" class="value">Toggle vim keybindings</text>
-
   <!-- Custom Commands -->
-  <rect x="20" y="870" width="570" height="160" class="card-bg"/>
-  <rect x="20" y="870" width="570" height="28" class="section-bg"/>
-  <text x="32" y="889" class="section-title">&#128295; CUSTOM SLASH COMMANDS</text>
+  <rect x="20" y="555" width="570" height="160" class="card-bg"/>
+  <rect x="20" y="555" width="570" height="28" class="section-bg"/>
+  <text x="32" y="574" class="section-title">&#128295; CUSTOM SLASH COMMANDS</text>
 
-  <text x="32" y="918" class="label">Location:</text>
-  <text x="100" y="918" class="code">.claude/commands/*.md (project) · ~/.claude/commands/*.md (global)</text>
-  <text x="32" y="938" class="label">Variables:</text>
-  <text x="100" y="938" class="code">$ARGUMENTS (all) · $1 $2 $3 (positional)</text>
-  <text x="32" y="958" class="label">Usage:</text>
-  <text x="100" y="958" class="code">/project:deploy staging</text>
+  <text x="32" y="603" class="label">Location:</text>
+  <text x="100" y="603" class="code">.claude/commands/*.md (project) · ~/.claude/commands/*.md (global)</text>
+  <text x="32" y="623" class="label">Variables:</text>
+  <text x="100" y="623" class="code">$ARGUMENTS (all) · $1 $2 $3 (positional)</text>
+  <text x="32" y="643" class="label">Usage:</text>
+  <text x="100" y="643" class="code">/project:deploy staging</text>
 
-  <text x="32" y="983" class="label">Frontmatter options:</text>
-  <text x="32" y="999" class="code">description: Deploy to staging</text>
-  <text x="32" y="1013" class="code">argument_hint: &lt;environment&gt;</text>
-  <text x="32" y="1027" class="code">model: claude-sonnet-4-20250514</text>
+  <text x="32" y="668" class="label">Frontmatter options:</text>
+  <text x="32" y="684" class="code">description: Deploy to staging</text>
+  <text x="32" y="698" class="code">argument_hint: &lt;environment&gt;</text>
+  <text x="32" y="712" class="code">model: claude-sonnet-4-20250514</text>
 
   <!-- Key File Locations -->
-  <rect x="20" y="1045" width="570" height="185" class="card-bg"/>
-  <rect x="20" y="1045" width="570" height="28" class="section-bg"/>
-  <text x="32" y="1064" class="section-title">&#128193; KEY FILE LOCATIONS</text>
+  <rect x="20" y="730" width="570" height="185" class="card-bg"/>
+  <rect x="20" y="730" width="570" height="28" class="section-bg"/>
+  <text x="32" y="749" class="section-title">&#128193; KEY FILE LOCATIONS</text>
 
-  <text x="32" y="1093" class="code">~/.claude/settings.json</text><text x="310" y="1093" class="value">User global settings</text>
-  <text x="32" y="1109" class="code">.claude/settings.json</text><text x="310" y="1109" class="value">Project shared settings</text>
-  <text x="32" y="1125" class="code">.claude/settings.local.json</text><text x="310" y="1125" class="value">Project local (gitignored)</text>
-  <text x="32" y="1141" class="code">CLAUDE.md</text><text x="310" y="1141" class="value">Project instructions &amp; memory</text>
-  <text x="32" y="1157" class="code">.claude/commands/</text><text x="310" y="1157" class="value">Custom slash commands</text>
-  <text x="32" y="1173" class="code">.claude/skills/</text><text x="310" y="1173" class="value">Agent skills</text>
-  <text x="32" y="1189" class="code">.claude/agents/</text><text x="310" y="1189" class="value">Subagent definitions</text>
-  <text x="32" y="1205" class="code">.claude/mcp.json</text><text x="310" y="1205" class="value">MCP server config</text>
-  <text x="32" y="1221" class="code">.claude/hooks/</text><text x="310" y="1221" class="value">Hook scripts</text>
+  <text x="32" y="778" class="code">~/.claude/settings.json</text><text x="310" y="778" class="value">User global settings</text>
+  <text x="32" y="794" class="code">.claude/settings.json</text><text x="310" y="794" class="value">Project shared settings</text>
+  <text x="32" y="810" class="code">.claude/settings.local.json</text><text x="310" y="810" class="value">Project local (gitignored)</text>
+  <text x="32" y="826" class="code">CLAUDE.md</text><text x="310" y="826" class="value">Project instructions &amp; memory</text>
+  <text x="32" y="842" class="code">.claude/commands/</text><text x="310" y="842" class="value">Custom slash commands</text>
+  <text x="32" y="858" class="code">.claude/skills/</text><text x="310" y="858" class="value">Agent skills</text>
+  <text x="32" y="874" class="code">.claude/agents/</text><text x="310" y="874" class="value">Subagent definitions</text>
+  <text x="32" y="890" class="code">.claude/mcp.json</text><text x="310" y="890" class="value">MCP server config</text>
+  <text x="32" y="906" class="code">.claude/hooks/</text><text x="310" y="906" class="value">Hook scripts</text>
+
+  <!-- AI Models -->
+  <rect x="20" y="930" width="570" height="200" class="card-bg"/>
+  <rect x="20" y="930" width="570" height="28" class="section-bg"/>
+  <text x="32" y="949" class="section-title">&#129302; AI MODELS</text>
+
+  <text x="32" y="978" class="label">Opus 4.6</text>
+  <text x="32" y="994" class="code">claude-opus-4-6</text>
+  <text x="220" y="994" class="value">Most capable</text>
+
+  <text x="32" y="1018" class="label">Sonnet 4.6</text>
+  <text x="32" y="1034" class="code">claude-sonnet-4-6</text>
+  <text x="220" y="1034" class="value">Balanced performance</text>
+
+  <text x="32" y="1058" class="label">Haiku 4.5</text>
+  <text x="32" y="1074" class="code">claude-haiku-4-5-20251001</text>
+  <text x="220" y="1074" class="value">Fastest responses</text>
+
+  <text x="32" y="1100" class="label">Switch:</text>
+  <text x="90" y="1100" class="code">/model  or  claude --model sonnet</text>
+
+  <text x="32" y="1120" class="tip">Use fast models for drafts, strong models for review</text>
 
   <!-- ==================== RIGHT COLUMN ==================== -->
 
@@ -192,63 +193,130 @@
   <text x="622" y="990" class="label">Exit codes:</text>
   <text x="700" y="990" class="code">0 = success · 2 = block &amp; show to Claude · other = error</text>
 
-  <!-- AI Models -->
-  <rect x="610" y="1030" width="570" height="200" class="card-bg"/>
-  <rect x="610" y="1030" width="570" height="28" class="section-bg"/>
-  <text x="622" y="1049" class="section-title">&#129302; AI MODELS</text>
+  <!-- ==================== FULL WIDTH: SLASH COMMANDS ==================== -->
 
-  <text x="622" y="1078" class="label">Opus 4.6</text>
-  <text x="622" y="1094" class="code">claude-opus-4-6</text>
-  <text x="810" y="1094" class="value">Most capable</text>
+  <rect x="20" y="1150" width="1160" height="510" class="card-bg"/>
+  <rect x="20" y="1150" width="1160" height="28" class="section-bg"/>
+  <text x="32" y="1169" class="section-title">&#9889; ALL SLASH COMMANDS (62 built-in)</text>
 
-  <text x="622" y="1118" class="label">Sonnet 4.6</text>
-  <text x="622" y="1134" class="code">claude-sonnet-4-6</text>
-  <text x="810" y="1134" class="value">Balanced performance</text>
+  <!-- Column 1: Session & Navigation + Model -->
+  <text x="32" y="1198" class="cat">SESSION &amp; NAVIGATION</text>
+  <text x="32" y="1214" class="code">/help</text><text x="175" y="1214" class="value">Show available commands</text>
+  <text x="32" y="1228" class="code">/clear</text><text x="175" y="1228" class="value">Clear history  (/reset, /new)</text>
+  <text x="32" y="1242" class="code">/compact [focus]</text><text x="175" y="1242" class="value">Compress conversation</text>
+  <text x="32" y="1256" class="code">/exit</text><text x="175" y="1256" class="value">Exit CLI  (/quit)</text>
+  <text x="32" y="1270" class="code">/fork [name]</text><text x="175" y="1270" class="value">Fork conversation</text>
+  <text x="32" y="1284" class="code">/resume [id]</text><text x="175" y="1284" class="value">Resume session  (/continue)</text>
+  <text x="32" y="1298" class="code">/rename [name]</text><text x="175" y="1298" class="value">Rename session</text>
+  <text x="32" y="1312" class="code">/rewind</text><text x="175" y="1312" class="value">Roll back  (/checkpoint)</text>
+  <text x="32" y="1326" class="code">/add-dir &lt;path&gt;</text><text x="175" y="1326" class="value">Add directory to context</text>
+  <text x="32" y="1340" class="code">/context</text><text x="175" y="1340" class="value">Visualize context usage</text>
+  <text x="32" y="1354" class="code">/copy</text><text x="175" y="1354" class="value">Copy response to clipboard</text>
+  <text x="32" y="1368" class="code">/diff</text><text x="175" y="1368" class="value">Interactive diff viewer</text>
+  <text x="32" y="1382" class="code">/export [file]</text><text x="175" y="1382" class="value">Export conversation as text</text>
+  <text x="32" y="1396" class="code">/plan</text><text x="175" y="1396" class="value">Enter plan mode</text>
+  <text x="32" y="1410" class="code">/tasks</text><text x="175" y="1410" class="value">Manage background tasks</text>
 
-  <text x="622" y="1158" class="label">Haiku 4.5</text>
-  <text x="622" y="1174" class="code">claude-haiku-4-5-20251001</text>
-  <text x="810" y="1174" class="value">Fastest responses</text>
+  <text x="32" y="1434" class="cat">MODEL &amp; PERFORMANCE</text>
+  <text x="32" y="1450" class="code">/model [model]</text><text x="175" y="1450" class="value">Switch active model</text>
+  <text x="32" y="1464" class="code">/fast [on|off]</text><text x="175" y="1464" class="value">Toggle fast mode</text>
+  <text x="32" y="1478" class="code">/effort [level]</text><text x="175" y="1478" class="value">Set effort (low/med/high/max)</text>
 
-  <text x="622" y="1200" class="label">Switch:</text>
-  <text x="680" y="1200" class="code">/model  or  claude --model sonnet</text>
+  <!-- Column 2: Config & Settings + Account -->
+  <text x="415" y="1198" class="cat">CONFIGURATION &amp; SETTINGS</text>
+  <text x="415" y="1214" class="code">/config</text><text x="545" y="1214" class="value">View/modify settings  (/settings)</text>
+  <text x="415" y="1228" class="code">/permissions</text><text x="545" y="1228" class="value">Tool permissions  (/allowed-tools)</text>
+  <text x="415" y="1242" class="code">/sandbox</text><text x="545" y="1242" class="value">Toggle sandboxed execution</text>
+  <text x="415" y="1256" class="code">/color [color]</text><text x="545" y="1256" class="value">Set prompt bar color</text>
+  <text x="415" y="1270" class="code">/theme</text><text x="545" y="1270" class="value">Change color theme</text>
+  <text x="415" y="1284" class="code">/vim</text><text x="545" y="1284" class="value">Toggle vim keybindings</text>
+  <text x="415" y="1298" class="code">/keybindings</text><text x="545" y="1298" class="value">Open keybindings config</text>
+  <text x="415" y="1312" class="code">/statusline</text><text x="545" y="1312" class="value">Configure status line</text>
+  <text x="415" y="1326" class="code">/terminal-setup</text><text x="545" y="1326" class="value">Terminal keybindings</text>
+  <text x="415" y="1340" class="code">/hooks</text><text x="545" y="1340" class="value">View hook configurations</text>
+  <text x="415" y="1354" class="code">/privacy-settings</text><text x="545" y="1354" class="value">Privacy (Pro/Max only)</text>
+  <text x="415" y="1368" class="code">/extra-usage</text><text x="545" y="1368" class="value">Extra usage for rate limits</text>
 
-  <text x="622" y="1220" class="tip">Use fast models for drafts, strong models for review</text>
+  <text x="415" y="1392" class="cat">ACCOUNT &amp; AUTH</text>
+  <text x="415" y="1408" class="code">/login</text><text x="545" y="1408" class="value">Sign in</text>
+  <text x="415" y="1422" class="code">/logout</text><text x="545" y="1422" class="value">Sign out</text>
+  <text x="415" y="1436" class="code">/usage</text><text x="545" y="1436" class="value">Plan usage &amp; rate limits</text>
+  <text x="415" y="1450" class="code">/cost</text><text x="545" y="1450" class="value">Token usage &amp; cost</text>
+  <text x="415" y="1464" class="code">/stats</text><text x="545" y="1464" class="value">Daily usage &amp; streaks</text>
+  <text x="415" y="1478" class="code">/upgrade</text><text x="545" y="1478" class="value">Open upgrade page</text>
+  <text x="415" y="1492" class="code">/passes</text><text x="545" y="1492" class="value">Share free week (if eligible)</text>
 
-  <!-- Permissions -->
-  <rect x="20" y="1245" width="1160" height="140" class="card-bg"/>
-  <rect x="20" y="1245" width="1160" height="28" class="section-bg"/>
-  <text x="32" y="1264" class="section-title">&#128274; PERMISSIONS &amp; SECURITY</text>
+  <!-- Column 3: Project + Extensions + GitHub + Comms + Platform -->
+  <text x="800" y="1198" class="cat">PROJECT &amp; MEMORY</text>
+  <text x="800" y="1214" class="code">/init</text><text x="940" y="1214" class="value">Create CLAUDE.md</text>
+  <text x="800" y="1228" class="code">/memory</text><text x="940" y="1228" class="value">Edit memory files</text>
+  <text x="800" y="1242" class="code">/doctor</text><text x="940" y="1242" class="value">Run diagnostics</text>
+  <text x="800" y="1256" class="code">/insights</text><text x="940" y="1256" class="value">Session analysis report</text>
 
-  <text x="32" y="1293" class="label">Basic template:</text>
-  <text x="32" y="1310" class="code">allow: ["Read", "Glob", "Grep", "Bash(git status)", "Bash(git diff)", "Bash(npm test)", "Bash(npm run lint)"]</text>
-  <text x="32" y="1326" class="code">deny:  ["Bash(rm -rf *)", "Bash(curl * | bash)", "Bash(sudo *)"]</text>
+  <text x="800" y="1280" class="cat">EXTENSIONS &amp; INTEGRATIONS</text>
+  <text x="800" y="1296" class="code">/mcp</text><text x="940" y="1296" class="value">Manage MCP servers</text>
+  <text x="800" y="1310" class="code">/agents</text><text x="940" y="1310" class="value">List subagents</text>
+  <text x="800" y="1324" class="code">/skills</text><text x="940" y="1324" class="value">List skills</text>
+  <text x="800" y="1338" class="code">/plugin</text><text x="940" y="1338" class="value">Manage plugins</text>
+  <text x="800" y="1352" class="code">/reload-plugins</text><text x="940" y="1352" class="value">Reload all plugins</text>
+  <text x="800" y="1366" class="code">/ide</text><text x="940" y="1366" class="value">IDE integrations</text>
 
-  <text x="32" y="1350" class="label">Strict (read-only):</text>
-  <text x="200" y="1350" class="code">allow: ["Read", "Glob", "Grep"]  deny: ["Bash", "Edit", "Write"]</text>
+  <text x="800" y="1390" class="cat">GITHUB &amp; CODE</text>
+  <text x="800" y="1406" class="code">/pr-comments</text><text x="940" y="1406" class="value">View PR comments</text>
+  <text x="800" y="1420" class="code">/review</text><text x="940" y="1420" class="value">Code review (deprecated)</text>
+  <text x="800" y="1434" class="code">/security-review</text><text x="940" y="1434" class="value">Security analysis</text>
+  <text x="800" y="1448" class="code">/install-github-app</text><text x="940" y="1448" class="value">Setup GitHub Actions</text>
 
-  <text x="32" y="1374" class="label">MCP permissions:</text>
-  <text x="200" y="1374" class="code">"mcp__github" (all tools) · "mcp__github__get_issue" (specific) · No wildcards</text>
+  <text x="800" y="1472" class="cat">COMMUNICATION &amp; SHARING</text>
+  <text x="800" y="1488" class="code">/feedback</text><text x="940" y="1488" class="value">Submit feedback  (/bug)</text>
+  <text x="800" y="1502" class="code">/btw &lt;question&gt;</text><text x="940" y="1502" class="value">Quick side question</text>
+  <text x="800" y="1516" class="code">/remote-control</text><text x="940" y="1516" class="value">Remote from claude.ai  (/rc)</text>
+  <text x="800" y="1530" class="code">/remote-env</text><text x="940" y="1530" class="value">Remote environment config</text>
+  <text x="800" y="1544" class="code">/install-slack-app</text><text x="940" y="1544" class="value">Install Slack app</text>
+
+  <text x="800" y="1568" class="cat">PLATFORM &amp; MISC</text>
+  <text x="800" y="1584" class="code">/desktop</text><text x="940" y="1584" class="value">Open in Desktop  (/app)</text>
+  <text x="800" y="1598" class="code">/mobile</text><text x="940" y="1598" class="value">Mobile QR  (/ios, /android)</text>
+  <text x="800" y="1612" class="code">/chrome</text><text x="940" y="1612" class="value">Chrome settings</text>
+  <text x="800" y="1626" class="code">/release-notes</text><text x="940" y="1626" class="value">View changelog</text>
+  <text x="800" y="1640" class="code">/stickers</text><text x="940" y="1640" class="value">Order stickers</text>
+
+  <!-- ==================== FULL WIDTH: PERMISSIONS ==================== -->
+
+  <rect x="20" y="1680" width="1160" height="140" class="card-bg"/>
+  <rect x="20" y="1680" width="1160" height="28" class="section-bg"/>
+  <text x="32" y="1699" class="section-title">&#128274; PERMISSIONS &amp; SECURITY</text>
+
+  <text x="32" y="1728" class="label">Basic template:</text>
+  <text x="32" y="1745" class="code">allow: ["Read", "Glob", "Grep", "Bash(git status)", "Bash(git diff)", "Bash(npm test)", "Bash(npm run lint)"]</text>
+  <text x="32" y="1761" class="code">deny:  ["Bash(rm -rf *)", "Bash(curl * | bash)", "Bash(sudo *)"]</text>
+
+  <text x="32" y="1785" class="label">Strict (read-only):</text>
+  <text x="200" y="1785" class="code">allow: ["Read", "Glob", "Grep"]  deny: ["Bash", "Edit", "Write"]</text>
+
+  <text x="32" y="1809" class="label">MCP permissions:</text>
+  <text x="200" y="1809" class="code">"mcp__github" (all tools) · "mcp__github__get_issue" (specific) · No wildcards</text>
 
   <!-- Multiple Profiles -->
-  <rect x="20" y="1400" width="1160" height="130" class="card-bg"/>
-  <rect x="20" y="1400" width="1160" height="28" class="section-bg"/>
-  <text x="32" y="1419" class="section-title">&#128101; MULTIPLE PROFILES (CLAUDE_CONFIG_DIR)</text>
+  <rect x="20" y="1835" width="1160" height="130" class="card-bg"/>
+  <rect x="20" y="1835" width="1160" height="28" class="section-bg"/>
+  <text x="32" y="1854" class="section-title">&#128101; MULTIPLE PROFILES (CLAUDE_CONFIG_DIR)</text>
 
-  <text x="32" y="1448" class="label">Run multiple accounts side by side with isolated configs:</text>
-  <rect x="32" y="1458" width="540" height="18" class="code-bg"/>
-  <text x="38" y="1471" class="code">alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work claude'</text>
-  <rect x="32" y="1480" width="540" height="18" class="code-bg"/>
-  <text x="38" y="1493" class="code">alias claude-personal='CLAUDE_CONFIG_DIR=~/.claude-personal claude'</text>
+  <text x="32" y="1883" class="label">Run multiple accounts side by side with isolated configs:</text>
+  <rect x="32" y="1893" width="540" height="18" class="code-bg"/>
+  <text x="38" y="1906" class="code">alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work claude'</text>
+  <rect x="32" y="1915" width="540" height="18" class="code-bg"/>
+  <text x="38" y="1928" class="code">alias claude-personal='CLAUDE_CONFIG_DIR=~/.claude-personal claude'</text>
 
-  <text x="620" y="1448" class="label">Each profile is fully isolated:</text>
-  <text x="620" y="1466" class="value">Separate settings, sessions, MCP configs, memory</text>
-  <text x="620" y="1482" class="value">Requires separate Anthropic accounts (different emails)</text>
-  <text x="620" y="1498" class="value">Default: ~/.claude/ or ~/.config/claude/</text>
+  <text x="620" y="1883" class="label">Each profile is fully isolated:</text>
+  <text x="620" y="1901" class="value">Separate settings, sessions, MCP configs, memory</text>
+  <text x="620" y="1917" class="value">Requires separate Anthropic accounts (different emails)</text>
+  <text x="620" y="1933" class="value">Default: ~/.claude/ or ~/.config/claude/</text>
 
-  <text x="620" y="1520" class="tip">Note: Unofficial feature. /ide may not work with custom dirs.</text>
+  <text x="620" y="1955" class="tip">Note: Unofficial feature. /ide may not work with custom dirs.</text>
 
   <!-- Footer -->
-  <rect x="0" y="1550" width="1200" height="50" fill="#f97316"/>
-  <text x="600" y="1578" text-anchor="middle" font-size="13" fill="#fff" font-weight="600">Claude Code Notes · github.com/alicuche/Claude-Code-Notes</text>
+  <rect x="0" y="1985" width="1200" height="50" fill="#f97316"/>
+  <text x="600" y="2013" text-anchor="middle" font-size="13" fill="#fff" font-weight="600">Claude Code Notes · github.com/alicuche/Claude-Code-Notes</text>
 
 </svg>
