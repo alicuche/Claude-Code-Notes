@@ -34,23 +34,17 @@ FOUNDATION                      OPTIMIZATION                    SCALE
 ### 67% of context window consumed before you type anything
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                                                            │
-│   A real Claude Code session:                              │
-│                                                            │
-│   58 MCP tools across 5 servers = 134,000 tokens           │
-│                                                            │
-│   ████████████████████████████████████████████░░░░░░░░░░░  │
-│   ◄──── 134K tool definitions ────►◄── 66K remaining ──►  │
-│                                        for actual work     │
-│                                                            │
-│   Context Window = 200,000 tokens                          │
-│                                                            │
-│   → 67% context WASTED before conversation even starts     │
-│   → Session runs a few turns → auto-compact → loses context│
-│   → Cost spikes due to snowball effect                     │
-│                                                            │
-└──────────────────────────────────────────────────────────┘
+A real Claude Code session:
+58 MCP tools across 5 servers = 134,000 tokens
+
+████████████████████████████████████████████░░░░░░░░░░░
+◄──── 134K tool definitions ────►◄── 66K remaining ──►
+                                     for actual work
+Context Window = 200,000 tokens
+
+→ 67% context WASTED before conversation even starts
+→ Session runs a few turns → auto-compact → loses context
+→ Cost spikes due to snowball effect
 ```
 
 ### This document will explain WHY and HOW TO FIX it
@@ -73,26 +67,20 @@ FOUNDATION                      OPTIMIZATION                    SCALE
 
 ```
 WITHOUT Tools:                         WITH Tools:
-──────────────                          ──────────
 ┌──────────────────┐                    ┌──────────────────┐
-│    LLM Brain     │                    │    LLM Brain     │
-│                  │                    │                  │
 │  Trained Data    │                    │  Trained Data    │
 │  (up to 2025)   │                    │  + Tool Access   │
-│                  │                    │    │             │
-│  ❌ Doesn't know │                    │    ├─► APIs     │
-│    today's BTC   │                    │    ├─► Database  │
-│    price         │                    │    ├─► Files     │
+│                  │                    │    ├─► APIs      │
+│  ❌ Doesn't know │                    │    ├─► Database  │
+│    today's BTC   │                    │    ├─► Files     │
 │  ❌ Can't read   │                    │    ├─► Web       │
 │    databases     │                    │    └─► Services  │
 │  ❌ Can't call   │                    │                  │
 │    APIs          │                    │  ✅ Real-time    │
 │                  │                    │  ✅ Live data    │
 │  "I don't have  │                    │  ✅ Can take     │
-│   real-time      │                    │     action!      │
-│   information"   │                    │                  │
+│   real-time info"│                    │     action!      │
 └──────────────────┘                    └──────────────────┘
-
 Tool = THE BRIDGE between LLM and THE OUTSIDE WORLD
 ```
 
@@ -139,34 +127,25 @@ Tool = THE BRIDGE between LLM and THE OUTSIDE WORLD
 ### Tool is the only primitive LLM understands — MCP, Skill, Agent all use it
 
 ```
-                        ┌─────────────┐
-                        │     LLM     │
-                        │  (Claude)   │
-                        └──────┬──────┘
-                               │
-                        UNDERSTANDS ONLY
-                         ONE THING:
-                         Tool Use JSON
-                               │
-                    ┌──────────┼──────────┐
-                    │          │          │
-                    ▼          ▼          ▼
-              ┌──────────┐ ┌──────┐ ┌──────────┐
-              │   MCP    │ │Skill │ │  Agent   │
-              │  Server  │ │      │ │(SubAgent)│
-              └────┬─────┘ └──┬───┘ └────┬─────┘
-                   │          │          │
-                   ▼          ▼          ▼
-              ┌──────────────────────────────────┐
-              │         TOOL USE (JSON)           │
-              │  { name: "...", args: {...} }     │
-              │                                    │
-              │  ← The root primitive LLM speaks   │
-              └──────────────────────────────────┘
-                   │          │          │
-                   ▼          ▼          ▼
-              External    Local FS    Other
-              APIs/DB     Scripts     Agents
+                    ┌─────────────┐
+                    │  LLM (Claude)│  ← understands only ONE thing: Tool Use JSON
+                    └──────┬──────┘
+                           │
+                ┌──────────┼──────────┐
+                ▼          ▼          ▼
+          ┌──────────┐ ┌──────┐ ┌──────────┐
+          │   MCP    │ │Skill │ │  Agent   │
+          │  Server  │ │      │ │(SubAgent)│
+          └────┬─────┘ └──┬───┘ └────┬─────┘
+               ▼          ▼          ▼
+          ┌──────────────────────────────────┐
+          │  TOOL USE (JSON)                  │
+          │  { name: "...", args: {...} }     │
+          │  ← The root primitive LLM speaks  │
+          └──────────────────────────────────┘
+               ▼          ▼          ▼
+          External    Local FS    Other Agents
+          APIs/DB     Scripts
 
 MCP   = standardized CONNECTION to external services (JSON-RPC 2.0)
 Skill = lazy-loaded DOMAIN KNOWLEDGE (prompt expansion)
@@ -204,34 +183,13 @@ Agent spawn:      tool_use → { name: "Agent", args: {prompt: "find tests"} }
 ### API is stateless — every turn resends the ENTIRE history
 
 ```
-REQUEST 1 (Turn 1):
-┌────────────────────────────────────────────────────────────┐
-│ System  │ Tools  │ User₁                                   │
-│  25K    │  8K    │  500                                     │
-└────────────────────────────────────────────────────────────┘
-Input tokens sent: 33,500
-                                                    ▼ Claude responds (Asst₁: 1K)
+Turn 1: │ System 25K │ Tools 8K │ User₁ 500 │                              → 33,500 tokens
+         ▼ Claude responds (Asst₁: 1K)
+Turn 2: │ System 25K │ Tools 8K │ User₁ │ Asst₁ │ User₂ │                  → 35,000 tokens (+1.5K new, RESENDS 33.5K!)
+         ▼ Claude responds (Asst₂: 2K)
+Turn 3: │ System 25K │ Tools 8K │ User₁ │ Asst₁ │ User₂ │ Asst₂ │ User₃ │ → 37,500 tokens (+2.5K new, RESENDS 35K!)
 
-REQUEST 2 (Turn 2):
-┌────────────────────────────────────────────────────────────┐
-│ System  │ Tools  │ User₁ │ Asst₁ │ User₂                  │
-│  25K    │  8K    │  500  │ 1,000 │  500                    │
-└────────────────────────────────────────────────────────────┘
-Input tokens sent: 35,000   (+1,500 new content, but RESENDS 33.5K old!)
-                                                    ▼ Claude responds (Asst₂: 2K)
-
-REQUEST 3 (Turn 3):
-┌────────────────────────────────────────────────────────────┐
-│ System  │ Tools  │ User₁ │ Asst₁ │ User₂ │ Asst₂ │ User₃ │
-│  25K    │  8K    │  500  │ 1,000 │  500  │ 2,000 │  500   │
-└────────────────────────────────────────────────────────────┘
-Input tokens sent: 37,500   (+2,500 new, but RESENDS 35K old!)
-
-ACCUMULATED after 3 turns:
-  New content created:    4,500 tokens (User×3 + Asst×2)
-  Total tokens SENT:      33,500 + 35,000 + 37,500 = 106,000 tokens!
-                           ═══════════════════════
-                           23x the new content!
+ACCUMULATED: 4,500 tokens new content → 106,000 tokens SENT = 23x the new content!
 ```
 
 ---
@@ -253,44 +211,27 @@ ACCUMULATED after 3 turns:
 Assuming: System+Tools = 33K (fixed), each turn adds ~2K new tokens
 Pricing: Opus 4.6 = $5/1M input, $25/1M output
 
-Turn │ Input tokens │ Cost/turn (input) │ Cumulative cost
-─────┼──────────────┼───────────────────┼───────────────
-  1  │    33,500    │     $0.168        │    $0.168
-  2  │    35,500    │     $0.178        │    $0.345
-  3  │    37,500    │     $0.188        │    $0.533
-  5  │    41,500    │     $0.208        │    $0.938
- 10  │    51,500    │     $0.258        │    $2.13
- 20  │    71,500    │     $0.358        │    $5.26
- 30  │    91,500    │     $0.458        │    $9.39
-
-     ┌──────────────────────────────────────────┐
-     │  $                                        │
-     │  9 ┤                                  ●   │
-     │  8 ┤                               ╱      │
-     │  7 ┤                            ╱         │
-     │  6 ┤                         ╱            │
-     │  5 ┤                      ●               │   ← TOTAL COST
-     │  4 ┤                   ╱                  │     grows
-     │  3 ┤                ╱                     │     QUADRATICALLY
-     │  2 ┤          ●  ╱                        │
-     │  1 ┤      ● ╱                             │
-     │  0 ┤──●──────────────────────────────────│
-     │    0    5    10   15   20   25   30 turns │
-     └──────────────────────────────────────────┘
-
-Formula: Total Cost ≈ N × fixed_cost + N×(N+1)/2 × delta_cost
-→ Cost grows QUADRATICALLY, not linearly!
-→ 30 turns = 56x the cost of the first turn (cumulative)
+Turn │ Input tokens │ Cost/turn │ Cumulative    $
+─────┼──────────────┼──────────┼──────────    9 ┤                            ●
+  1  │    33,500    │  $0.168  │  $0.168     8 ┤                         ╱
+  2  │    35,500    │  $0.178  │  $0.345     7 ┤                      ╱
+  3  │    37,500    │  $0.188  │  $0.533     6 ┤                   ╱
+  5  │    41,500    │  $0.208  │  $0.938     5 ┤                ●        ← QUADRATIC
+ 10  │    51,500    │  $0.258  │  $2.13      4 ┤             ╱
+ 20  │    71,500    │  $0.358  │  $5.26      3 ┤          ╱
+ 30  │    91,500    │  $0.458  │  $9.39      2 ┤     ●  ╱
+                                              1 ┤  ● ╱
+Formula: Total ≈ N×fixed + N(N+1)/2×delta    0 ┤●─────────────────────
+→ QUADRATIC, not linear!                       0   5  10  15  20  25  30
+→ 30 turns = 56x cost of first turn
 ```
 
 ### Prompt Caching saves 90% on static content
 
 ```
-WITHOUT cache: System+Tools 33K × $5/1M = $0.165/turn
+WITHOUT cache: System+Tools 33K × $5/1M   = $0.165/turn
 WITH cache:    System+Tools 33K × $0.5/1M = $0.017/turn  ← 10x cheaper!
-
-→ Only messages (snowball) pay full price
-→ Cache write = 1.25x first time, cache read = 0.1x — breaks even by turn 2
+→ Only messages (snowball) pay full price. Cache write 1.25x, read 0.1x — breaks even by turn 2
 ```
 
 ---
@@ -309,60 +250,36 @@ WITH cache:    System+Tools 33K × $0.5/1M = $0.017/turn  ← 10x cheaper!
 ### When context gets TOO LARGE — What happens?
 
 ```
-┌────────────────────────────────────────────────────────────────┐
-│                                                                  │
-│  ❌ "Lost in the Middle"                                        │
-│     LLM attends to beginning + end, SKIPS the middle            │
-│     → File read at turn 5 gets "forgotten" despite being in ctx │
-│                                                                  │
-│  ❌ Hallucination increases                                      │
-│     Too many tools/info → model picks WRONG tool, wrong args    │
-│     5 tools → 95% accuracy  |  50+ tools → <60% accuracy       │
-│                                                                  │
-│  ❌ Unexpected auto-compact                                      │
-│     Context hits limit → AI auto-summarizes → LOSES code in     │
-│     progress, LOSES files read, LOSES decisions discussed        │
-│                                                                  │
-│  ❌ Latency increases                                            │
-│     More tokens = slower processing = longer response times      │
-│                                                                  │
-│  ❌ Cost explodes (quadratic)                                    │
-│     As shown: 30 turns = 56x cost of first turn                 │
-│                                                                  │
-│  ❌ Output quality degrades                                      │
-│     Attention diluted → generic, less accurate answers           │
-│                                                                  │
-└────────────────────────────────────────────────────────────────┘
+❌ "Lost in the Middle" — LLM attends to beginning + end, SKIPS the middle
+   → File read at turn 5 gets "forgotten" despite being in context
+❌ Hallucination increases — too many tools → model picks WRONG tool, wrong args
+   5 tools → 95% accuracy  |  50+ tools → <60% accuracy
+❌ Unexpected auto-compact — context hits limit → AI auto-summarizes
+   → LOSES code in progress, files read, decisions discussed
+❌ Latency increases — more tokens = slower processing = longer response times
+❌ Cost explodes (quadratic) — 30 turns = 56x cost of first turn
+❌ Output quality degrades — attention diluted → generic, less accurate answers
 ```
 
 ### 4 Rules to keep context clean
 
 ```
-┌───────────────────────────────────────────────────────────┐
-│                                                             │
-│  Rule #1: INJECT ENOUGH, NOT EVERYTHING                     │
-│  ──────────────────────────────────────────                  │
-│  ❌ 58 MCP tools "just in case" → 55K wasted               │
-│  ✅ 5 needed tools + defer the rest → 5K used              │
-│                                                             │
-│  Rule #2: USE CLI WHEN POSSIBLE                             │
-│  ────────────────────────────                                │
-│  ❌ MCP tool "list_files" = 500 tokens definition           │
-│  ✅ Bash: ls -la = 0 tokens definition (built-in)          │
-│  → CLI tools (Bash, Read, Grep) are built-in, NO extra     │
-│    token cost for definitions. Only use MCP when CLI can't. │
-│                                                             │
-│  Rule #3: DELEGATE → SUBAGENT                               │
-│  ──────────────────────────                                  │
-│  ❌ File reads, greps in main → 70K context                 │
-│  ✅ SubAgent does it, returns summary → 35K context         │
-│                                                             │
-│  Rule #4: COMPACT AT THE RIGHT TIME                         │
-│  ─────────────────────────                                   │
-│  ❌ Auto-compact mid-task → loses critical context           │
-│  ✅ /compact after milestones → clean break                 │
-│                                                             │
-└───────────────────────────────────────────────────────────┘
+Rule #1: INJECT ENOUGH, NOT EVERYTHING
+  ❌ 58 MCP tools "just in case" → 55K wasted
+  ✅ 5 needed tools + defer the rest → 5K used
+
+Rule #2: USE CLI WHEN POSSIBLE
+  ❌ MCP tool "list_files" = 500 tokens definition
+  ✅ Bash: ls -la = 0 tokens definition (built-in)
+  → CLI tools (Bash, Read, Grep) are built-in, NO extra token cost. Only use MCP when CLI can't.
+
+Rule #3: DELEGATE → SUBAGENT
+  ❌ File reads, greps in main → 70K context
+  ✅ SubAgent does it, returns summary → 35K context
+
+Rule #4: COMPACT AT THE RIGHT TIME
+  ❌ Auto-compact mid-task → loses critical context
+  ✅ /compact after milestones → clean break
 ```
 
 ### SubAgent — Separate Context, Clean Main
@@ -371,19 +288,15 @@ WITH cache:    System+Tools 33K × $0.5/1M = $0.017/turn  ← 10x cheaper!
 BEFORE delegation:                  AFTER delegation:
 ┌────────────────────┐              ┌────────────────────┐
 │ Main (200K)        │              │ Main (200K)        │
-│                    │              │                    │
 │ Overhead     30K   │              │ Overhead     30K   │
 │ File reads   18K   │              │ Summaries     5K   │
 │ Grep          8K   │              │ TOTAL: 35K ✅     │
 │ Tests         4K   │              └─────────┬──────────┘
-│ Chat         10K   │                        │
-│ TOTAL: 70K ❌     │              ┌─────────┼─────────┐
-└────────────────────┘              ▼         ▼         ▼
-                                 Explore   Research    Test
+│ Chat         10K   │              ┌─────────┼─────────┐
+│ TOTAL: 70K ❌     │              ▼         ▼         ▼
+└────────────────────┘           Explore   Research    Test
                                  (200K)    (200K)    (200K)
-
-                                 TOTAL: 600K working context!
-                                 84% reduction in main token usage
+                                 TOTAL: 600K working context! 84% reduction
 ```
 
 ---
@@ -498,52 +411,29 @@ skills: payroll-calc, salary-report  # ONLY 2 skills!
 
 ```
 PHASE 1: STARTUP — Only loads metadata
-──────────────────────────────────────
-
   .claude/skills/review-pr.md          System Prompt
   ┌─────────────────────────┐          ┌──────────────────────────┐
   │ ---                     │          │ Available skills:        │
-  │ name: review-pr         │ ──────►  │                          │
-  │ description: Review PRs │          │ - review-pr: Review PRs  │
-  │ ---                     │          │ - commit: Create commits │
-  │                         │          │ - ...                    │
-  │ [Full body: 5K tokens   │          │                          │
-  │  NOT loaded yet!]       │          │ ~100 tokens/skill ✅     │
-  └─────────────────────────┘          └──────────────────────────┘
-
+  │ name: review-pr         │ ──────►  │ - review-pr: Review PRs  │
+  │ description: Review PRs │          │ - commit: Create commits │
+  │ ---                     │          │ - ...                    │
+  │ [Full body: 5K tokens   │          │ ~100 tokens/skill ✅     │
+  │  NOT loaded yet!]       │          └──────────────────────────┘
+  └─────────────────────────┘
 
 PHASE 2: INVOKE — User types /review-pr
-──────────────────────────────────────
-
-  ① Claude calls the "Skill" tool
-     tool_use: { name: "Skill", args: { skill: "review-pr" } }
-                    │
-                    ▼
-  ② Host reads SKILL.md from local filesystem
-     Read .claude/skills/review-pr.md → full body (5K tokens)
-                    │
-                    ▼
-  ③ Full content INJECTED into context (messages)
-     ┌──────────────────────────────────────────┐
-     │ messages: [                               │
-     │   ...previous messages...,                │
-     │   { role: "user",                         │
-     │     content: "<skill>                     │
-     │       [Full 5K tokens skill body]         │
-     │       Instructions, templates, refs...    │
-     │     </skill>" }                           │
-     │ ]                                         │
-     └──────────────────────────────────────────┘
-                    │
-                    ▼
+  ① Claude calls tool_use: { name: "Skill", args: { skill: "review-pr" } }
+     ▼
+  ② Host reads SKILL.md from local filesystem → full body (5K tokens)
+     ▼
+  ③ Full content INJECTED into messages:
+     { role: "user", content: "<skill>[Full 5K body]</skill>" }
+     ▼
   ④ Sent to Claude Server — now Claude fully understands the skill
      → From here, skill body STAYS IN history (snowball!)
 
-
-SUMMARY:
-  100 skills × 100 tokens (metadata) = 10K tokens at startup
-  Invoke 1 skill                     = +5K tokens when needed
-  → 98% reduction for unused skills ✅
+SUMMARY: 100 skills × 100 tokens = 10K at startup. Invoke 1 = +5K when needed.
+→ 98% reduction for unused skills ✅
 ```
 
 ---
@@ -565,37 +455,26 @@ SUMMARY:
 
 ```
 10,000 skills × 300 tokens = 3,000,000 tokens
-Context Window             =   200,000 tokens
-
-                    ❌ tokens + init cost too high
-                    ❌ 15x over the limit
+Context Window             =   200,000 tokens  → ❌ 15x over the limit
 ```
 
 ### Skill Finder + Tag/Scope Architecture
 
 ```
 System Prompt (~2.2K tokens total)
-│
 ├── General Skills (20)  ── always loaded ── ~2K tokens
-│
 └── Skill Finder ── meta-tool ── ~200 tokens
-    │
     │  User: team = "Payroll"
     ▼
-┌─────────────────────────────────────────┐
-│  Tags:                                   │
-│  ├── general      20 skills   → all     │
-│  ├── payroll      50 skills   → Payroll │
-│  ├── hr           80 skills   → HR      │
-│  ├── engineering  200 skills  → Eng     │
-│  └── ...          10K total             │
-│                                          │
-│  Payroll user loads:                     │
-│  general(20) + payroll(50) = 70 skills  │
-│  Cost: 70 × 100 = 7K tokens ✅         │
-│                                          │
-│  vs ALL: 10K × 300 = 3M tokens ❌       │
-└─────────────────────────────────────────┘
+    Tags:
+    ├── general      20 skills  → all teams
+    ├── payroll      50 skills  → Payroll
+    ├── hr           80 skills  → HR
+    ├── engineering  200 skills → Eng
+    └── ...          10K total
+
+    Payroll user loads: general(20) + payroll(50) = 70 skills
+    Cost: 70 × 100 = 7K tokens ✅  vs ALL: 10K × 300 = 3M tokens ❌
 ```
 
 > "Agentic AI is a routing problem, not an intelligence problem"
