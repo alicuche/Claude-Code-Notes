@@ -1,0 +1,254 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1700" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
+  <defs>
+    <style>
+      .title { font-size: 28px; font-weight: 700; fill: #fff; }
+      .subtitle { font-size: 12px; fill: #fff; opacity: 0.9; }
+      .section-title { font-size: 14px; font-weight: 700; fill: #fff; }
+      .label { font-size: 11px; font-weight: 600; fill: #333; }
+      .value { font-size: 10px; fill: #555; }
+      .code { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 9.5px; fill: #333; }
+      .code-bg { fill: #f5f5f5; rx: 3; }
+      .divider { stroke: #e0e0e0; stroke-width: 0.5; }
+      .section-bg { fill: #f97316; rx: 6; }
+      .card-bg { fill: #fff; rx: 6; stroke: #e5e7eb; stroke-width: 1; }
+      .tip { font-size: 9px; fill: #666; font-style: italic; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="1700" fill="#f8f9fa"/>
+
+  <!-- Header -->
+  <rect width="1200" height="80" fill="#f97316" rx="0"/>
+  <text x="600" y="38" text-anchor="middle" class="title">CLAUDE CODE CHEATSHEET</text>
+  <text x="600" y="58" text-anchor="middle" class="subtitle">Your complete quick reference for Claude Code -- commands, config, integrations &amp; more</text>
+
+  <!-- ==================== LEFT COLUMN ==================== -->
+
+  <!-- Configuration -->
+  <rect x="20" y="100" width="570" height="165" class="card-bg"/>
+  <rect x="20" y="100" width="570" height="28" class="section-bg"/>
+  <text x="32" y="119" class="section-title">&#9881; CONFIGURATION</text>
+
+  <text x="32" y="148" class="label">Settings Priority (highest → lowest):</text>
+  <text x="32" y="163" class="code">1. /etc/claude-code/managed-settings.json  (Enterprise)</text>
+  <text x="32" y="177" class="code">2. .claude/settings.local.json              (Project local)</text>
+  <text x="32" y="191" class="code">3. .claude/settings.json                    (Project shared)</text>
+  <text x="32" y="205" class="code">4. ~/.claude/settings.json                  (User global)</text>
+
+  <text x="32" y="225" class="label">Status Line:</text>
+  <rect x="32" y="231" width="300" height="18" class="code-bg"/>
+  <text x="38" y="244" class="code">npx -y ccstatusline@latest</text>
+
+  <!-- CLAUDE.md & Memory -->
+  <rect x="20" y="280" width="570" height="260" class="card-bg"/>
+  <rect x="20" y="280" width="570" height="28" class="section-bg"/>
+  <text x="32" y="299" class="section-title">&#128196; CLAUDE.md &amp; PROJECT MEMORY</text>
+
+  <text x="32" y="328" class="label">File Locations &amp; Inheritance (loaded top → bottom, merged):</text>
+  <text x="32" y="345" class="code">~/.claude/CLAUDE.md         → User global (always loaded)</text>
+  <text x="32" y="359" class="code">CLAUDE.md (repo root)       → Project-wide</text>
+  <text x="32" y="373" class="code">src/CLAUDE.md               → Added when working in src/</text>
+  <text x="32" y="387" class="code">src/api/CLAUDE.md           → Added when working in src/api/</text>
+
+  <line x1="32" y1="397" x2="578" y2="397" class="divider"/>
+
+  <text x="32" y="415" class="label">What to include:</text>
+  <text x="32" y="432" class="value">• Project overview &amp; tech stack</text>
+  <text x="32" y="446" class="value">• Coding conventions &amp; style rules</text>
+  <text x="32" y="460" class="value">• File structure explanation</text>
+  <text x="32" y="474" class="value">• Common commands (dev, test, lint, build)</text>
+  <text x="32" y="488" class="value">• Hard rules (never modify X, always run Y)</text>
+
+  <text x="32" y="510" class="label">Subfolder files extend parent rules, not replace them.</text>
+  <text x="32" y="526" class="tip">Use /init to generate a starter CLAUDE.md · /memory to edit</text>
+
+  <!-- Slash Commands -->
+  <rect x="20" y="555" width="570" height="300" class="card-bg"/>
+  <rect x="20" y="555" width="570" height="28" class="section-bg"/>
+  <text x="32" y="574" class="section-title">&#9889; SLASH COMMANDS</text>
+
+  <text x="32" y="600" class="code">/clear</text><text x="180" y="600" class="value">Clear conversation history</text>
+  <text x="32" y="616" class="code">/compact [focus]</text><text x="180" y="616" class="value">Compress conversation to save context</text>
+  <text x="32" y="632" class="code">/config</text><text x="180" y="632" class="value">View/modify settings</text>
+  <text x="32" y="648" class="code">/cost</text><text x="180" y="648" class="value">Show token usage &amp; cost</text>
+  <text x="32" y="664" class="code">/doctor</text><text x="180" y="664" class="value">Run setup diagnostics</text>
+  <text x="32" y="680" class="code">/init</text><text x="180" y="680" class="value">Create CLAUDE.md for project</text>
+  <text x="32" y="696" class="code">/memory</text><text x="180" y="696" class="value">Edit CLAUDE.md memory files</text>
+  <text x="32" y="712" class="code">/model</text><text x="180" y="712" class="value">Switch active model</text>
+  <text x="32" y="728" class="code">/mcp</text><text x="180" y="728" class="value">Manage MCP server connections</text>
+  <text x="32" y="744" class="code">/agents</text><text x="180" y="744" class="value">List available subagents</text>
+  <text x="32" y="760" class="code">/permissions</text><text x="180" y="760" class="value">View/update tool permissions</text>
+  <text x="32" y="776" class="code">/review</text><text x="180" y="776" class="value">Request code review</text>
+  <text x="32" y="792" class="code">/rewind</text><text x="180" y="792" class="value">Roll back to checkpoint</text>
+  <text x="32" y="808" class="code">/sandbox</text><text x="180" y="808" class="value">Toggle sandboxed execution</text>
+  <text x="32" y="824" class="code">/pr_comments</text><text x="180" y="824" class="value">View pull request comments</text>
+  <text x="32" y="840" class="code">/vim</text><text x="180" y="840" class="value">Toggle vim keybindings</text>
+
+  <!-- Custom Commands -->
+  <rect x="20" y="870" width="570" height="160" class="card-bg"/>
+  <rect x="20" y="870" width="570" height="28" class="section-bg"/>
+  <text x="32" y="889" class="section-title">&#128295; CUSTOM SLASH COMMANDS</text>
+
+  <text x="32" y="918" class="label">Location:</text>
+  <text x="100" y="918" class="code">.claude/commands/*.md (project) · ~/.claude/commands/*.md (global)</text>
+  <text x="32" y="938" class="label">Variables:</text>
+  <text x="100" y="938" class="code">$ARGUMENTS (all) · $1 $2 $3 (positional)</text>
+  <text x="32" y="958" class="label">Usage:</text>
+  <text x="100" y="958" class="code">/project:deploy staging</text>
+
+  <text x="32" y="983" class="label">Frontmatter options:</text>
+  <text x="32" y="999" class="code">description: Deploy to staging</text>
+  <text x="32" y="1013" class="code">argument_hint: &lt;environment&gt;</text>
+  <text x="32" y="1027" class="code">model: claude-sonnet-4-20250514</text>
+
+  <!-- Key File Locations -->
+  <rect x="20" y="1045" width="570" height="185" class="card-bg"/>
+  <rect x="20" y="1045" width="570" height="28" class="section-bg"/>
+  <text x="32" y="1064" class="section-title">&#128193; KEY FILE LOCATIONS</text>
+
+  <text x="32" y="1093" class="code">~/.claude/settings.json</text><text x="310" y="1093" class="value">User global settings</text>
+  <text x="32" y="1109" class="code">.claude/settings.json</text><text x="310" y="1109" class="value">Project shared settings</text>
+  <text x="32" y="1125" class="code">.claude/settings.local.json</text><text x="310" y="1125" class="value">Project local (gitignored)</text>
+  <text x="32" y="1141" class="code">CLAUDE.md</text><text x="310" y="1141" class="value">Project instructions &amp; memory</text>
+  <text x="32" y="1157" class="code">.claude/commands/</text><text x="310" y="1157" class="value">Custom slash commands</text>
+  <text x="32" y="1173" class="code">.claude/skills/</text><text x="310" y="1173" class="value">Agent skills</text>
+  <text x="32" y="1189" class="code">.claude/agents/</text><text x="310" y="1189" class="value">Subagent definitions</text>
+  <text x="32" y="1205" class="code">.claude/mcp.json</text><text x="310" y="1205" class="value">MCP server config</text>
+  <text x="32" y="1221" class="code">.claude/hooks/</text><text x="310" y="1221" class="value">Hook scripts</text>
+
+  <!-- ==================== RIGHT COLUMN ==================== -->
+
+  <!-- Headless Mode -->
+  <rect x="610" y="100" width="570" height="200" class="card-bg"/>
+  <rect x="610" y="100" width="570" height="28" class="section-bg"/>
+  <text x="622" y="119" class="section-title">&#128187; HEADLESS / CLI MODE</text>
+
+  <text x="622" y="148" class="code">claude -p "query"</text><text x="870" y="148" class="value">Non-interactive single prompt</text>
+  <text x="622" y="164" class="code">claude -p --output-format json "q"</text><text x="870" y="164" class="value">JSON output with metadata</text>
+  <text x="622" y="180" class="code">claude -p --output-format stream-json</text><text x="870" y="180" class="value">Streaming JSON events</text>
+  <text x="622" y="196" class="code">claude -p --continue "query"</text><text x="870" y="196" class="value">Resume last session</text>
+  <text x="622" y="212" class="code">claude -p --session-id ID "query"</text><text x="870" y="212" class="value">Resume specific session</text>
+  <text x="622" y="228" class="code">echo "q" | claude -p</text><text x="870" y="228" class="value">Pipe input</text>
+  <text x="622" y="244" class="code">claude -p --max-turns 10 "query"</text><text x="870" y="244" class="value">Limit agentic turns</text>
+  <text x="622" y="260" class="code">claude --verbose -p "query"</text><text x="870" y="260" class="value">Enable verbose logging</text>
+
+  <text x="622" y="286" class="tip">Combine --output-format json with jq for shell script processing</text>
+
+  <!-- Git Worktrees -->
+  <rect x="610" y="315" width="570" height="135" class="card-bg"/>
+  <rect x="610" y="315" width="570" height="28" class="section-bg"/>
+  <text x="622" y="334" class="section-title">&#128268; GIT WORKTREES</text>
+
+  <text x="622" y="363" class="code">git worktree add ../feature-x -b feature main</text>
+  <text x="622" y="378" class="value">Create new worktree with branch</text>
+  <text x="622" y="398" class="code">git worktree list</text>
+  <text x="622" y="413" class="value">List all worktrees</text>
+  <text x="622" y="433" class="code">git worktree remove ../feature-x</text>
+  <text x="622" y="448" class="value">Remove worktree</text>
+
+  <!-- Popular MCP Servers -->
+  <rect x="610" y="465" width="570" height="310" class="card-bg"/>
+  <rect x="610" y="465" width="570" height="28" class="section-bg"/>
+  <text x="622" y="484" class="section-title">&#128268; POPULAR MCP SERVERS</text>
+
+  <text x="622" y="510" class="code">claude mcp add playwright -- npx @anthropic-ai/mcp-playwright</text>
+  <text x="622" y="523" class="value">Browser automation</text>
+  <text x="622" y="541" class="code">claude mcp add github -- npx @anthropic-ai/mcp-github</text>
+  <text x="622" y="554" class="value">GitHub integration</text>
+  <text x="622" y="572" class="code">https://api.githubcopilot.com/mcp/</text>
+  <text x="622" y="585" class="value">GitHub MCP (remote, official)</text>
+  <text x="622" y="603" class="code">claude mcp add slack -- npx @anthropic-ai/mcp-slack</text>
+  <text x="622" y="616" class="value">Slack messaging</text>
+  <text x="622" y="634" class="code">claude mcp add postgres -- npx @anthropic-ai/mcp-postgres</text>
+  <text x="622" y="647" class="value">PostgreSQL database</text>
+  <text x="622" y="665" class="code">claude mcp add sentry -- npx @anthropic-ai/mcp-sentry</text>
+  <text x="622" y="678" class="value">Error tracking</text>
+  <text x="622" y="696" class="code">claude mcp add docker -- npx @anthropic-ai/mcp-docker</text>
+  <text x="622" y="709" class="value">Container management</text>
+
+  <text x="622" y="735" class="label">Transports:</text>
+  <text x="700" y="735" class="code">stdio (default) · sse · http</text>
+  <text x="622" y="755" class="label">Config:</text>
+  <text x="700" y="755" class="code">.claude/mcp.json (project) · ~/.claude/mcp.json (global)</text>
+
+  <!-- Hooks & Automation -->
+  <rect x="610" y="790" width="570" height="225" class="card-bg"/>
+  <rect x="610" y="790" width="570" height="28" class="section-bg"/>
+  <text x="622" y="809" class="section-title">&#9875; HOOKS &amp; AUTOMATION</text>
+
+  <text x="622" y="838" class="label">Hook Events:</text>
+  <text x="622" y="855" class="code">PreToolUse</text><text x="780" y="855" class="code">PostToolUse</text>
+  <text x="622" y="871" class="code">UserPromptSubmit</text><text x="780" y="871" class="code">Stop</text>
+  <text x="622" y="887" class="code">SessionStart</text><text x="780" y="887" class="code">SessionEnd</text>
+  <text x="622" y="903" class="code">SubagentStop</text><text x="780" y="903" class="code">PreCompact</text>
+  <text x="622" y="919" class="code">Notification</text>
+
+  <line x1="622" y1="929" x2="1168" y2="929" class="divider"/>
+
+  <text x="622" y="948" class="label">Settings Location:</text>
+  <text x="622" y="965" class="code">.claude/settings.json  or  ~/.claude/settings.json</text>
+
+  <text x="622" y="990" class="label">Exit codes:</text>
+  <text x="700" y="990" class="code">0 = success · 2 = block &amp; show to Claude · other = error</text>
+
+  <!-- AI Models -->
+  <rect x="610" y="1030" width="570" height="200" class="card-bg"/>
+  <rect x="610" y="1030" width="570" height="28" class="section-bg"/>
+  <text x="622" y="1049" class="section-title">&#129302; AI MODELS</text>
+
+  <text x="622" y="1078" class="label">Opus 4.6</text>
+  <text x="622" y="1094" class="code">claude-opus-4-6</text>
+  <text x="810" y="1094" class="value">Most capable</text>
+
+  <text x="622" y="1118" class="label">Sonnet 4.6</text>
+  <text x="622" y="1134" class="code">claude-sonnet-4-6</text>
+  <text x="810" y="1134" class="value">Balanced performance</text>
+
+  <text x="622" y="1158" class="label">Haiku 4.5</text>
+  <text x="622" y="1174" class="code">claude-haiku-4-5-20251001</text>
+  <text x="810" y="1174" class="value">Fastest responses</text>
+
+  <text x="622" y="1200" class="label">Switch:</text>
+  <text x="680" y="1200" class="code">/model  or  claude --model sonnet</text>
+
+  <text x="622" y="1220" class="tip">Use fast models for drafts, strong models for review</text>
+
+  <!-- Permissions -->
+  <rect x="20" y="1245" width="1160" height="140" class="card-bg"/>
+  <rect x="20" y="1245" width="1160" height="28" class="section-bg"/>
+  <text x="32" y="1264" class="section-title">&#128274; PERMISSIONS &amp; SECURITY</text>
+
+  <text x="32" y="1293" class="label">Basic template:</text>
+  <text x="32" y="1310" class="code">allow: ["Read", "Glob", "Grep", "Bash(git status)", "Bash(git diff)", "Bash(npm test)", "Bash(npm run lint)"]</text>
+  <text x="32" y="1326" class="code">deny:  ["Bash(rm -rf *)", "Bash(curl * | bash)", "Bash(sudo *)"]</text>
+
+  <text x="32" y="1350" class="label">Strict (read-only):</text>
+  <text x="200" y="1350" class="code">allow: ["Read", "Glob", "Grep"]  deny: ["Bash", "Edit", "Write"]</text>
+
+  <text x="32" y="1374" class="label">MCP permissions:</text>
+  <text x="200" y="1374" class="code">"mcp__github" (all tools) · "mcp__github__get_issue" (specific) · No wildcards</text>
+
+  <!-- Multiple Profiles -->
+  <rect x="20" y="1400" width="1160" height="130" class="card-bg"/>
+  <rect x="20" y="1400" width="1160" height="28" class="section-bg"/>
+  <text x="32" y="1419" class="section-title">&#128101; MULTIPLE PROFILES (CLAUDE_CONFIG_DIR)</text>
+
+  <text x="32" y="1448" class="label">Run multiple accounts side by side with isolated configs:</text>
+  <rect x="32" y="1458" width="540" height="18" class="code-bg"/>
+  <text x="38" y="1471" class="code">alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work claude'</text>
+  <rect x="32" y="1480" width="540" height="18" class="code-bg"/>
+  <text x="38" y="1493" class="code">alias claude-personal='CLAUDE_CONFIG_DIR=~/.claude-personal claude'</text>
+
+  <text x="620" y="1448" class="label">Each profile is fully isolated:</text>
+  <text x="620" y="1466" class="value">Separate settings, sessions, MCP configs, memory</text>
+  <text x="620" y="1482" class="value">Requires separate Anthropic accounts (different emails)</text>
+  <text x="620" y="1498" class="value">Default: ~/.claude/ or ~/.config/claude/</text>
+
+  <text x="620" y="1520" class="tip">Note: Unofficial feature. /ide may not work with custom dirs.</text>
+
+  <!-- Footer -->
+  <rect x="0" y="1550" width="1200" height="50" fill="#f97316"/>
+  <text x="600" y="1578" text-anchor="middle" font-size="13" fill="#fff" font-weight="600">Claude Code Notes · github.com/alicuche/Claude-Code-Notes</text>
+
+</svg>
