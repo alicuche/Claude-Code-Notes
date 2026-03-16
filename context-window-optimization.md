@@ -1,10 +1,5 @@
 # CONTEXT AI — AI Context Window
 
-> From Tool Use primitives to scaling 10K skills
-> How to optimize the context window for maximum AI agent effectiveness
-
----
-
 **NOTE:**
 - Target audience: AI engineers, developers building or using AI agents
 - Flow: Foundation → Optimization → Scale
