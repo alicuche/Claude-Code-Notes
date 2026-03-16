@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — Compact</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    /* ── Section dividers ── */
+    .flow-section {
+      margin-bottom: 28px;
+    }
+    .flow-section-label {
+      display: inline-block;
+      background: var(--purple);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 14px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+
+    /* ── Token stacked bars ── */
+    .token-bar-wrapper {
+      margin: 8px 0;
+    }
+    .token-bar-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .token-bar {
+      display: flex;
+      height: 28px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #F1F5F9;
+    }
+    .token-seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+      transition: width 0.6s ease;
+    }
+    .seg-system { background: #7C3AED; }
+    .seg-tools { background: #2563EB; }
+    .seg-messages { background: #F59E0B; color: #18181B; }
+    .seg-messages-after { background: #22C55E; }
+    .seg-empty { background: transparent; }
+
+    /* ── Message timeline (horizontal) ── */
+    .msg-timeline {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 12px 0 8px;
+      scrollbar-width: thin;
+    }
+    .msg-card {
+      flex-shrink: 0;
+      width: 180px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 11px;
+    }
+    .msg-card.role-user { border-left: 3px solid #2563EB; }
+    .msg-card.role-assistant { border-left: 3px solid #7C3AED; }
+    .msg-card .msg-role {
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+    .msg-card.role-user .msg-role { color: #2563EB; }
+    .msg-card.role-assistant .msg-role { color: #7C3AED; }
+    .msg-card .msg-type {
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+    }
+    .msg-card .msg-content {
+      color: var(--text-secondary);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+    .msg-ellipsis {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      color: var(--text-muted);
+      padding: 0 8px;
+    }
+    .threshold-warning {
+      margin-top: 8px;
+      padding: 6px 14px;
+      background: #FEF3C7;
+      border: 1px solid #FDE68A;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #92400E;
+    }
+
+    /* ── Mermaid container ── */
+    .mermaid-container {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--purple-border);
+      border-radius: 12px;
+      padding: 16px 8px;
+      margin: 8px 0;
+      overflow-x: auto;
+    }
+    .mermaid-container svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ── After: message cards (horizontal) ── */
+    .after-messages {
+      display: flex;
+      gap: 8px;
+      margin: 8px 0;
+    }
+    .after-msg-card {
+      flex: 1;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 11px;
+    }
+    .after-msg-card h5 {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #2563EB;
+      margin-bottom: 4px;
+    }
+    .after-msg-card.summary h5 { color: #7C3AED; }
+    .after-msg-card .detail {
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+    .after-msg-card .tag-reinject {
+      display: inline-block;
+      background: #DBEAFE;
+      color: #1E40AF;
+      font-size: 9px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+    .after-msg-card.summary .tag-reinject {
+      background: #F3F0FF;
+      color: #7C3AED;
+    }
+
+    /* ── Comparison table ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .compare-table {
+      width: 100%;
+      font-size: 12px;
+      border-collapse: collapse;
+    }
+    .compare-table th {
+      text-align: left;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-bottom: 2px solid var(--purple);
+      color: var(--purple);
+      font-size: 11px;
+    }
+    .compare-table td {
+      padding: 3px 8px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+    }
+    .compare-table .delta {
+      font-weight: 600;
+      color: #16A34A;
+    }
+    .compare-table .delta-same {
+      color: var(--text-muted);
+    }
+    .lost-kept-card {
+      background: rgba(255,255,255,0.8);
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .lost-kept-card.lost {
+      border: 1px solid #FCA5A5;
+      background: rgba(254,242,242,0.6);
+    }
+    .lost-kept-card.kept {
+      border: 1px solid #86EFAC;
+      background: rgba(240,253,244,0.6);
+    }
+    .lost-kept-card h5 {
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .lost-kept-card.lost h5 { color: #DC2626; }
+    .lost-kept-card.kept h5 { color: #16A34A; }
+    .lost-kept-card ul {
+      list-style: none;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    .lost-kept-card ul li {
+      padding: 2px 0;
+      display: flex;
+      gap: 6px;
+    }
+    .lost-kept-card ul li .icon { flex-shrink: 0; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">&#9315; Compact &mdash; Context Lifecycle</h1>
+        <p class="slide-subtitle animate-in">What happens when context window fills up?</p>
+
+        <!-- ═══════════ FLOW 1: BEFORE ═══════════ -->
+        <div class="flow-section animate-in">
+          <div class="flow-section-label">Before &mdash; API Request (Turn 7) ~120K tokens</div>
+
+          <!-- Stacked bar -->
+          <div class="token-bar-wrapper">
+            <div class="token-bar-label">
+              <span>Token breakdown</span>
+              <span>120K / 151K threshold</span>
+            </div>
+            <div class="token-bar">
+              <div class="token-seg seg-system" style="width: 20.8%">System 25K</div>
+              <div class="token-seg seg-tools" style="width: 15%">Tools 18K</div>
+              <div class="token-seg seg-messages" style="width: 64.2%">Messages 77K</div>
+            </div>
+          </div>
+
+          <!-- Horizontal message timeline -->
+          <div class="msg-timeline">
+            <div class="msg-card role-user">
+              <div class="msg-role">user [0]</div>
+              <div class="msg-type">&lt;available-deferred-tools&gt;</div>
+              <div class="msg-content">AskUserQuestion, WebSearch, mcp__jira__...</div>
+            </div>
+            <div class="msg-card role-user">
+              <div class="msg-role">user [1] <span style="color:var(--text-muted);font-weight:400">isMeta + prompt</span></div>
+              <div class="msg-type">&lt;system-reminder&gt;</div>
+              <div class="msg-content">CLAUDE.md context, skill_listing</div>
+              <div class="msg-type" style="margin-top:3px">text</div>
+              <div class="msg-content">"Create feature login page"</div>
+            </div>
+            <div class="msg-card role-assistant">
+              <div class="msg-role">assistant [2]</div>
+              <div class="msg-type">text</div>
+              <div class="msg-content">"I need to read current code first..."</div>
+              <div class="msg-type" style="margin-top:3px">tool_use &rarr; Read</div>
+              <div class="msg-content">{ file: "src/app.ts" }</div>
+            </div>
+            <div class="msg-card role-user">
+              <div class="msg-role">user [3]</div>
+              <div class="msg-type">tool_result</div>
+              <div class="msg-content">import React from 'react'; export function App()... <strong>~3K chars</strong></div>
+            </div>
+            <div class="msg-card role-assistant">
+              <div class="msg-role">assistant [4]</div>
+              <div class="msg-type">text + tool_use &rarr; Grep</div>
+              <div class="msg-content">{ pattern: "Route", path: "src/" }</div>
+            </div>
+            <div class="msg-card role-user">
+              <div class="msg-role">user [5]</div>
+              <div class="msg-type">tool_result</div>
+              <div class="msg-content">src/routes.ts:5: &lt;Route path='/login'&gt; ... <strong>~2K chars</strong></div>
+            </div>
+            <div class="msg-card role-assistant">
+              <div class="msg-role">assistant [6]</div>
+              <div class="msg-type">text + tool_use &rarr; Write</div>
+              <div class="msg-content">{ file: "src/Login.tsx", content: "..." }</div>
+            </div>
+            <div class="msg-card role-user">
+              <div class="msg-role">user [7]</div>
+              <div class="msg-type">tool_result</div>
+              <div class="msg-content">"File written successfully"</div>
+            </div>
+            <div class="msg-card role-assistant">
+              <div class="msg-role">assistant [8]</div>
+              <div class="msg-type">text</div>
+              <div class="msg-content">"Done! Need unit tests?"</div>
+            </div>
+            <div class="msg-card role-user">
+              <div class="msg-role">user [9]</div>
+              <div class="msg-type">&lt;system-reminder&gt; re-inject</div>
+              <div class="msg-content">"Add tests and dark mode too"</div>
+            </div>
+            <div class="msg-ellipsis">...</div>
+          </div>
+
+          <div class="threshold-warning">
+            &#9888; 120K / 151K threshold = 79% &rarr; APPROACHING compact!
+          </div>
+        </div>
+
+        <!-- ═══════════ FLOW 2: LIFECYCLE ═══════════ -->
+        <div class="flow-section animate-in">
+          <div class="flow-section-label">Lifecycle &mdash; 8 Steps</div>
+          <div class="mermaid-container" id="lifecycle-diagram"></div>
+        </div>
+
+        <!-- ═══════════ FLOW 3: AFTER ═══════════ -->
+        <div class="flow-section animate-in">
+          <div class="flow-section-label">After &mdash; API Request (Turn 1 post-compact) ~51K tokens</div>
+
+          <!-- Stacked bar AFTER -->
+          <div class="token-bar-wrapper">
+            <div class="token-bar-label">
+              <span>Token breakdown</span>
+              <span>51K total (57% freed)</span>
+            </div>
+            <div class="token-bar">
+              <div class="token-seg seg-system" style="width: 49%">System 25K (unchanged)</div>
+              <div class="token-seg seg-tools" style="width: 35.3%">Tools 18K (unchanged)</div>
+              <div class="token-seg seg-messages-after" style="width: 15.7%">Msgs 8K</div>
+            </div>
+          </div>
+
+          <!-- After message cards (horizontal) -->
+          <div class="after-messages">
+            <div class="after-msg-card">
+              <h5>user [0] &mdash; deferred tools</h5>
+              <div class="detail">&lt;available-deferred-tools&gt;<br>AskUserQuestion, WebSearch, mcp__jira__...</div>
+              <div class="tag-reinject">RE-INJECT</div>
+            </div>
+            <div class="after-msg-card">
+              <h5>user [1] &mdash; metadata</h5>
+              <div class="detail">&lt;system-reminder&gt;<br>CLAUDE.md context<br>skill_listing</div>
+              <div class="tag-reinject">RE-INJECT</div>
+            </div>
+            <div class="after-msg-card summary">
+              <h5>user [2] &mdash; summary (~5K chars)</h5>
+              <div class="detail">
+                "This session is being continued..."<br>
+                1. Primary Request: login page<br>
+                2. Key Concepts: React, TS, routing<br>
+                3. Files: app.ts, Login.tsx, routes.ts<br>
+                4. Errors: none<br>
+                5. Problem Solving: Read &rarr; Grep &rarr; Write<br>
+                6. User Messages: (all preserved)<br>
+                7. Pending: unit test, dark mode<br>
+                8. Current: login page created<br>
+                9. Next: implement dark mode
+              </div>
+              <div class="tag-reinject">SUMMARY</div>
+            </div>
+          </div>
+
+          <!-- Comparison: table + lost/kept -->
+          <div class="compare-grid">
+            <div>
+              <table class="compare-table">
+                <thead>
+                  <tr><th>Component</th><th>Before</th><th>After</th><th>Delta</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>System</td><td>25K</td><td>25K</td>
+                    <td class="delta-same">unchanged</td>
+                  </tr>
+                  <tr>
+                    <td>Tools</td><td>18K</td><td>18K</td>
+                    <td class="delta-same">unchanged</td>
+                  </tr>
+                  <tr>
+                    <td>Messages</td><td>77K</td><td>8K</td>
+                    <td class="delta">&darr; 90%</td>
+                  </tr>
+                  <tr style="font-weight:600">
+                    <td>TOTAL</td><td>120K</td><td>51K</td>
+                    <td class="delta">&darr; 57%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="lost-kept-card lost">
+                <h5>&#10007; Lost</h5>
+                <ul>
+                  <li><span class="icon">&#10007;</span> tool_result contents (file content, grep output)</li>
+                  <li><span class="icon">&#10007;</span> tool_use params (detailed input)</li>
+                  <li><span class="icon">&#10007;</span> thinking blocks</li>
+                  <li><span class="icon">&#10007;</span> isMeta messages (original)</li>
+                  <li><span class="icon">&#10007;</span> exact code snippets (unless AI included)</li>
+                </ul>
+              </div>
+              <div class="lost-kept-card kept">
+                <h5>&#10003; Kept</h5>
+                <ul>
+                  <li><span class="icon">&#10003;</span> system prompt + CLAUDE.md</li>
+                  <li><span class="icon">&#10003;</span> tool definitions</li>
+                  <li><span class="icon">&#10003;</span> skill listing (re-inject)</li>
+                  <li><span class="icon">&#10003;</span> deferred tools list (re-inject)</li>
+                  <li><span class="icon">&#10003;</span> summary of everything above</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#F3F0FF',
+        primaryTextColor: '#18181B',
+        primaryBorderColor: '#7C3AED',
+        lineColor: '#7C3AED',
+        secondaryColor: '#F8FAFC',
+        tertiaryColor: '#FFFFFF',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '11px'
+      },
+      flowchart: {
+        curve: 'basis',
+        padding: 10,
+        nodeSpacing: 20,
+        rankSpacing: 30,
+        useMaxWidth: true
+      }
+    });
+
+    const lifecycleDiagram = `flowchart LR
+    TRIGGER["Token count >= 151K<br/>or user runs /compact"]
+    S1["Step 1<br/><b>PreCompact Hook</b><br/><i>shell command<br/>stdout → summary prompt<br/>exit 0 → continue<br/>exit 2 → CANCEL</i>"]
+    S2["Step 2<br/><b>Build Summary Request</b><br/><i>system: 'summarize conversations'<br/>messages: full history<br/>+ SUMMARY_PROMPT<br/>tools: [] (none)<br/>max_tokens: 200K/1M</i>"]
+    S3["Step 3<br/><b>Send to Claude API</b><br/><i>Reads full history →<br/>writes 9-section summary:<br/>1. Request & Intent<br/>2. Key Concepts<br/>3. Files & Code<br/>4. Errors & Fixes<br/>5. Problem Solving<br/>6. ALL User Messages<br/>7. Pending Tasks<br/>8. Current Work<br/>9. Optional Next Step</i>"]
+    S4["Step 4<br/><b>Replace Messages</b><br/><i>DELETE messages[0..N]<br/>REPLACE with single<br/>user message containing<br/>summary text</i>"]
+    S5["Step 5<br/><b>Write Boundary</b><br/><i>JSONL: compact_boundary<br/>trigger: auto|manual<br/>preTokens: 151K<br/>messagesSummarized: 20<br/>discoveredTools: [...]</i>"]
+    S6["Step 6<br/><b>Re-inject Metadata</b><br/><i>deferred-tools<br/>system-reminder<br/>skill_listing<br/>CLAUDE.md context<br/>discovered MCP tools</i>"]
+    S7["Step 7<br/><b>PostCompact Hook</b><br/><i>shell command<br/>receives summary<br/>stdout → display</i>"]
+    S8["Step 8<br/><b>SessionStart Hook</b><br/><i>trigger='compact'<br/>inject extra context</i>"]
+    DONE["Compact DONE<br/>Continue conversation"]
+
+    TRIGGER --> S1
+    S1 -->|exit 0| S2
+    S2 --> S3
+    S3 --> S4
+    S4 --> S5
+    S5 --> S6
+    S6 --> S7
+    S7 --> S8
+    S8 --> DONE
+
+    style TRIGGER fill:#FEF3C7,stroke:#F59E0B,color:#92400E
+    style S1 fill:#FFFFFF,stroke:#7C3AED,color:#18181B
+    style S2 fill:#FFFFFF,stroke:#7C3AED,color:#18181B
+    style S3 fill:#F3F0FF,stroke:#7C3AED,color:#18181B
+    style S4 fill:#FEE2E2,stroke:#EF4444,color:#18181B
+    style S5 fill:#FFFFFF,stroke:#7C3AED,color:#18181B
+    style S6 fill:#DBEAFE,stroke:#2563EB,color:#18181B
+    style S7 fill:#FFFFFF,stroke:#7C3AED,color:#18181B
+    style S8 fill:#FFFFFF,stroke:#7C3AED,color:#18181B
+    style DONE fill:#DCFCE7,stroke:#22C55E,color:#166534`;
+
+    const r1 = await mermaid.render('lifecycle-svg', lifecycleDiagram);
+    document.getElementById('lifecycle-diagram').innerHTML = r1.svg;
+  </script>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

@@ -10,19 +10,20 @@ const SLIDES = [
   { id: 'slide-04', file: 'slide-04-tool-use.html', title: 'Tool Use', section: 'FOUNDATION', label: '\u2460 Tool Use' },
   { id: 'slide-05', file: 'slide-05-mcp-skills.html', title: 'MCP / Skills / Agents', section: 'FOUNDATION', label: '\u2461 MCP / Skills / Agents' },
   { id: 'slide-06', file: 'slide-06-tokens.html', title: 'Tokens', section: 'FOUNDATION', label: '\u2462 Tokens' },
-  { id: 'slide-07', file: 'slide-07-cost.html', title: 'Cost', section: 'OPTIMIZATION', label: '\u2462 Cost' },
-  { id: 'slide-08', file: 'slide-08-context-optimization.html', title: 'Context Optimization', section: 'OPTIMIZATION', label: '\u2463 Context Optimization' },
-  { id: 'slide-09', file: 'slide-09-claude-md.html', title: 'CLAUDE.md', section: 'OPTIMIZATION', label: 'CLAUDE.md' },
-  { id: 'slide-10', file: 'slide-10-subagent.html', title: 'SubAgent', section: 'OPTIMIZATION', label: '\u2464 SubAgent' },
-  { id: 'slide-11', file: 'slide-11-skill-loading.html', title: 'Skill Loading', section: 'SCALE', label: '\u2465 Skill Loading' },
-  { id: 'slide-12', file: 'slide-12-scale.html', title: 'Skill Explosion', section: 'SCALE', label: '\u2466 Skill Explosion' },
-  { id: 'slide-13', file: 'slide-13-best-practices.html', title: 'Best Practices', section: 'SCALE', label: '\u2467 Best Practices' }
+  { id: 'slide-07', file: 'slide-07-cost.html', title: 'Cost', section: 'FOUNDATION', label: '\u2462 Cost' },
+  { id: 'slide-08', file: 'slide-08-compact.html', title: 'Compact', section: 'FOUNDATION', label: '\u2463 Compact' },
+  { id: 'slide-09', file: 'slide-09-context-optimization.html', title: 'Context Optimization', section: 'OPTIMIZATION', label: '\u2464 Context Optimization' },
+  { id: 'slide-10', file: 'slide-10-claude-md.html', title: 'CLAUDE.md', section: 'OPTIMIZATION', label: 'CLAUDE.md' },
+  { id: 'slide-11', file: 'slide-11-subagent.html', title: 'SubAgent', section: 'OPTIMIZATION', label: '\u2465 SubAgent' },
+  { id: 'slide-12', file: 'slide-12-skill-loading.html', title: 'Skill Loading', section: 'SCALE', label: '\u2466 Skill Loading' },
+  { id: 'slide-13', file: 'slide-13-scale.html', title: 'Skill Explosion', section: 'SCALE', label: '\u2467 Skill Explosion' },
+  { id: 'slide-14', file: 'slide-14-best-practices.html', title: 'Best Practices', section: 'SCALE', label: '\u2468 Best Practices' }
 ];
 
 const SECTIONS = {
-  FOUNDATION: { label: 'Foundation', slides: [0, 1, 2, 3, 4, 5] },
-  OPTIMIZATION: { label: 'Optimization', slides: [6, 7, 8, 9] },
-  SCALE: { label: 'Advanced', slides: [10, 11, 12] }
+  FOUNDATION: { label: 'Foundation', slides: [0, 1, 2, 3, 4, 5, 6, 7] },
+  OPTIMIZATION: { label: 'Optimization', slides: [8, 9, 10] },
+  SCALE: { label: 'Advanced', slides: [11, 12, 13] }
 };
 
 /**

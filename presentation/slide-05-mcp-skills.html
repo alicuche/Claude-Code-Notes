@@ -102,7 +102,7 @@
         <div class="definition-row animate-in">
           <div class="definition-card">
             <h4>MCP</h4>
-            <p>Standardized CONNECTION to external services (JSON-RPC 2.0)</p>
+            <p>Standardized CONNECTION to external &amp; local services (JSON-RPC 2.0)</p>
           </div>
           <div class="definition-card">
             <h4>Skill</h4>
@@ -181,29 +181,31 @@
       }
     });
 
-    // Fan-out diagram: LLM -> MCP / Skill / Agent -> Tool Use JSON
+    // Fan-out diagram: LLM -> tool_use JSON -> Host -> MCP / Skill / Agent
     const fanoutDiagram = `flowchart TD
     LLM["LLM (Claude)<br/><i>understands only ONE thing:<br/>Tool Use JSON</i>"]
-    MCP["MCP Server"]
-    SK["Skill"]
-    AG["Agent / SubAgent"]
-    TU["TOOL USE (JSON)<br/><b>{ name: '...', args: {...} }</b><br/><i>The root primitive</i>"]
+    TU["tool_use JSON<br/><b>{ name: '...', args: {...} }</b>"]
+    HOST["Host (executor)"]
+    MCP["MCP Client → Server"]
+    SK["Skill Loader"]
+    AG["Agent Spawner"]
     EXT["External APIs / DB"]
     FS["Local Filesystem"]
-    OA["Other Agents"]
+    OA["SubAgent"]
 
-    LLM --> MCP
-    LLM --> SK
-    LLM --> AG
-    MCP --> TU
-    SK --> TU
-    AG --> TU
-    TU --> EXT
-    TU --> FS
-    TU --> OA
+    LLM --> TU
+    TU --> HOST
+    HOST --> MCP
+    HOST --> SK
+    HOST --> AG
+    MCP --> EXT
+    MCP --> FS
+    SK --> FS
+    AG --> OA
 
     style LLM fill:#7C3AED,stroke:#6D28D9,color:#FFFFFF
     style TU fill:#F3F0FF,stroke:#7C3AED,color:#18181B
+    style HOST fill:#7C3AED,stroke:#6D28D9,color:#FFFFFF
     style MCP fill:#FFFFFF,stroke:#7C3AED,color:#18181B
     style SK fill:#FFFFFF,stroke:#7C3AED,color:#18181B
     style AG fill:#FFFFFF,stroke:#7C3AED,color:#18181B
@@ -215,14 +217,19 @@
     const mcpDiagram = `sequenceDiagram
     participant H as Host
     participant L as LLM
+    participant S as MCP Server
 
     H->>L: tool definitions
     activate L
     L-->>H: mcp__jira__search
     deactivate L
     activate H
-    Note over H: calls Jira API
-    H->>L: result: [issues]
+    H->>S: JSON-RPC request
+    activate S
+    Note over S: calls Jira API
+    S-->>H: result: [issues]
+    deactivate S
+    H->>L: tool result
     deactivate H
     activate L
     L-->>H: "Found 3 bugs"
