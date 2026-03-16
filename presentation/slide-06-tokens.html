@@ -89,7 +89,7 @@
     <header class="header" role="banner"></header>
     <main class="content" role="main">
       <div class="slide-container">
-        <h1 class="slide-title animate-in">③ Tokens &mdash; Snowball Effect</h1>
+        <h1 class="slide-title animate-in">Tokens &mdash; Snowball Effect</h1>
         <p class="slide-subtitle animate-in">API is stateless &mdash; every turn resends the ENTIRE history</p>
 
         <div class="snowball-visual animate-in">
@@ -122,14 +122,7 @@
           </div>
         </div>
 
-        <div class="diagram-block animate-in">Turn 1: | System 25K | Tools 8K | User1 500 |                            -> 33,500 tokens
-         v Claude responds (Asst1: 1K)
-Turn 2: | System 25K | Tools 8K | User1 | Asst1 | User2 |                -> 35,000 tokens
-         (+1.5K new, RESENDS 33.5K!)
-Turn 3: | System 25K | Tools 8K | User1 | Asst1 | User2 | Asst2 | User3 -> 37,500 tokens
-         (+2.5K new, RESENDS 35K!)
-
-ACCUMULATED: 4,500 tokens new content -> 106,000 tokens SENT = 23x the new content!</div>
+        <div class="mermaid-container animate-in" id="snowball-diagram"></div>
 
         <div class="callout-box animate-in">
           <p>
@@ -142,6 +135,86 @@ ACCUMULATED: 4,500 tokens new content -> 106,000 tokens SENT = 23x the new conte
     </main>
     <footer class="footer" role="contentinfo"></footer>
   </div>
+  <style>
+    .mermaid-container {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--purple-border);
+      border-radius: 12px;
+      padding: 16px 12px;
+      margin: 16px 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid-container svg {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+    }
+  </style>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#F3F0FF',
+        primaryTextColor: '#18181B',
+        primaryBorderColor: '#7C3AED',
+        lineColor: '#7C3AED',
+        secondaryColor: '#F8FAFC',
+        tertiaryColor: '#FFFFFF',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '12px',
+        actorBkg: '#7C3AED',
+        actorTextColor: '#FFFFFF',
+        actorBorder: '#6D28D9',
+        signalColor: '#18181B',
+        signalTextColor: '#18181B',
+        noteBkgColor: '#F3F0FF',
+        noteTextColor: '#18181B',
+        noteBorderColor: '#7C3AED',
+        activationBkgColor: '#EDE9FE',
+        activationBorderColor: '#7C3AED'
+      },
+      sequence: {
+        diagramMarginX: 16,
+        diagramMarginY: 16,
+        actorMargin: 60,
+        width: 150,
+        height: 40,
+        messageMargin: 30,
+        mirrorActors: false,
+        useMaxWidth: true
+      }
+    });
+
+    const snowballDiagram = `sequenceDiagram
+    participant C as Client
+    participant A as Claude API
+
+    Note over C,A: Turn 1: System 25K + Tools 8K + User₁ 500 = 33,500 tokens
+    C->>A: [33.5K tokens sent]
+    activate A
+    A-->>C: Asst₁ (1K tokens)
+    deactivate A
+
+    Note over C,A: Turn 2: RESENDS 33.5K + new 1.5K = 35,000 tokens
+    C->>A: [35K tokens sent]
+    activate A
+    A-->>C: Asst₂ (2K tokens)
+    deactivate A
+
+    Note over C,A: Turn 3: RESENDS 35K + new 2.5K = 37,500 tokens
+    C->>A: [37.5K tokens sent]
+    activate A
+    A-->>C: Asst₃ (1.5K tokens)
+    deactivate A
+
+    Note over C,A: 4,500 tokens NEW → 106,000 tokens SENT = 23x!`;
+
+    const r = await mermaid.render('snowball-svg', snowballDiagram);
+    document.getElementById('snowball-diagram').innerHTML = r.svg;
+  </script>
   <script src="shared/navigation.js"></script>
 </body>
 </html>

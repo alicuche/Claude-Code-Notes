@@ -52,7 +52,7 @@
     <header class="header" role="banner"></header>
     <main class="content" role="main">
       <div class="slide-container">
-        <h1 class="slide-title animate-in">⑤ SubAgent &mdash; Comparison & Gotchas</h1>
+        <h1 class="slide-title animate-in">SubAgent &mdash; Comparison &amp; Gotchas</h1>
 
         <h2 class="slide-heading animate-in">Main Agent vs SubAgent</h2>
 
@@ -73,28 +73,23 @@
               </tr>
               <tr>
                 <td><strong>Spawn agents</strong></td>
-                <td><span style="color:#16A34A">Yes</span> (no hard limit)</td>
-                <td><span style="color:#DC2626">Cannot</span></td>
+                <td><span style="color:#16A34A">Yes</span></td>
+                <td><span style="color:#DC2626">No</span></td>
               </tr>
               <tr>
                 <td><strong>Tools</strong></td>
                 <td>All built-in + MCP</td>
-                <td>Inherit all. Restrict via tools/disallowedTools</td>
+                <td>Inherit all OR Restrict via tools/disallowedTools</td>
               </tr>
               <tr>
                 <td><strong>MCP Servers</strong></td>
                 <td>All configured</td>
-                <td>Inherit all. Can scope via mcpServers</td>
+                <td>Inherit all OR Can scope via mcpServers</td>
               </tr>
               <tr>
                 <td><strong>Skills</strong></td>
                 <td>Lazy &mdash; description only, full on invoke</td>
                 <td>Must explicitly list via skills &rarr; injects full body immediately</td>
-              </tr>
-              <tr>
-                <td><strong>CLAUDE.md</strong></td>
-                <td>Full hierarchy (ancestor + lazy child)</td>
-                <td>Not received. Only custom system prompt</td>
               </tr>
               <tr>
                 <td><strong>Deferred loading</strong></td>
@@ -113,8 +108,7 @@
           </div>
           <div class="gotcha-card">
             <h4>Gotcha #2: Cannot Nest</h4>
-            <div class="gotcha-example">Main -> SubAgent  OK
-Main -> SubAgent -> SubAgent  NOT OK</div>
+            <div class="mermaid-container" id="nesting-diagram"></div>
             <p>Workaround: chain subagents sequentially from main</p>
           </div>
         </div>
@@ -131,6 +125,64 @@ skills: payroll-calc, salary-report  # ONLY 2 skills!
     </main>
     <footer class="footer" role="contentinfo"></footer>
   </div>
+  <style>
+    .mermaid-container {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--purple-border);
+      border-radius: 8px;
+      padding: 12px 8px;
+      margin: 8px 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid-container svg {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+    }
+  </style>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#F3F0FF',
+        primaryTextColor: '#18181B',
+        primaryBorderColor: '#7C3AED',
+        lineColor: '#7C3AED',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '12px'
+      },
+      flowchart: {
+        curve: 'basis',
+        padding: 10,
+        nodeSpacing: 20,
+        rankSpacing: 30,
+        useMaxWidth: true
+      }
+    });
+
+    const nestingDiagram = `flowchart LR
+    M["Main Agent"]
+    S1["SubAgent A"]
+    S2["SubAgent B"]
+    S3["SubAgent C"]
+
+    M -->|"spawn"| S1
+    M -->|"spawn"| S2
+    S2 -.->|"spawn"| S3
+
+    style M fill:#7C3AED,stroke:#6D28D9,color:#FFFFFF
+    style S1 fill:#DCFCE7,stroke:#22C55E,color:#166534
+    style S2 fill:#DCFCE7,stroke:#22C55E,color:#166534
+    style S3 fill:#FEE2E2,stroke:#EF4444,color:#991B1B
+
+    linkStyle 2 stroke:#EF4444,stroke-dasharray:5`;
+
+    const r = await mermaid.render('nesting-svg', nestingDiagram);
+    document.getElementById('nesting-diagram').innerHTML = r.svg;
+  </script>
   <script src="shared/navigation.js"></script>
 </body>
 </html>

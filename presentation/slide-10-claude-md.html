@@ -3,50 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Context AI — CLAUDE.md</title>
+  <title>Context AI — CLAUDE.md Inheritance</title>
   <link rel="stylesheet" href="shared/styles.css">
   <style>
-    .tree-visual {
+    .mermaid-container {
       background: rgba(255,255,255,0.9);
       border: 1px solid var(--purple-border);
       border-radius: 12px;
-      padding: 24px 28px;
-      margin: 20px 0;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      line-height: 2;
+      padding: 16px 12px;
+      margin: 16px 0;
+      overflow-x: auto;
+      text-align: center;
     }
-    .tree-line {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .tree-indent { padding-left: 24px; }
-    .tree-indent-2 { padding-left: 48px; }
-    .tree-file {
-      color: var(--purple);
-      font-weight: 600;
-    }
-    .tree-folder {
-      color: var(--text-primary);
-      font-weight: 500;
-    }
-    .tree-comment {
-      color: var(--text-faint);
-      font-size: 12px;
-      margin-left: 8px;
-    }
-    .tree-content {
-      color: var(--text-muted);
-      font-style: italic;
-      font-size: 12px;
-      padding-left: 24px;
+    .mermaid-container svg {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
     }
     .behavior-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin: 20px 0;
+      margin: 16px 0;
     }
     .behavior-card {
       background: rgba(255,255,255,0.85);
@@ -69,9 +47,26 @@
       border: 1px solid #FDE68A;
       border-radius: 8px;
       padding: 12px 16px;
-      margin: 16px 0;
-      font-size: 14px;
+      margin: 12px 0;
+      font-size: 13px;
       color: #92400E;
+    }
+    .tip-box {
+      background: rgba(124,58,237,0.06);
+      border: 1px solid var(--purple-border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 12px;
+    }
+    .tip-box strong { color: var(--purple); }
+    .tip-box code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: rgba(124,58,237,0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
     }
   </style>
 </head>
@@ -81,48 +76,19 @@
     <header class="header" role="banner"></header>
     <main class="content" role="main">
       <div class="slide-container">
-        <h1 class="slide-title animate-in">CLAUDE.md &mdash; Parent &rarr; Child Inheritance</h1>
+        <h1 class="slide-title animate-in">CLAUDE.md Inheritance</h1>
+        <p class="slide-subtitle animate-in">4-tier hierarchy &mdash; additive loading, child wins on conflict</p>
 
-        <div class="tree-visual animate-in">
-          <div class="tree-line">
-            <span class="tree-file">~/.claude/CLAUDE.md</span>
-            <span class="tree-comment">&larr; Global (all projects)</span>
-          </div>
-          <div class="tree-line tree-indent">|</div>
-          <div class="tree-line">
-            <span class="tree-folder">my-monorepo/</span>
-          </div>
-          <div class="tree-line tree-indent">
-            <span class="tree-file">CLAUDE.md</span>
-            <span class="tree-comment">&larr; Project root (git shared)</span>
-          </div>
-          <div class="tree-content">"Use TypeScript. Follow ESLint."</div>
-          <div class="tree-line tree-indent">|</div>
-          <div class="tree-line tree-indent">
-            <span class="tree-folder">packages/frontend/</span>
-          </div>
-          <div class="tree-line tree-indent-2">
-            <span class="tree-file">CLAUDE.md</span>
-            <span class="tree-comment">&larr; Subdirectory (LAZY load)</span>
-          </div>
-          <div class="tree-content" style="padding-left:48px">"Use React 19. Server components."</div>
-          <div class="tree-line tree-indent">|</div>
-          <div class="tree-line tree-indent">
-            <span class="tree-folder">packages/backend/</span>
-          </div>
-          <div class="tree-line tree-indent-2">
-            <span class="tree-file">CLAUDE.md</span>
-            <span class="tree-comment">&larr; Subdirectory (LAZY load)</span>
-          </div>
-          <div class="tree-content" style="padding-left:48px">"Use Hono. APIs must have OpenAPI."</div>
-        </div>
+        <h2 class="slide-heading animate-in">Hierarchy &amp; Loading</h2>
 
-        <h2 class="slide-heading animate-in">Key behaviors</h2>
+        <div class="mermaid-container animate-in" id="hierarchy-diagram"></div>
+
+        <h2 class="slide-heading animate-in">Key Behaviors</h2>
 
         <div class="behavior-grid animate-in">
           <div class="behavior-card">
             <h4>Precedence</h4>
-            <p>Child &gt; Parent (specific overrides general)</p>
+            <p>Additive &mdash; all levels loaded &amp; combined. Child wins on conflict</p>
           </div>
           <div class="behavior-card">
             <h4>Subdirectory</h4>
@@ -130,25 +96,114 @@
           </div>
           <div class="behavior-card">
             <h4>Compaction</h4>
-            <p><strong>SURVIVES</strong> &mdash; one of the few things NOT lost during compact</p>
+            <p><strong>SURVIVES</strong> &mdash; re-read from disk after compact, not preserved in context</p>
           </div>
           <div class="behavior-card">
             <h4>Size</h4>
-            <p>Keep &lt; 200 lines &mdash; every token is "permanent"</p>
+            <p>Recommend &lt; 200 lines &mdash; loaded every session, longer = lower adherence</p>
           </div>
         </div>
 
+        <h2 class="slide-heading animate-in">How Loading Works</h2>
+
+        <div class="mermaid-container animate-in" id="loading-flow"></div>
+
         <div class="warning-box animate-in">
-          <strong>Warning:</strong> Skills do NOT have inheritance &mdash; only 2-tier (global + project)
+          <strong>Warning:</strong> Managed policy CLAUDE.md cannot be excluded via <code>claudeMdExcludes</code> &mdash; enforced by organization
         </div>
 
-        <div class="callout-box animate-in" style="background: rgba(124,58,237,0.06); border: 1px solid var(--purple-border); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: var(--text-secondary);">
-          <strong>Tips:</strong> CLAUDE.local.md for personal settings (gitignored) &bull; claudeMdExcludes in settings to exclude patterns
+        <div class="tip-box animate-in">
+          <strong>Tips:</strong>
+          <code>claudeMdExcludes</code> in settings to skip specific files by path/glob &bull;
+          <code>@import</code> syntax to reference external files (e.g. <code>@~/.claude/my-rules.md</code>) &bull;
+          <code>~/.claude/CLAUDE.md</code> for personal global preferences
         </div>
       </div>
     </main>
     <footer class="footer" role="contentinfo"></footer>
   </div>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#F3F0FF',
+        primaryTextColor: '#18181B',
+        primaryBorderColor: '#7C3AED',
+        lineColor: '#7C3AED',
+        secondaryColor: '#F8FAFC',
+        tertiaryColor: '#FFFFFF',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '12px'
+      },
+      flowchart: {
+        curve: 'basis',
+        padding: 12,
+        nodeSpacing: 24,
+        rankSpacing: 36,
+        useMaxWidth: true
+      }
+    });
+
+    // Hierarchy diagram: 4 tiers
+    const hierarchyDiagram = `flowchart TD
+    MP["<b>Tier 1: Managed Policy</b><br/>/etc/claude-code/CLAUDE.md<br/><i>Organization-wide, cannot exclude</i>"]
+    GL["<b>Tier 2: User (Global)</b><br/>~/.claude/CLAUDE.md<br/><i>Personal, all projects</i>"]
+    PJ["<b>Tier 3: Project Root</b><br/>./CLAUDE.md or ./.claude/CLAUDE.md<br/><i>Git shared, loaded at launch</i>"]
+    SD1["<b>Tier 4: Subdirectory</b><br/>packages/frontend/CLAUDE.md<br/><i>Lazy-loaded on file access</i>"]
+    SD2["<b>Tier 4: Subdirectory</b><br/>packages/backend/CLAUDE.md<br/><i>Lazy-loaded on file access</i>"]
+
+    MP -->|"always loaded"| GL
+    GL -->|"always loaded"| PJ
+    PJ -->|"on demand"| SD1
+    PJ -->|"on demand"| SD2
+
+    style MP fill:#FEE2E2,stroke:#EF4444,color:#18181B
+    style GL fill:#F3F0FF,stroke:#7C3AED,color:#18181B
+    style PJ fill:#F3F0FF,stroke:#7C3AED,color:#18181B
+    style SD1 fill:#DBEAFE,stroke:#2563EB,color:#18181B
+    style SD2 fill:#DBEAFE,stroke:#2563EB,color:#18181B`;
+
+    // Loading flow: startup vs runtime vs compact
+    const loadingFlow = `flowchart LR
+    START["Session Start"]
+    LOAD_E["Load Managed Policy<br/><i>always, cannot skip</i>"]
+    LOAD_G["Load ~/.claude/CLAUDE.md"]
+    LOAD_P["Load ./CLAUDE.md<br/>or ./.claude/CLAUDE.md"]
+    INJECT["Inject into<br/>System Prompt"]
+    RUN["Runtime"]
+    FILE["Claude reads file in<br/>packages/frontend/"]
+    LAZY["Lazy-load<br/>frontend/CLAUDE.md"]
+    ADD["Add to context"]
+    COMPACT["/compact triggered"]
+    REREAD["Re-read ALL from disk"]
+    REINJECT["Re-inject fresh<br/>into new session"]
+
+    START --> LOAD_E --> LOAD_G --> LOAD_P --> INJECT
+    INJECT --> RUN
+    RUN --> FILE --> LAZY --> ADD
+    RUN --> COMPACT --> REREAD --> REINJECT
+
+    style START fill:#DCFCE7,stroke:#22C55E,color:#166534
+    style LOAD_E fill:#FEE2E2,stroke:#EF4444,color:#18181B
+    style LOAD_G fill:#F3F0FF,stroke:#7C3AED,color:#18181B
+    style LOAD_P fill:#F3F0FF,stroke:#7C3AED,color:#18181B
+    style INJECT fill:#F3F0FF,stroke:#7C3AED,color:#18181B
+    style RUN fill:#F8FAFC,stroke:#D4D4D8,color:#18181B
+    style FILE fill:#DBEAFE,stroke:#2563EB,color:#18181B
+    style LAZY fill:#DBEAFE,stroke:#2563EB,color:#18181B
+    style ADD fill:#DBEAFE,stroke:#2563EB,color:#18181B
+    style COMPACT fill:#FEF3C7,stroke:#F59E0B,color:#92400E
+    style REREAD fill:#FEF3C7,stroke:#F59E0B,color:#92400E
+    style REINJECT fill:#DCFCE7,stroke:#22C55E,color:#166534`;
+
+    const r1 = await mermaid.render('hierarchy-svg', hierarchyDiagram);
+    document.getElementById('hierarchy-diagram').innerHTML = r1.svg;
+
+    const r2 = await mermaid.render('loading-svg', loadingFlow);
+    document.getElementById('loading-flow').innerHTML = r2.svg;
+  </script>
   <script src="shared/navigation.js"></script>
 </body>
 </html>

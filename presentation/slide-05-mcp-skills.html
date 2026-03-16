@@ -35,10 +35,12 @@
       padding: 20px 12px 12px;
       margin: 16px 0;
       overflow-x: auto;
+      text-align: center;
     }
     .mermaid-container svg {
       max-width: 100%;
       height: auto;
+      display: inline-block;
     }
     .flow-trio {
       display: grid;
@@ -92,7 +94,7 @@
     <header class="header" role="banner"></header>
     <main class="content" role="main">
       <div class="slide-container">
-        <h1 class="slide-title animate-in">② MCP / Skills / Agents</h1>
+        <h1 class="slide-title animate-in">MCP / Skills / Agents</h1>
         <p class="slide-subtitle animate-in">Tool is the only primitive LLM understands &mdash; MCP, Skill, Agent all use it</p>
 
         <h2 class="slide-heading animate-in">Fan-out from Tool Use</h2>
@@ -102,15 +104,18 @@
         <div class="definition-row animate-in">
           <div class="definition-card">
             <h4>MCP</h4>
-            <p>Standardized CONNECTION to external &amp; local services (JSON-RPC 2.0)</p>
+            <p>Standardized CONNECTION to external &amp; local services (JSON-RPC 2.0)<br>
+            <em>Load: deferred via ToolSearch &mdash; name only &rarr; full schema on demand</em></p>
           </div>
           <div class="definition-card">
             <h4>Skill</h4>
-            <p>Lazy-loaded DOMAIN KNOWLEDGE (prompt expansion)</p>
+            <p>Lazy-loaded DOMAIN KNOWLEDGE (prompt expansion)<br>
+            <em>Load: metadata at startup (2% budget) &rarr; full .md on invoke &rarr; injected back into SAME conversation</em></p>
           </div>
           <div class="definition-card">
             <h4>Agent</h4>
-            <p>DELEGATION &mdash; separate context, separate task</p>
+            <p>DELEGATION &mdash; separate context, separate task<br>
+            <em>Load: summary in prompt, full system prompt in host memory &rarr; spawns NEW API call</em></p>
           </div>
         </div>
 
@@ -133,10 +138,10 @@
 
         <div class="common-thread animate-in">
           <strong>Common thread:</strong> LLM commands via Tool Use &rarr; Host executes<br>
-          <code>MCP: tool_use &rarr; mcp__jira__search</code> &nbsp;|&nbsp;
-          <code>Skill: tool_use &rarr; Skill</code> &nbsp;|&nbsp;
-          <code>Agent: tool_use &rarr; Agent</code><br>
-          <strong>&rarr; Every tool definition eats tokens in the context window!</strong>
+          <code>MCP: deferred name &rarr; ToolSearch &rarr; full schema &rarr; call</code><br>
+          <code>Skill: metadata in prompt &rarr; Skill tool &rarr; full .md injected back into SAME context</code><br>
+          <code>Agent: summary in prompt &rarr; Agent tool &rarr; host builds NEW context from memory &rarr; separate API call</code><br>
+          <strong>&rarr; Key difference: Skill expands current context, Agent creates isolated context</strong>
         </div>
       </div>
     </main>
@@ -219,7 +224,9 @@
     participant L as LLM
     participant S as MCP Server
 
-    H->>L: tool definitions
+    Note over H,L: Startup: name only in deferred list
+    L-->>H: ToolSearch("jira")
+    H-->>L: full schema via tool_reference
     activate L
     L-->>H: mcp__jira__search
     deactivate L
@@ -240,14 +247,16 @@
     participant H as Claude Code
     participant L as LLM
 
-    H->>L: tool definitions
+    Note over H,L: Startup: name + desc (2% budget)
+    H->>L: Skill tool + skill list
     activate L
-    L-->>H: Skill: review-pr
+    L-->>H: Skill("review-pr")
     deactivate L
     activate H
-    Note over H: reads review-pr.md
-    H->>L: result: [5K body]
+    Note over H: reads .md from filesystem
+    H->>L: full body injected back
     deactivate H
+    Note over L: content now in THIS context
     activate L
     L-->>H: follows instructions
     deactivate L`;
@@ -255,16 +264,23 @@
     // Agent flow
     const agentDiagram = `sequenceDiagram
     participant H as Host
-    participant L as LLM
+    participant L as Parent LLM
+    participant S as Sub LLM
 
-    H->>L: tool definitions
+    Note over H,L: Startup: summary in Agent tool desc
+    H->>L: Agent tool (name+whenToUse)
     activate L
-    L-->>H: Agent: "find tests"
+    L-->>H: Agent("Explore", "find tests")
     deactivate L
     activate H
-    Note over H: spawns SubAgent
-    H->>L: result: [findings]
+    Note over H: builds system prompt<br/>from host memory
+    H->>S: NEW API call + full prompt
+    activate S
+    S-->>H: findings
+    deactivate S
+    H->>L: summary only
     deactivate H
+    Note over L: sub-agent context isolated
     activate L
     L-->>H: uses sub-results
     deactivate L`;

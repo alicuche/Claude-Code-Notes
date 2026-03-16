@@ -4,26 +4,26 @@
    ============================================ */
 
 const SLIDES = [
-  { id: 'slide-01', file: 'slide-01-title.html', title: 'Context AI', section: 'FOUNDATION', label: 'Title & Intro' },
-  { id: 'slide-02', file: 'slide-02-agenda.html', title: 'Agenda', section: 'FOUNDATION', label: 'Agenda' },
-  { id: 'slide-03', file: 'slide-03-problem.html', title: 'The Problem', section: 'FOUNDATION', label: 'The Problem' },
-  { id: 'slide-04', file: 'slide-04-tool-use.html', title: 'Tool Use', section: 'FOUNDATION', label: '\u2460 Tool Use' },
-  { id: 'slide-05', file: 'slide-05-mcp-skills.html', title: 'MCP / Skills / Agents', section: 'FOUNDATION', label: '\u2461 MCP / Skills / Agents' },
-  { id: 'slide-06', file: 'slide-06-tokens.html', title: 'Tokens', section: 'FOUNDATION', label: '\u2462 Tokens' },
-  { id: 'slide-07', file: 'slide-07-cost.html', title: 'Cost', section: 'FOUNDATION', label: '\u2462 Cost' },
-  { id: 'slide-08', file: 'slide-08-compact.html', title: 'Compact', section: 'FOUNDATION', label: '\u2463 Compact' },
-  { id: 'slide-09', file: 'slide-09-context-optimization.html', title: 'Context Optimization', section: 'OPTIMIZATION', label: '\u2464 Context Optimization' },
-  { id: 'slide-10', file: 'slide-10-claude-md.html', title: 'CLAUDE.md', section: 'OPTIMIZATION', label: 'CLAUDE.md' },
-  { id: 'slide-11', file: 'slide-11-subagent.html', title: 'SubAgent', section: 'OPTIMIZATION', label: '\u2465 SubAgent' },
-  { id: 'slide-12', file: 'slide-12-skill-loading.html', title: 'Skill Loading', section: 'SCALE', label: '\u2466 Skill Loading' },
-  { id: 'slide-13', file: 'slide-13-scale.html', title: 'Skill Explosion', section: 'SCALE', label: '\u2467 Skill Explosion' },
-  { id: 'slide-14', file: 'slide-14-best-practices.html', title: 'Best Practices', section: 'SCALE', label: '\u2468 Best Practices' }
+  { id: 'slide-01', file: 'slide-01-title.html', title: 'Context AI', section: 'INTRO', label: 'Home' },
+  { id: 'slide-02', file: 'slide-02-agenda.html', title: 'Overview', section: 'INTRO', label: 'Overview' },
+  { id: 'slide-03', file: 'slide-03-problem.html', title: 'The Problem', section: 'FOUNDATION', label: '\u2460 The Problem' },
+  { id: 'slide-04', file: 'slide-04-tool-use.html', title: 'Tool Use', section: 'FOUNDATION', label: '\u2461 Tool Use' },
+  { id: 'slide-05', file: 'slide-05-mcp-skills.html', title: 'MCP / Skills / Agents', section: 'FOUNDATION', label: '\u2462 MCP / Skills / Agents' },
+  { id: 'slide-06', file: 'slide-06-tokens.html', title: 'Tokens', section: 'FOUNDATION', label: '\u2463 Tokens' },
+  { id: 'slide-07', file: 'slide-07-cost.html', title: 'Cost', section: 'FOUNDATION', label: '\u2464 Cost' },
+  { id: 'slide-08', file: 'slide-08-compact.html', title: 'Compact', section: 'FOUNDATION', label: '\u2465 Compact' },
+  { id: 'slide-09', file: 'slide-09-context-optimization.html', title: 'Context Optimization', section: 'OPTIMIZATION', label: '\u2466 Context Optimization' },
+  { id: 'slide-10', file: 'slide-10-claude-md.html', title: 'CLAUDE.md Inheritance', section: 'OPTIMIZATION', label: '\u2467 CLAUDE.md Inheritance' },
+  { id: 'slide-11', file: 'slide-11-subagent.html', title: 'SubAgent', section: 'OPTIMIZATION', label: '\u2468 SubAgent' },
+  { id: 'slide-13', file: 'slide-13-scale.html', title: 'Skill Explosion', section: 'SCALE', label: '\u2469 Skill Explosion' },
+  { id: 'slide-14', file: 'slide-14-best-practices.html', title: 'Best Practices', section: 'SCALE', label: '\u246A Best Practices' }
 ];
 
 const SECTIONS = {
-  FOUNDATION: { label: 'Foundation', slides: [0, 1, 2, 3, 4, 5, 6, 7] },
+  INTRO: { label: '', slides: [0, 1] },
+  FOUNDATION: { label: 'Foundation', slides: [2, 3, 4, 5, 6, 7] },
   OPTIMIZATION: { label: 'Optimization', slides: [8, 9, 10] },
-  SCALE: { label: 'Advanced', slides: [11, 12, 13] }
+  SCALE: { label: 'Advanced', slides: [11, 12] }
 };
 
 /**
@@ -56,11 +56,14 @@ function buildSidebar() {
   SLIDES.forEach((slide, i) => {
     if (slide.section !== lastSection) {
       lastSection = slide.section;
-      html += `
-        <li class="sidebar-section">
-          <span class="sidebar-section-title">${SECTIONS[slide.section].label}</span>
-        </li>
-      `;
+      const sectionLabel = SECTIONS[slide.section].label;
+      if (sectionLabel) {
+        html += `
+          <li class="sidebar-section">
+            <span class="sidebar-section-title">${sectionLabel}</span>
+          </li>
+        `;
+      }
     }
     const activeClass = i === currentIdx ? ' active' : '';
     html += `
@@ -87,10 +90,11 @@ function buildHeader() {
   const slide = SLIDES[currentIdx];
   const progress = ((currentIdx + 1) / SLIDES.length) * 100;
 
+  const sectionLabel = SECTIONS[slide.section].label || slide.title;
   return `
     <div class="header-section-badge">
       <span class="badge-dot"></span>
-      ${SECTIONS[slide.section].label}
+      ${sectionLabel}
     </div>
     <span class="header-title">${slide.title}</span>
     <div class="header-progress">
