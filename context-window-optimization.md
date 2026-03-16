@@ -8,8 +8,6 @@
 
 ## Agenda
 
-# Agenda
-
 ```
 FOUNDATION                      OPTIMIZATION                    SCALE
 ─────────────                   ─────────────                   ─────
@@ -32,8 +30,6 @@ FOUNDATION                      OPTIMIZATION                    SCALE
 ---
 
 ## The Problem
-
-# The Problem
 
 ### 67% of context window consumed before you type anything
 
@@ -70,8 +66,6 @@ FOUNDATION                      OPTIMIZATION                    SCALE
 ---
 
 ## ① Tool Use — The Foundation
-
-# ① Tool Use — The Foundation
 
 > *"Tool access is one of the highest-leverage primitives you can give an agent."* — Anthropic
 
@@ -140,9 +134,7 @@ Tool = THE BRIDGE between LLM and THE OUTSIDE WORLD
 
 ---
 
-## ② MCP & Skills — Fan-out from Tool
-
-# ② MCP & Skills — Everything builds on Tool
+## ② MCP & Skills — Everything builds on Tool
 
 ### Tool is the only primitive LLM understands — MCP, Skill, Agent all use it
 
@@ -209,8 +201,6 @@ Agent spawn:      tool_use → { name: "Agent", args: {prompt: "find tests"} }
 
 ## ③ Tokens — Snowball Effect
 
-# ③ Tokens — Snowball Effect
-
 ### API is stateless — every turn resends the ENTIRE history
 
 ```
@@ -256,8 +246,6 @@ ACCUMULATED after 3 turns:
 ---
 
 ## ③ Cost — Quadratic Accumulation
-
-# ③ Cost — Quadratic Accumulation
 
 ### Cost per turn increases because input grows larger each time
 
@@ -317,8 +305,6 @@ WITH cache:    System+Tools 33K × $0.5/1M = $0.017/turn  ← 10x cheaper!
 ---
 
 ## ④ Context Optimization
-
-# ④ Context Optimization
 
 ### When context gets TOO LARGE — What happens?
 
@@ -414,9 +400,7 @@ BEFORE delegation:                  AFTER delegation:
 
 ---
 
-## CLAUDE.md Hierarchy
-
-# CLAUDE.md — Parent → Child Inheritance
+## CLAUDE.md — Parent → Child Inheritance
 
 ```
 ~/.claude/CLAUDE.md                    ← Global (all projects)
@@ -457,9 +441,7 @@ my-monorepo/
 
 ---
 
-## ⑤ SubAgent vs Main Agent
-
-# SubAgent — Comparison & Gotchas
+## ⑤ SubAgent — Comparison & Gotchas
 
 ### Main Agent vs SubAgent
 
@@ -511,8 +493,6 @@ skills: payroll-calc, salary-report  # ONLY 2 skills!
 ---
 
 ## ⑥ Skill Loading — Progressive Disclosure
-
-# ⑥ Skill Loading — Progressive Disclosure
 
 ### Lifecycle of a Skill in Claude Code
 
@@ -581,8 +561,6 @@ SUMMARY:
 
 ## ⑦ Scale — 10K Skills Problem
 
-# ⑦ Scale — 10K Skills Problem
-
 ### The challenge
 
 ```
@@ -636,9 +614,7 @@ System Prompt (~2.2K tokens total)
 
 ---
 
-## ⑧ Top Best Practices
-
-# ⑧ Top 6 Highest-Impact Techniques
+## ⑧ Top 6 Highest-Impact Techniques
 
 | # | Technique | Savings | Effort |
 |---|-----------|---------|--------|
