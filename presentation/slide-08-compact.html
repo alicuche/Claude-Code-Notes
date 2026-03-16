@@ -6,181 +6,376 @@
   <title>Context AI — Compact</title>
   <link rel="stylesheet" href="shared/styles.css">
   <style>
-    /* ── Section dividers ── */
-    .flow-section {
-      margin-bottom: 28px;
+    /* ── Two-Column Layout ── */
+    .compact-duo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
     }
-    .flow-section-label {
+    .compact-col {
+      background: rgba(255,255,255,0.6);
+      border-radius: 12px;
+      border: 1px solid var(--border-light);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .col-badge {
       display: inline-block;
-      background: var(--purple);
-      color: white;
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 3px 14px;
-      border-radius: 10px;
-      margin-bottom: 12px;
-    }
-
-    /* ── Token stacked bars ── */
-    .token-bar-wrapper {
-      margin: 8px 0;
-    }
-    .token-bar-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      padding: 3px 12px;
+      border-radius: 8px;
       margin-bottom: 4px;
-      display: flex;
-      justify-content: space-between;
+      align-self: flex-start;
     }
-    .token-bar {
-      display: flex;
-      height: 28px;
-      border-radius: 6px;
-      overflow: hidden;
-      background: #F1F5F9;
-    }
-    .token-seg {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 600;
-      color: white;
-      white-space: nowrap;
-      transition: width 0.6s ease;
-    }
-    .seg-system { background: #7C3AED; }
-    .seg-tools { background: #2563EB; }
-    .seg-messages { background: #F59E0B; color: #18181B; }
-    .seg-messages-after { background: #22C55E; }
-    .seg-empty { background: transparent; }
+    .col-badge.before { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+    .col-badge.after { background: #DCFCE7; color: #166534; border: 1px solid #86EFAC; }
 
-    /* ── Message timeline (horizontal) ── */
-    .msg-timeline {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding: 12px 0 8px;
-      scrollbar-width: thin;
+    /* ── API Body Fields ── */
+    .api-field {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 2px 0;
     }
-    .msg-card {
-      flex-shrink: 0;
-      width: 180px;
-      background: rgba(255,255,255,0.9);
-      border: 1px solid var(--border-light);
+    .api-field code {
+      background: rgba(124,58,237,0.06);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 10px;
+    }
+
+    /* ── Nested Section Cards ── */
+    .api-section {
       border-radius: 8px;
       padding: 8px 10px;
-      font-size: 11px;
+      margin: 2px 0;
     }
-    .msg-card.role-user { border-left: 3px solid #2563EB; }
-    .msg-card.role-assistant { border-left: 3px solid #7C3AED; }
-    .msg-card .msg-role {
-      font-weight: 700;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 3px;
+    .api-section.sec-system {
+      background: rgba(124,58,237,0.06);
+      border: 1px solid rgba(124,58,237,0.2);
     }
-    .msg-card.role-user .msg-role { color: #2563EB; }
-    .msg-card.role-assistant .msg-role { color: #7C3AED; }
-    .msg-card .msg-type {
-      color: var(--text-muted);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
+    .api-section.sec-tools {
+      background: rgba(37,99,235,0.05);
+      border: 1px solid rgba(37,99,235,0.2);
     }
-    .msg-card .msg-content {
-      color: var(--text-secondary);
-      margin-top: 2px;
-      line-height: 1.4;
+    .api-section.sec-messages {
+      background: rgba(245,158,11,0.06);
+      border: 1px solid rgba(245,158,11,0.25);
     }
-    .msg-ellipsis {
-      flex-shrink: 0;
+    .api-section.sec-messages-after {
+      background: rgba(34,197,94,0.06);
+      border: 1px solid rgba(34,197,94,0.25);
+    }
+    .sec-header {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      font-size: 18px;
-      color: var(--text-muted);
-      padding: 0 8px;
+      margin-bottom: 6px;
     }
-    .threshold-warning {
-      margin-top: 8px;
-      padding: 6px 14px;
-      background: #FEF3C7;
-      border: 1px solid #FDE68A;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #92400E;
-    }
-
-    /* ── Mermaid container ── */
-    .mermaid-container {
-      background: rgba(255,255,255,0.9);
-      border: 1px solid var(--purple-border);
-      border-radius: 12px;
-      padding: 16px 8px;
-      margin: 8px 0;
-      overflow-x: auto;
-      text-align: center;
-    }
-    .mermaid-container svg {
-      max-width: 100%;
-      height: auto;
-      display: inline-block;
-    }
-
-    /* ── After: message cards (horizontal) ── */
-    .after-messages {
-      display: flex;
-      gap: 8px;
-      margin: 8px 0;
-    }
-    .after-msg-card {
-      flex: 1;
-      background: rgba(255,255,255,0.9);
-      border: 1px solid var(--border-light);
-      border-radius: 8px;
-      padding: 10px 12px;
+    .sec-header-title {
+      font-family: var(--font-mono);
       font-size: 11px;
+      font-weight: 700;
     }
-    .after-msg-card h5 {
+    .api-section.sec-system .sec-header-title { color: #7C3AED; }
+    .api-section.sec-tools .sec-header-title { color: #2563EB; }
+    .api-section.sec-messages .sec-header-title { color: #D97706; }
+    .api-section.sec-messages-after .sec-header-title { color: #16A34A; }
+    .sec-header-tokens {
       font-size: 10px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #2563EB;
-      margin-bottom: 4px;
+      padding: 1px 8px;
+      border-radius: 10px;
+      color: white;
     }
-    .after-msg-card.summary h5 { color: #7C3AED; }
-    .after-msg-card .detail {
-      color: var(--text-muted);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      line-height: 1.5;
-    }
-    .after-msg-card .tag-reinject {
-      display: inline-block;
-      background: #DBEAFE;
-      color: #1E40AF;
+    .api-section.sec-system .sec-header-tokens { background: #7C3AED; }
+    .api-section.sec-tools .sec-header-tokens { background: #2563EB; }
+    .api-section.sec-messages .sec-header-tokens { background: #F59E0B; color: #18181B; }
+    .api-section.sec-messages-after .sec-header-tokens { background: #22C55E; }
+    .sec-status {
       font-size: 9px;
       font-weight: 600;
       padding: 1px 6px;
       border-radius: 4px;
-      margin-top: 4px;
+      margin-left: 4px;
     }
-    .after-msg-card.summary .tag-reinject {
-      background: #F3F0FF;
-      color: #7C3AED;
+    .sec-status.unchanged { background: #E5E7EB; color: #6B7280; }
+    .sec-status.reduced { background: #FEE2E2; color: #DC2626; }
+
+    /* ── Section Children ── */
+    .sec-children {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding-left: 0;
+    }
+    .sec-child {
+      font-size: 10px;
+      color: var(--text-secondary);
+      padding: 1px 0;
+      font-family: var(--font-mono);
+    }
+    .sec-child .idx {
+      color: var(--text-muted);
+      margin-right: 2px;
     }
 
-    /* ── Comparison table ── */
+    /* ── Message Items inside messages section ── */
+    .msg-item {
+      background: rgba(255,255,255,0.85);
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 10px;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .msg-item.role-user { border-left: 3px solid #2563EB; }
+    .msg-item.role-asst { border-left: 3px solid #7C3AED; }
+    .msg-item.role-reinject { border-left: 3px solid #22C55E; }
+    .msg-item.role-summary { border-left: 3px solid #7C3AED; background: rgba(124,58,237,0.04); }
+    .msg-item-header {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 2px;
+    }
+    .msg-idx {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .msg-role-badge {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0 5px;
+      border-radius: 3px;
+    }
+    .msg-role-badge.user { background: #DBEAFE; color: #1E40AF; }
+    .msg-role-badge.asst { background: #F3F0FF; color: #7C3AED; }
+    .msg-role-badge.meta { background: #E5E7EB; color: #6B7280; font-size: 8px; }
+    .msg-tag {
+      font-size: 8px;
+      font-weight: 600;
+      padding: 0 4px;
+      border-radius: 3px;
+      margin-left: auto;
+    }
+    .msg-tag.reinject { background: #DCFCE7; color: #166534; }
+    .msg-tag.summary-tag { background: #F3F0FF; color: #7C3AED; }
+    .msg-detail {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      padding-left: 4px;
+    }
+    .msg-detail .type-label {
+      color: #9CA3AF;
+      font-style: italic;
+    }
+    .msg-detail .val { color: var(--text-secondary); }
+    .msg-detail .strong-val { color: var(--text-primary); font-weight: 600; }
+    .msg-more {
+      text-align: center;
+      font-size: 10px;
+      color: var(--text-muted);
+      padding: 4px 0;
+      font-style: italic;
+    }
+
+    /* ── Token Bar (compact) ── */
+    .token-summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+    .token-bar-mini {
+      flex: 1;
+      height: 20px;
+      display: flex;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #F1F5F9;
+    }
+    .tb-seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+    }
+    .tb-sys { background: #7C3AED; }
+    .tb-tools { background: #2563EB; }
+    .tb-msgs { background: #F59E0B; color: #18181B; }
+    .tb-msgs-after { background: #22C55E; }
+    .token-total {
+      font-size: 14px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .token-total.before-total { color: #D97706; }
+    .token-total.after-total { color: #16A34A; }
+    .threshold-warning {
+      padding: 4px 10px;
+      background: #FEF3C7;
+      border: 1px solid #FDE68A;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #92400E;
+      text-align: center;
+    }
+
+    /* ── Lifecycle Snake Grid ── */
+    .lifecycle-section {
+      margin: 24px 0 16px;
+    }
+    .lc-row {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .lc-row.rtl { flex-direction: row-reverse; }
+    .lc-card {
+      flex: 1;
+      border-radius: 8px;
+      padding: 10px 12px;
+      min-height: 80px;
+    }
+    .lc-card-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 4px;
+    }
+    .lc-card-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 3px;
+    }
+    .lc-card-detail {
+      font-size: 9px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      font-family: var(--font-mono);
+    }
+    /* Card colors */
+    .lc-trigger { background: #FEF3C7; border: 1px solid #FDE68A; }
+    .lc-trigger .lc-card-num { background: #F59E0B; }
+    .lc-hook { background: rgba(255,255,255,0.85); border: 1px solid var(--border-light); }
+    .lc-hook .lc-card-num { background: #9CA3AF; }
+    .lc-build { background: rgba(124,58,237,0.05); border: 1px solid rgba(124,58,237,0.2); }
+    .lc-build .lc-card-num { background: #7C3AED; }
+    .lc-api { background: #F3F0FF; border: 1px solid rgba(124,58,237,0.3); }
+    .lc-api .lc-card-num { background: #7C3AED; }
+    .lc-delete { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.25); }
+    .lc-delete .lc-card-num { background: #EF4444; }
+    .lc-boundary { background: rgba(255,255,255,0.85); border: 1px solid var(--border-light); }
+    .lc-boundary .lc-card-num { background: #6B7280; }
+    .lc-inject { background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.2); }
+    .lc-inject .lc-card-num { background: #2563EB; }
+    .lc-done { background: #DCFCE7; border: 1px solid #86EFAC; }
+    .lc-done .lc-card-num { background: #22C55E; }
+
+    /* Arrows — horizontal */
+    .lc-arrow-h {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      width: 32px;
+      position: relative;
+    }
+    .lc-arrow-h::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 2px;
+      right: 10px;
+      height: 3px;
+      background: var(--purple);
+      border-radius: 2px;
+    }
+    .lc-arrow-h::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 2px;
+      transform: translateY(-50%);
+      border: 6px solid transparent;
+      border-left: 8px solid var(--purple);
+    }
+    .lc-arrow-h.left::before {
+      left: 10px;
+      right: 2px;
+    }
+    .lc-arrow-h.left::after {
+      right: auto;
+      left: 2px;
+      border-left: none;
+      border-right: 8px solid var(--purple);
+    }
+
+    /* Turn arrows — vertical connectors */
+    .lc-turn {
+      display: flex;
+      padding: 0;
+      height: 32px;
+      position: relative;
+    }
+    .lc-turn.right {
+      justify-content: flex-end;
+      padding-right: 48px;
+    }
+    .lc-turn.left {
+      justify-content: flex-start;
+      padding-left: 48px;
+    }
+    .lc-turn-connector {
+      width: 3px;
+      height: 100%;
+      background: var(--purple);
+      border-radius: 2px;
+      position: relative;
+    }
+    .lc-turn-connector::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top: 8px solid var(--purple);
+    }
+
+    /* ── Comparison Section ── */
+    .compare-section {
+      margin-top: 20px;
+    }
     .compare-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-top: 12px;
+      margin-top: 8px;
     }
     .compare-table {
       width: 100%;
@@ -200,15 +395,9 @@
       border-bottom: 1px solid var(--border-light);
       color: var(--text-secondary);
     }
-    .compare-table .delta {
-      font-weight: 600;
-      color: #16A34A;
-    }
-    .compare-table .delta-same {
-      color: var(--text-muted);
-    }
+    .compare-table .delta { font-weight: 600; color: #16A34A; }
+    .compare-table .delta-same { color: var(--text-muted); }
     .lost-kept-card {
-      background: rgba(255,255,255,0.8);
       border-radius: 8px;
       padding: 10px 14px;
     }
@@ -237,7 +426,7 @@
       display: flex;
       gap: 6px;
     }
-    .lost-kept-card ul li .icon { flex-shrink: 0; font-size: 11px; }
+    .lost-kept-card ul li .icon { flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -249,256 +438,405 @@
         <h1 class="slide-title animate-in">Compact &mdash; Context Lifecycle</h1>
         <p class="slide-subtitle animate-in">What happens when context window fills up?</p>
 
-        <!-- ═══════════ FLOW 1: BEFORE ═══════════ -->
-        <div class="flow-section animate-in">
-          <div class="flow-section-label">Before &mdash; API Request (Turn 7) ~120K tokens</div>
+        <!-- ═══════════ TWO-COLUMN: BEFORE vs AFTER ═══════════ -->
+        <div class="compact-duo animate-in">
 
-          <!-- Stacked bar -->
-          <div class="token-bar-wrapper">
-            <div class="token-bar-label">
-              <span>Token breakdown</span>
-              <span>120K / 151K threshold</span>
+          <!-- ── BEFORE Column ── -->
+          <div class="compact-col">
+            <div class="col-badge before">Before &mdash; API Request (&gt; 5 turns)</div>
+            <div class="api-field">"model": "claude-opus-4-...", "max_tokens": 16384, "stream": true</div>
+
+            <!-- system -->
+            <div class="api-section sec-system">
+              <div class="sec-header">
+                <span class="sec-header-title">"system": [3 items]</span>
+                <span class="sec-header-tokens">25K</span>
+              </div>
+              <div class="sec-children">
+                <div class="sec-child"><span class="idx">[0]</span> text: "&lt;billing header&gt;"</div>
+                <div class="sec-child"><span class="idx">[1]</span> text: "You are a Claude agent, built on..."</div>
+                <div class="sec-child"><span class="idx">[2]</span> text: instructions (# System, # Doing tasks, # Tools, # Tone, # Memory, # Environment)</div>
+              </div>
             </div>
-            <div class="token-bar">
-              <div class="token-seg seg-system" style="width: 20.8%">System 25K</div>
-              <div class="token-seg seg-tools" style="width: 15%">Tools 18K</div>
-              <div class="token-seg seg-messages" style="width: 64.2%">Messages 77K</div>
+
+            <!-- tools -->
+            <div class="api-section sec-tools">
+              <div class="sec-header">
+                <span class="sec-header-title">"tools": [10+ items]</span>
+                <span class="sec-header-tokens">18K</span>
+              </div>
+              <div class="sec-children">
+                <div class="sec-child">Agent, Bash, Read, Edit, Write, Glob, Grep, Skill</div>
+                <div class="sec-child">+ ToolSearch, MCP tools (mcp__jira__...)</div>
+              </div>
             </div>
+
+            <!-- messages -->
+            <div class="api-section sec-messages">
+              <div class="sec-header">
+                <span class="sec-header-title">"messages": [10 items]</span>
+                <span class="sec-header-tokens">77K</span>
+              </div>
+              <div class="sec-children" style="gap:4px">
+                <div class="msg-item role-user">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[0]</span>
+                    <span class="msg-role-badge user">user</span>
+                    <span class="msg-role-badge meta">isMeta</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">text:</span> <span class="val">&lt;available-deferred-tools&gt;<br>AskUserQuestion, WebSearch, mcp__jira__...</span>
+                  </div>
+                </div>
+
+                <div class="msg-item role-user">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[1]</span>
+                    <span class="msg-role-badge user">user</span>
+                    <span class="msg-role-badge meta">isMeta</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">text:</span> <span class="val">&lt;system-reminder&gt;<br># claudeMd &mdash; CLAUDE.md hierarchy<br># memory &mdash; Memory index<br># currentDate</span>
+                  </div>
+                </div>
+
+                <div class="msg-item role-asst">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[2]</span>
+                    <span class="msg-role-badge asst">assistant</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">text:</span> <span class="val">"To create this feature..."</span><br>
+                    <span class="type-label">tool_use:</span> <span class="val">Read({ file_path: "src/app.ts" })</span>
+                  </div>
+                </div>
+
+                <div class="msg-item role-user">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[3]</span>
+                    <span class="msg-role-badge user">user</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">tool_result:</span> <span class="val">import React from 'react';... <b>~3K chars</b></span>
+                  </div>
+                </div>
+
+                <div class="msg-item role-asst">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[4]</span>
+                    <span class="msg-role-badge asst">assistant</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">text:</span> <span class="val">"Got it. Checking routes..."</span><br>
+                    <span class="type-label">tool_use:</span> <span class="val">Grep({ pattern: "Route", path: "src/" })</span>
+                  </div>
+                </div>
+
+                <div class="msg-item role-user">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[5]</span>
+                    <span class="msg-role-badge user">user</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">tool_result:</span> <span class="val">src/routes.ts:5: &lt;Route path='/login'... <b>~2K chars</b></span>
+                  </div>
+                </div>
+
+                <div class="msg-item role-asst">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[6]</span>
+                    <span class="msg-role-badge asst">assistant</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">text:</span> <span class="val">"Creating LoginPage..."</span><br>
+                    <span class="type-label">tool_use:</span> <span class="val">Write({ file_path: "src/Login.tsx", content: "..." })</span>
+                  </div>
+                </div>
+
+                <div class="msg-item role-user">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[7]</span>
+                    <span class="msg-role-badge user">user</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">tool_result:</span> <span class="val">"File written successfully"</span>
+                  </div>
+                </div>
+
+                <div class="msg-item role-asst">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[8]</span>
+                    <span class="msg-role-badge asst">assistant</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">text:</span> <span class="val">"LoginPage created. Need unit tests?"</span>
+                  </div>
+                </div>
+
+                <div class="msg-item role-user">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[9]</span>
+                    <span class="msg-role-badge user">user</span>
+                    <span class="msg-role-badge meta">isMeta</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">text:</span> <span class="val">&lt;system-reminder&gt; skill_listing</span>
+                  </div>
+                </div>
+
+                <div class="msg-more">... (more turns)</div>
+              </div>
+            </div>
+
+            <!-- Token bar -->
+            <div class="token-summary">
+              <div class="token-bar-mini">
+                <div class="tb-seg tb-sys" style="width:20.8%">Sys 25K</div>
+                <div class="tb-seg tb-tools" style="width:15%">Tools 18K</div>
+                <div class="tb-seg tb-msgs" style="width:64.2%">Msgs 77K</div>
+              </div>
+              <span class="token-total before-total">~120K</span>
+            </div>
+            <div class="threshold-warning">&#9888; Token count &ge; N &mdash; compact triggers automatically</div>
           </div>
 
-          <!-- Horizontal message timeline -->
-          <div class="msg-timeline">
-            <div class="msg-card role-user">
-              <div class="msg-role">user [0]</div>
-              <div class="msg-type">&lt;available-deferred-tools&gt;</div>
-              <div class="msg-content">AskUserQuestion, WebSearch, mcp__jira__...</div>
-            </div>
-            <div class="msg-card role-user">
-              <div class="msg-role">user [1] <span style="color:var(--text-muted);font-weight:400">isMeta + prompt</span></div>
-              <div class="msg-type">&lt;system-reminder&gt;</div>
-              <div class="msg-content">CLAUDE.md context, skill_listing</div>
-              <div class="msg-type" style="margin-top:3px">text</div>
-              <div class="msg-content">"Create feature login page"</div>
-            </div>
-            <div class="msg-card role-assistant">
-              <div class="msg-role">assistant [2]</div>
-              <div class="msg-type">text</div>
-              <div class="msg-content">"I need to read current code first..."</div>
-              <div class="msg-type" style="margin-top:3px">tool_use &rarr; Read</div>
-              <div class="msg-content">{ file: "src/app.ts" }</div>
-            </div>
-            <div class="msg-card role-user">
-              <div class="msg-role">user [3]</div>
-              <div class="msg-type">tool_result</div>
-              <div class="msg-content">import React from 'react'; export function App()... <strong>~3K chars</strong></div>
-            </div>
-            <div class="msg-card role-assistant">
-              <div class="msg-role">assistant [4]</div>
-              <div class="msg-type">text + tool_use &rarr; Grep</div>
-              <div class="msg-content">{ pattern: "Route", path: "src/" }</div>
-            </div>
-            <div class="msg-card role-user">
-              <div class="msg-role">user [5]</div>
-              <div class="msg-type">tool_result</div>
-              <div class="msg-content">src/routes.ts:5: &lt;Route path='/login'&gt; ... <strong>~2K chars</strong></div>
-            </div>
-            <div class="msg-card role-assistant">
-              <div class="msg-role">assistant [6]</div>
-              <div class="msg-type">text + tool_use &rarr; Write</div>
-              <div class="msg-content">{ file: "src/Login.tsx", content: "..." }</div>
-            </div>
-            <div class="msg-card role-user">
-              <div class="msg-role">user [7]</div>
-              <div class="msg-type">tool_result</div>
-              <div class="msg-content">"File written successfully"</div>
-            </div>
-            <div class="msg-card role-assistant">
-              <div class="msg-role">assistant [8]</div>
-              <div class="msg-type">text</div>
-              <div class="msg-content">"Done! Need unit tests?"</div>
-            </div>
-            <div class="msg-card role-user">
-              <div class="msg-role">user [9]</div>
-              <div class="msg-type">&lt;system-reminder&gt; re-inject</div>
-              <div class="msg-content">"Add tests and dark mode too"</div>
-            </div>
-            <div class="msg-ellipsis">...</div>
-          </div>
+          <!-- ── AFTER Column ── -->
+          <div class="compact-col">
+            <div class="col-badge after">After &mdash; Post-compact (1st turn)</div>
+            <div class="api-field">"model": "claude-opus-4-...", "max_tokens": 16384, "stream": true</div>
 
-          <div class="threshold-warning">
-            &#9888; 120K / 151K threshold = 79% &rarr; APPROACHING compact!
+            <!-- system — UNCHANGED -->
+            <div class="api-section sec-system">
+              <div class="sec-header">
+                <span class="sec-header-title">"system": [3 items]</span>
+                <span class="sec-header-tokens">25K</span>
+                <span class="sec-status unchanged">UNCHANGED</span>
+              </div>
+              <div class="sec-children">
+                <div class="sec-child"><span class="idx">[0]</span> text: "&lt;billing header&gt;"</div>
+                <div class="sec-child"><span class="idx">[1]</span> text: "You are a Claude agent, built on..."</div>
+                <div class="sec-child"><span class="idx">[2]</span> text: instructions (# System, # Doing tasks, # Tools, # Tone, # Memory, # Environment)</div>
+              </div>
+            </div>
+
+            <!-- tools — UNCHANGED -->
+            <div class="api-section sec-tools">
+              <div class="sec-header">
+                <span class="sec-header-title">"tools": [10+ items]</span>
+                <span class="sec-header-tokens">18K</span>
+                <span class="sec-status unchanged">UNCHANGED</span>
+              </div>
+              <div class="sec-children">
+                <div class="sec-child">Agent, Bash, Read, Edit, Write, Glob, Grep, Skill</div>
+                <div class="sec-child">+ ToolSearch, MCP tools (mcp__jira__...)</div>
+              </div>
+            </div>
+
+            <!-- messages — REDUCED -->
+            <div class="api-section sec-messages-after">
+              <div class="sec-header">
+                <span class="sec-header-title">"messages": [4 items]</span>
+                <span class="sec-header-tokens">8K</span>
+                <span class="sec-status reduced">&darr; 90%</span>
+              </div>
+              <div class="sec-children" style="gap:4px">
+                <div class="msg-item role-reinject">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[0]</span>
+                    <span class="msg-role-badge user">user</span>
+                    <span class="msg-role-badge meta">isMeta</span>
+                    <span class="msg-tag reinject">RE-INJECT</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">text:</span> <span class="val">&lt;available-deferred-tools&gt;<br>AskUserQuestion, WebSearch, mcp__jira__...</span>
+                  </div>
+                </div>
+
+                <div class="msg-item role-reinject">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[1]</span>
+                    <span class="msg-role-badge user">user</span>
+                    <span class="msg-role-badge meta">isMeta</span>
+                    <span class="msg-tag reinject">RE-INJECT</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">text:</span> <span class="val">&lt;system-reminder&gt;<br># claudeMd &mdash; CLAUDE.md hierarchy<br># memory &mdash; Memory index<br># currentDate</span>
+                  </div>
+                </div>
+
+                <div class="msg-item role-summary">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[2]</span>
+                    <span class="msg-role-badge user">user</span>
+                    <span class="msg-tag summary-tag">SUMMARY ~5K</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="val">"This session is being continued from a previous conversation that ran out of context."</span><br><br>
+                    <span class="strong-val">Summary:</span><br>
+                    1. Primary Request: Create login page feature<br>
+                    2. Key Concepts: React, TypeScript, routing<br>
+                    3. Files: src/app.ts, src/Login.tsx, src/routes.ts<br>
+                    4. Errors: none<br>
+                    5. Problem Solving: Read &rarr; Grep &rarr; Write<br>
+                    6. User Messages: "Create login page feature",<br>
+                    &nbsp;&nbsp;&nbsp;"Add tests and dark mode too"<br>
+                    7. Pending: unit test, dark mode<br>
+                    8. Current: login page created<br>
+                    9. Next: implement dark mode toggle<br><br>
+                    <span class="val">If you need details, read transcript at:<br>~/.claude/projects/.../session.jsonl<br>Continue without asking further questions.</span>
+                  </div>
+                </div>
+
+                <div class="msg-item role-reinject">
+                  <div class="msg-item-header">
+                    <span class="msg-idx">[3]</span>
+                    <span class="msg-role-badge user">user</span>
+                    <span class="msg-role-badge meta">isMeta</span>
+                    <span class="msg-tag reinject">RE-INJECT</span>
+                  </div>
+                  <div class="msg-detail">
+                    <span class="type-label">text:</span> <span class="val">&lt;system-reminder&gt; skill_listing</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Token bar -->
+            <div class="token-summary">
+              <div class="token-bar-mini">
+                <div class="tb-seg tb-sys" style="width:49%">Sys 25K</div>
+                <div class="tb-seg tb-tools" style="width:35.3%">Tools 18K</div>
+                <div class="tb-seg tb-msgs-after" style="width:15.7%">Msgs 8K</div>
+              </div>
+              <span class="token-total after-total">~51K</span>
+            </div>
+            <div style="text-align:center; padding:4px; background:#DCFCE7; border-radius:4px; font-size:11px; font-weight:700; color:#166534;">
+              57% freed &mdash; 69K tokens recovered
+            </div>
           </div>
         </div>
 
-        <!-- ═══════════ FLOW 2: LIFECYCLE ═══════════ -->
-        <div class="flow-section animate-in">
-          <div class="flow-section-label">Lifecycle &mdash; 8 Steps</div>
-          <div class="mermaid-container" id="lifecycle-diagram"></div>
+        <!-- ═══════════ LIFECYCLE — Snake Grid ═══════════ -->
+        <h2 class="slide-heading animate-in">Lifecycle &mdash; 8 Steps</h2>
+
+        <div class="lifecycle-section animate-in">
+          <!-- Row 1: LTR — Trigger → S1 → S2 -->
+          <div class="lc-row">
+            <div class="lc-card lc-trigger">
+              <div class="lc-card-num">!</div>
+              <div class="lc-card-title">Trigger</div>
+              <div class="lc-card-detail">Token count >= N<br>(depends on context window)<br>or user runs /compact</div>
+            </div>
+            <div class="lc-arrow-h"></div>
+            <div class="lc-card lc-hook">
+              <div class="lc-card-num">1</div>
+              <div class="lc-card-title">PreCompact Hook</div>
+              <div class="lc-card-detail">shell command (if configured)<br>stdout &rarr; summary prompt</div>
+            </div>
+            <div class="lc-arrow-h"></div>
+            <div class="lc-card lc-build">
+              <div class="lc-card-num">2</div>
+              <div class="lc-card-title">Build Summary Request</div>
+              <div class="lc-card-detail">system: "summarize conversations"<br>messages: full history + SUMMARY_PROMPT<br>tools: [] (none)</div>
+            </div>
+          </div>
+
+          <!-- Turn arrow: right side -->
+          <div class="lc-turn right"><div class="lc-turn-connector"></div></div>
+
+          <!-- Row 2: RTL — S3 → S4 → S5 (visual right-to-left) -->
+          <div class="lc-row rtl">
+            <div class="lc-card lc-api">
+              <div class="lc-card-num">3</div>
+              <div class="lc-card-title">Send to Claude API</div>
+              <div class="lc-card-detail" style="display:grid; grid-template-columns:1fr 1fr; gap:0 12px;">
+                <span style="grid-column:1/-1; margin-bottom:2px;">Reads full history &rarr; 9-section summary:</span>
+                <span>1. Request &amp; Intent</span>
+                <span>6. ALL User Messages</span>
+                <span>2. Key Concepts</span>
+                <span>7. Pending Tasks</span>
+                <span>3. Files &amp; Code</span>
+                <span>8. Current Work</span>
+                <span>4. Errors &amp; Fixes</span>
+                <span>9. Optional Next Step</span>
+                <span>5. Problem Solving</span>
+              </div>
+            </div>
+            <div class="lc-arrow-h left"></div>
+            <div class="lc-card lc-delete">
+              <div class="lc-card-num">4</div>
+              <div class="lc-card-title">Replace Messages</div>
+              <div class="lc-card-detail">DELETE messages[0..N]<br>REPLACE with single user<br>message containing summary</div>
+            </div>
+            <div class="lc-arrow-h left"></div>
+            <div class="lc-card lc-boundary">
+              <div class="lc-card-num">5</div>
+              <div class="lc-card-title">Write Boundary</div>
+              <div class="lc-card-detail">JSONL: compact_boundary<br>trigger: auto|manual<br>preTokens, messagesSummarized</div>
+            </div>
+          </div>
+
+          <!-- Turn arrow: left side -->
+          <div class="lc-turn left"><div class="lc-turn-connector"></div></div>
+
+          <!-- Row 3: LTR — S6 → S7 → S8 → Done -->
+          <div class="lc-row">
+            <div class="lc-card lc-inject">
+              <div class="lc-card-num">6</div>
+              <div class="lc-card-title">Re-inject Metadata</div>
+              <div class="lc-card-detail">&lt;available-deferred-tools&gt;<br>&lt;system-reminder&gt;<br>CLAUDE.md, memory, currentDate</div>
+            </div>
+            <div class="lc-arrow-h"></div>
+            <div class="lc-card lc-hook">
+              <div class="lc-card-num">7</div>
+              <div class="lc-card-title">PostCompact Hook</div>
+              <div class="lc-card-detail">shell command<br>receives summary text<br>stdout &rarr; displayed to user</div>
+            </div>
+            <div class="lc-arrow-h"></div>
+            <div class="lc-card lc-hook">
+              <div class="lc-card-num">8</div>
+              <div class="lc-card-title">SessionStart Hook</div>
+              <div class="lc-card-detail">trigger="compact"<br>inject additional context</div>
+            </div>
+            <div class="lc-arrow-h"></div>
+            <div class="lc-card lc-done">
+              <div class="lc-card-num">&check;</div>
+              <div class="lc-card-title">Compact DONE</div>
+              <div class="lc-card-detail">Continue conversation</div>
+            </div>
+          </div>
         </div>
 
-        <!-- ═══════════ FLOW 3: AFTER ═══════════ -->
-        <div class="flow-section animate-in">
-          <div class="flow-section-label">After &mdash; API Request (Turn 1 post-compact) ~51K tokens</div>
+        <!-- ═══════════ COMPARISON ═══════════ -->
+        <h2 class="slide-heading animate-in">Before vs After</h2>
 
-          <!-- Stacked bar AFTER -->
-          <div class="token-bar-wrapper">
-            <div class="token-bar-label">
-              <span>Token breakdown</span>
-              <span>51K total (57% freed)</span>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;" class="animate-in">
+            <div class="lost-kept-card lost">
+              <h5>&#10007; Lost</h5>
+              <ul>
+                <li><span class="icon">&#10007;</span> tool_result contents (file content, grep output)</li>
+                <li><span class="icon">&#10007;</span> tool_use params (detailed input)</li>
+                <li><span class="icon">&#10007;</span> thinking blocks</li>
+                <li><span class="icon">&#10007;</span> isMeta messages (original)</li>
+                <li><span class="icon">&#10007;</span> exact code snippets (unless AI included)</li>
+              </ul>
             </div>
-            <div class="token-bar">
-              <div class="token-seg seg-system" style="width: 49%">System 25K (unchanged)</div>
-              <div class="token-seg seg-tools" style="width: 35.3%">Tools 18K (unchanged)</div>
-              <div class="token-seg seg-messages-after" style="width: 15.7%">Msgs 8K</div>
+            <div class="lost-kept-card kept">
+              <h5>&#10003; Kept</h5>
+              <ul>
+                <li><span class="icon">&#10003;</span> system prompt (instructions)</li>
+                <li><span class="icon">&#10003;</span> tool definitions</li>
+                <li><span class="icon">&#10003;</span> CLAUDE.md + memory (re-inject via &lt;system-reminder&gt;)</li>
+                <li><span class="icon">&#10003;</span> deferred tool names (re-inject)</li>
+                <li><span class="icon">&#10003;</span> summary of entire conversation history</li>
+              </ul>
             </div>
-          </div>
-
-          <!-- After message cards (horizontal) -->
-          <div class="after-messages">
-            <div class="after-msg-card">
-              <h5>user [0] &mdash; deferred tools</h5>
-              <div class="detail">&lt;available-deferred-tools&gt;<br>AskUserQuestion, WebSearch, mcp__jira__...</div>
-              <div class="tag-reinject">RE-INJECT</div>
-            </div>
-            <div class="after-msg-card">
-              <h5>user [1] &mdash; metadata</h5>
-              <div class="detail">&lt;system-reminder&gt;<br>CLAUDE.md context<br>skill_listing</div>
-              <div class="tag-reinject">RE-INJECT</div>
-            </div>
-            <div class="after-msg-card summary">
-              <h5>user [2] &mdash; summary (~5K chars)</h5>
-              <div class="detail">
-                "This session is being continued..."<br>
-                1. Primary Request: login page<br>
-                2. Key Concepts: React, TS, routing<br>
-                3. Files: app.ts, Login.tsx, routes.ts<br>
-                4. Errors: none<br>
-                5. Problem Solving: Read &rarr; Grep &rarr; Write<br>
-                6. User Messages: (all preserved)<br>
-                7. Pending: unit test, dark mode<br>
-                8. Current: login page created<br>
-                9. Next: implement dark mode
-              </div>
-              <div class="tag-reinject">SUMMARY</div>
-            </div>
-          </div>
-
-          <!-- Comparison: table + lost/kept -->
-          <div class="compare-grid">
-            <div>
-              <table class="compare-table">
-                <thead>
-                  <tr><th>Component</th><th>Before</th><th>After</th><th>Delta</th></tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>System</td><td>25K</td><td>25K</td>
-                    <td class="delta-same">unchanged</td>
-                  </tr>
-                  <tr>
-                    <td>Tools</td><td>18K</td><td>18K</td>
-                    <td class="delta-same">unchanged</td>
-                  </tr>
-                  <tr>
-                    <td>Messages</td><td>77K</td><td>8K</td>
-                    <td class="delta">&darr; 90%</td>
-                  </tr>
-                  <tr style="font-weight:600">
-                    <td>TOTAL</td><td>120K</td><td>51K</td>
-                    <td class="delta">&darr; 57%</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <div class="lost-kept-card lost">
-                <h5>&#10007; Lost</h5>
-                <ul>
-                  <li><span class="icon">&#10007;</span> tool_result contents (file content, grep output)</li>
-                  <li><span class="icon">&#10007;</span> tool_use params (detailed input)</li>
-                  <li><span class="icon">&#10007;</span> thinking blocks</li>
-                  <li><span class="icon">&#10007;</span> isMeta messages (original)</li>
-                  <li><span class="icon">&#10007;</span> exact code snippets (unless AI included)</li>
-                </ul>
-              </div>
-              <div class="lost-kept-card kept">
-                <h5>&#10003; Kept</h5>
-                <ul>
-                  <li><span class="icon">&#10003;</span> system prompt + CLAUDE.md</li>
-                  <li><span class="icon">&#10003;</span> tool definitions</li>
-                  <li><span class="icon">&#10003;</span> skill listing (re-inject)</li>
-                  <li><span class="icon">&#10003;</span> deferred tools list (re-inject)</li>
-                  <li><span class="icon">&#10003;</span> summary of everything above</li>
-                </ul>
-              </div>
-            </div>
-          </div>
         </div>
 
       </div>
     </main>
     <footer class="footer" role="contentinfo"></footer>
   </div>
-  <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: 'base',
-      themeVariables: {
-        primaryColor: '#F3F0FF',
-        primaryTextColor: '#18181B',
-        primaryBorderColor: '#7C3AED',
-        lineColor: '#7C3AED',
-        secondaryColor: '#F8FAFC',
-        tertiaryColor: '#FFFFFF',
-        fontFamily: 'Inter, sans-serif',
-        fontSize: '11px'
-      },
-      flowchart: {
-        curve: 'basis',
-        padding: 10,
-        nodeSpacing: 20,
-        rankSpacing: 30,
-        useMaxWidth: true
-      }
-    });
-
-    const lifecycleDiagram = `flowchart LR
-    TRIGGER["Token count >= 151K<br/>or user runs /compact"]
-    S1["Step 1<br/><b>PreCompact Hook</b><br/><i>shell command<br/>stdout → summary prompt<br/>exit 0 → continue<br/>exit 2 → CANCEL</i>"]
-    S2["Step 2<br/><b>Build Summary Request</b><br/><i>system: 'summarize conversations'<br/>messages: full history<br/>+ SUMMARY_PROMPT<br/>tools: [] (none)<br/>max_tokens: 200K/1M</i>"]
-    S3["Step 3<br/><b>Send to Claude API</b><br/><i>Reads full history →<br/>writes 9-section summary:<br/>1. Request & Intent<br/>2. Key Concepts<br/>3. Files & Code<br/>4. Errors & Fixes<br/>5. Problem Solving<br/>6. ALL User Messages<br/>7. Pending Tasks<br/>8. Current Work<br/>9. Optional Next Step</i>"]
-    S4["Step 4<br/><b>Replace Messages</b><br/><i>DELETE messages[0..N]<br/>REPLACE with single<br/>user message containing<br/>summary text</i>"]
-    S5["Step 5<br/><b>Write Boundary</b><br/><i>JSONL: compact_boundary<br/>trigger: auto|manual<br/>preTokens: 151K<br/>messagesSummarized: 20<br/>discoveredTools: [...]</i>"]
-    S6["Step 6<br/><b>Re-inject Metadata</b><br/><i>deferred-tools<br/>system-reminder<br/>skill_listing<br/>CLAUDE.md context<br/>discovered MCP tools</i>"]
-    S7["Step 7<br/><b>PostCompact Hook</b><br/><i>shell command<br/>receives summary<br/>stdout → display</i>"]
-    S8["Step 8<br/><b>SessionStart Hook</b><br/><i>trigger='compact'<br/>inject extra context</i>"]
-    DONE["Compact DONE<br/>Continue conversation"]
-
-    TRIGGER --> S1
-    S1 -->|exit 0| S2
-    S2 --> S3
-    S3 --> S4
-    S4 --> S5
-    S5 --> S6
-    S6 --> S7
-    S7 --> S8
-    S8 --> DONE
-
-    style TRIGGER fill:#FEF3C7,stroke:#F59E0B,color:#92400E
-    style S1 fill:#FFFFFF,stroke:#7C3AED,color:#18181B
-    style S2 fill:#FFFFFF,stroke:#7C3AED,color:#18181B
-    style S3 fill:#F3F0FF,stroke:#7C3AED,color:#18181B
-    style S4 fill:#FEE2E2,stroke:#EF4444,color:#18181B
-    style S5 fill:#FFFFFF,stroke:#7C3AED,color:#18181B
-    style S6 fill:#DBEAFE,stroke:#2563EB,color:#18181B
-    style S7 fill:#FFFFFF,stroke:#7C3AED,color:#18181B
-    style S8 fill:#FFFFFF,stroke:#7C3AED,color:#18181B
-    style DONE fill:#DCFCE7,stroke:#22C55E,color:#166534`;
-
-    const r1 = await mermaid.render('lifecycle-svg', lifecycleDiagram);
-    document.getElementById('lifecycle-diagram').innerHTML = r1.svg;
-  </script>
   <script src="shared/navigation.js"></script>
 </body>
 </html>

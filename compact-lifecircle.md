@@ -11,38 +11,25 @@
 │  "stream": true                                                          │
 │                                                                          │
 │  ┌────────────────────────────────────────────────────────────────────┐  │
-│  │ "system": [...]                                                    │  │
-│  │  [0] { type: "text", text: "<billing header>" }                   │  │
-│  │  [1] { type: "text", text: "You are a Claude agent..." }          │  │
-│  │  [2] { type: "text", text: "<instructions + CLAUDE.md>" }         │  │
-│  └────────────────────────────────────────────────────────────────────┘  │
-│  ┌────────────────────────────────────────────────────────────────────┐  │
-│  │ "tools": [...]                                                     │  │
-│  │  { name: "Agent",  description: "...", input_schema: {...} }      │  │
-│  │  { name: "Bash",   description: "...", input_schema: {...} }      │  │
-│  │  { name: "Read",   description: "...", input_schema: {...} }      │  │
-│  │  { name: "Edit",   description: "...", input_schema: {...} }      │  │
-│  │  { name: "Write",  description: "...", input_schema: {...} }      │  │
-│  │  { name: "Glob",   description: "...", input_schema: {...} }      │  │
-│  │  { name: "Grep",   description: "...", input_schema: {...} }      │  │
-│  │  { name: "Skill",  description: "...", input_schema: {...} }      │  │
-│  │  ... + ToolSearch, MCP tools                                      │  │
-│  └────────────────────────────────────────────────────────────────────┘  │
-│  ┌────────────────────────────────────────────────────────────────────┐  │
 │  │ "messages": [...]                                                  │  │
 │  │                                                                    │  │
-│  │  ┌─ [0] { role: "user" } ─────────────────────────────────────┐  │  │
-│  │  │  content: [{ type: "text", text: "<available-deferred-tools>│  │  │
-│  │  │    AskUserQuestion, WebSearch, mcp__jira__...               │  │  │
-│  │  │    </available-deferred-tools>" }]                          │  │  │
+│  │  ┌─ [0] { role: "user" } (isMeta) ── deferred tool names ──────┐  │  │
+│  │  │  content: [{ type: "text", text: "<available-deferred-tools>  │  │  │
+│  │  │    AskUserQuestion, WebSearch, mcp__jira__...                 │  │  │
+│  │  │    </available-deferred-tools>" }]                            │  │  │
 │  │  └────────────────────────────────────────────────────────────┘  │  │
-│  │  ┌─ [1] { role: "user" } (isMeta + prompt) ───────────────────┐  │  │
-│  │  │  content: [                                                 │  │  │
-│  │  │    { type: "text", text: "<system-reminder>                 │  │  │
-│  │  │        CLAUDE.md context, skill_listing                     │  │  │
-│  │  │        </system-reminder>" },                               │  │  │
-│  │  │    { type: "text", text: "Create login page feature" }      │  │  │
-│  │  │  ]                                                          │  │  │
+│  │  ┌─ [1] { role: "user" } (isMeta + prompt) ─────────────────────┐  │  │
+│  │  │  content: [                                                   │  │  │
+│  │  │    { type: "text", text: "<system-reminder>                   │  │  │
+│  │  │        # claudeMd                                             │  │  │
+│  │  │        Contents of CLAUDE.md hierarchy                        │  │  │
+│  │  │        # memory                                               │  │  │
+│  │  │        Memory index                                           │  │  │
+│  │  │        # currentDate                                          │  │  │
+│  │  │        Today's date is 2026-03-14.                            │  │  │
+│  │  │        </system-reminder>" },                                 │  │  │
+│  │  │    { type: "text", text: "Create login page feature" }        │  │  │
+│  │  │  ]                                                            │  │  │
 │  │  └────────────────────────────────────────────────────────────┘  │  │
 │  │  ┌─ [2] { role: "assistant" } ────────────────────────────────┐  │  │
 │  │  │  content: [                                                 │  │  │
@@ -87,11 +74,35 @@
 │  │  ┌─ [9] { role: "user" } ─────────────────────────────────────┐  │  │
 │  │  │  content: [                                                 │  │  │
 │  │  │    { type: "text", text: "<system-reminder>                 │  │  │
-│  │  │        skill_listing (re-injected)</system-reminder>" },     │  │  │
-│  │  │    { type: "text", text: "Add tests and dark mode too" }    │  │  │
+│  │  │        skill_listing (re-injected each turn)                │  │  │
+│  │  │        </system-reminder>" },                               │  │  │
+│  │  │    { type: "text", text: "Add tests and dark mode too",     │  │  │
+│  │  │      cache_control: { type: "ephemeral", ttl: "1h" } }     │  │  │
 │  │  │  ]                                                          │  │  │
 │  │  └────────────────────────────────────────────────────────────┘  │  │
 │  │  ... (more turns)                                                 │  │
+│  └────────────────────────────────────────────────────────────────────┘  │
+│  ┌────────────────────────────────────────────────────────────────────┐  │
+│  │ "system": [...]                                                    │  │
+│  │  [0] { type: "text", text: "<billing header>" }                   │  │
+│  │  [1] { type: "text", text: "You are a Claude agent..." }          │  │
+│  │  [2] { type: "text", text: "<instructions>                        │  │
+│  │         # System, # Doing tasks, # Executing actions with care,   │  │
+│  │         # Using your tools, # Tone and style, # Output efficiency,│  │
+│  │         # auto memory, # Environment" }                           │  │
+│  │  ⚠️  NO CLAUDE.md here — CLAUDE.md is in messages via eE1()       │  │
+│  └────────────────────────────────────────────────────────────────────┘  │
+│  ┌────────────────────────────────────────────────────────────────────┐  │
+│  │ "tools": [...]                                                     │  │
+│  │  { name: "Agent",  description: "...", input_schema: {...} }      │  │
+│  │  { name: "Bash",   description: "...", input_schema: {...} }      │  │
+│  │  { name: "Read",   description: "...", input_schema: {...} }      │  │
+│  │  { name: "Edit",   description: "...", input_schema: {...} }      │  │
+│  │  { name: "Write",  description: "...", input_schema: {...} }      │  │
+│  │  { name: "Glob",   description: "...", input_schema: {...} }      │  │
+│  │  { name: "Grep",   description: "...", input_schema: {...} }      │  │
+│  │  { name: "Skill",  description: "...", input_schema: {...} }      │  │
+│  │  ... + ToolSearch, MCP tools                                      │  │
 │  └────────────────────────────────────────────────────────────────────┘  │
 │                                                                          │
 │  ┌────────────────────────────────────────────────────────────────────┐  │
@@ -108,112 +119,103 @@
 ## Flow 2: Compact LIFECYCLE
 
 ```
-                    ┌──────────────────────────┐
-                    │  Token count >= 151K     │
-                    │  or user types /compact   │
-                    └────────────┬─────────────┘
-                                 │
-                                 ▼
-               ┌─────────────────────────────────────┐
-               │  STEP 1: PreCompact Hook             │
-               │  Run shell command (if configured)   │
-               │  stdout → appended to summary prompt │
-               │  exit 0 → continue                   │
-               │  exit 2 → CANCEL compact             │
-               └──────────────────┬──────────────────┘
-                                  │ exit 0
-                                  ▼
-               ┌─────────────────────────────────────┐
-               │  STEP 2: Build Summary Request       │
-               │  system: "You are a helpful AI       │
-               │    assistant tasked with              │
-               │    summarizing conversations."        │
-               │  messages: [                          │
-               │    ...entire_original_history...,     │
-               │    { role: "user",                    │
-               │      content: SUMMARY_PROMPT }        │
-               │  ]                                    │
-               │  tools: [] (no tools allowed)         │
-               │  max_tokens: 200K / 1M                │
-               └──────────────────┬──────────────────┘
-                                  │
-                                  ▼
-               ┌─────────────────────────────────────┐
-               │  STEP 3: Send to Claude API          │
-               │  Claude reads entire history →       │
-               │  writes summary with 9 sections:     │
-               │  1. Primary Request & Intent          │
-               │  2. Key Technical Concepts            │
-               │  3. Files & Code Sections             │
-               │  4. Errors & Fixes                    │
-               │  5. Problem Solving                   │
-               │  6. ALL User Messages                 │
-               │  7. Pending Tasks                     │
-               │  8. Current Work                      │
-               │  9. Optional Next Step                │
-               │  Output: <summary>...</summary>       │
-               └──────────────────┬──────────────────┘
-                                  │
-                                  ▼
-               ┌─────────────────────────────────────┐
-               │  STEP 4: Replace Messages             │
-               │  DELETE: messages[0..N]               │
-               │  REPLACE WITH: messages = [{          │
-               │    role: "user",                      │
-               │    content: "This session is being    │
-               │      continued from a previous        │
-               │      conversation that ran out        │
-               │      of context.\nSummary:\n          │
-               │      <summary content>"               │
-               │  }]                                   │
-               └──────────────────┬──────────────────┘
-                                  │
-                                  ▼
-               ┌─────────────────────────────────────┐
-               │  STEP 5: Write Compact Boundary       │
-               │  Write to JSONL: {                    │
-               │    type: "system",                    │
-               │    subtype: "compact_boundary",       │
-               │    compactMetadata: {                 │
-               │      trigger: "auto"|"manual",        │
-               │      preTokens: 151000,               │
-               │      messagesSummarized: 20,          │
-               │      preCompactDiscoveredTools:        │
-               │        ["mcp__jira__search"]          │
-               │  }}                                   │
-               └──────────────────┬──────────────────┘
-                                  │
-                                  ▼
-               ┌─────────────────────────────────────┐
-               │  STEP 6: Re-inject Metadata           │
-               │  Re-inject into new messages:         │
-               │  ├── <available-deferred-tools>       │
-               │  ├── <system-reminder>                │
-               │  │     skill_listing, CLAUDE.md       │
-               │  │   </system-reminder>               │
-               │  └── discovered MCP tools             │
-               └──────────────────┬──────────────────┘
-                                  │
-                                  ▼
-               ┌─────────────────────────────────────┐
-               │  STEP 7: PostCompact Hook             │
-               │  Run shell command (if configured)   │
-               │  Receives summary text                │
-               │  stdout → displayed to user           │
-               └──────────────────┬──────────────────┘
-                                  │
-                                  ▼
-               ┌─────────────────────────────────────┐
-               │  STEP 8: SessionStart Hook            │
-               │  (trigger="compact")                 │
-               │  Inject additional context if needed  │
-               └──────────────────┬──────────────────┘
-                                  │
-                                  ▼
-                    ┌───────────────────────┐
-                    │  ✅ Compact DONE       │
-                    │  Continue conversation │
-                    └───────────────────────┘
+  ╔═══════════════════════════════════════════════╗
+  ║  TRIGGER                                      ║
+  ║  Token count >= N (depends on context window)  ║
+  ║  or user types /compact                        ║
+  ╚════════════════════╤══════════════════════════╝
+                       │
+                       ▼
+  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  ┃  STEP 1: PreCompact Hook                      ┃
+  ┃  Run shell command (if configured)             ┃
+  ┃  stdout → appended to summary prompt           ┃
+  ┗━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                       │
+                       ▼
+  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  ┃  STEP 2: Build Summary Request                ┃
+  ┃  system: "You are a helpful AI assistant       ┃
+  ┃    tasked with summarizing conversations."     ┃
+  ┃  messages: [                                   ┃
+  ┃    ...entire_original_history...,              ┃
+  ┃    { role: "user", content: SUMMARY_PROMPT }   ┃
+  ┃  ]                                             ┃
+  ┃  tools: [] (no tools allowed)                  ┃
+  ┗━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                       │
+                       ▼
+  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  ┃  STEP 3: Send to Claude API                   ┃
+  ┃  Claude reads entire history →                 ┃
+  ┃  writes summary with 9 sections:               ┃
+  ┃  1. Primary Request & Intent                   ┃
+  ┃  2. Key Technical Concepts                     ┃
+  ┃  3. Files & Code Sections                      ┃
+  ┃  4. Errors & Fixes                             ┃
+  ┃  5. Problem Solving                            ┃
+  ┃  6. ALL User Messages                          ┃
+  ┃  7. Pending Tasks                              ┃
+  ┃  8. Current Work                               ┃
+  ┃  9. Optional Next Step                         ┃
+  ┃  Output: <summary>...</summary>                ┃
+  ┗━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                       │
+                       ▼
+  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  ┃  STEP 4: Replace Messages                     ┃
+  ┃  DELETE: messages[0..N]                        ┃
+  ┃  REPLACE WITH: messages = [{                   ┃
+  ┃    role: "user",                               ┃
+  ┃    content: "This session is being             ┃
+  ┃      continued from a previous conversation    ┃
+  ┃      that ran out of context.\nSummary:\n      ┃
+  ┃      <summary content>"                        ┃
+  ┃  }]                                            ┃
+  ┗━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                       │
+                       ▼
+  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  ┃  STEP 5: Write Compact Boundary               ┃
+  ┃  Write to JSONL: {                             ┃
+  ┃    type: "system",                             ┃
+  ┃    subtype: "compact_boundary",                ┃
+  ┃    compactMetadata: {                          ┃
+  ┃      trigger: "auto"|"manual",                 ┃
+  ┃      preTokens, messagesSummarized             ┃
+  ┃  }}                                            ┃
+  ┗━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                       │
+                       ▼
+  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  ┃  STEP 6: Re-inject Metadata                   ┃
+  ┃  Re-inject into new messages:                  ┃
+  ┃  ├── <available-deferred-tools>                ┃
+  ┃  │     (deferred tool names)                   ┃
+  ┃  └── <system-reminder>                         ┃
+  ┃        CLAUDE.md, memory, currentDate          ┃
+  ┃      </system-reminder>                        ┃
+  ┗━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                       │
+                       ▼
+  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  ┃  STEP 7: PostCompact Hook                     ┃
+  ┃  Run shell command (if configured)             ┃
+  ┃  Receives summary text                         ┃
+  ┃  stdout → displayed to user                    ┃
+  ┗━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                       │
+                       ▼
+  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+  ┃  STEP 8: SessionStart Hook                    ┃
+  ┃  (trigger="compact")                           ┃
+  ┃  Inject additional context if needed           ┃
+  ┗━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                       │
+                       ▼
+  ╔═══════════════════════════════════════════════╗
+  ║  ✅ Compact DONE — Continue conversation       ║
+  ╚═══════════════════════════════════════════════╝
 ```
 
 ---
@@ -229,29 +231,22 @@
 │  "stream": true                                                          │
 │                                                                          │
 │  ┌────────────────────────────────────────────────────────────────────┐  │
-│  │ "system": [...] → UNCHANGED — kept 100%                            │  │
-│  │  [0] { type: "text", text: "<billing header>" }                   │  │
-│  │  [1] { type: "text", text: "You are a Claude agent..." }          │  │
-│  │  [2] { type: "text", text: "<instructions + CLAUDE.md>" }         │  │
-│  └────────────────────────────────────────────────────────────────────┘  │
-│  ┌────────────────────────────────────────────────────────────────────┐  │
-│  │ "tools": [...] → UNCHANGED — kept 100%                             │  │
-│  │  { name: "Agent",  description: "...", input_schema: {...} }      │  │
-│  │  { name: "Bash",   description: "...", input_schema: {...} }      │  │
-│  │  ... + ToolSearch, MCP tools                                      │  │
-│  └────────────────────────────────────────────────────────────────────┘  │
-│  ┌────────────────────────────────────────────────────────────────────┐  │
 │  │ "messages": [...]                                                  │  │
 │  │                                                                    │  │
-│  │  ┌─ [0] { role: "user" } → RE-INJECTED ──────────────────────┐  │  │
-│  │  │  content: [{ type: "text", text: "<available-deferred-tools>│  │  │
-│  │  │    AskUserQuestion, WebSearch, mcp__jira__...               │  │  │
-│  │  │    </available-deferred-tools>" }]                          │  │  │
+│  │  ┌─ [0] { role: "user" } (isMeta) → RE-INJECTED ───────────────┐  │  │
+│  │  │  content: [{ type: "text", text: "<available-deferred-tools>  │  │  │
+│  │  │    AskUserQuestion, WebSearch, mcp__jira__...                 │  │  │
+│  │  │    </available-deferred-tools>" }]                            │  │  │
 │  │  └────────────────────────────────────────────────────────────┘  │  │
-│  │  ┌─ [1] { role: "user" } (isMeta) → RE-INJECTED ─────────────┐  │  │
-│  │  │  content: [{ type: "text", text: "<system-reminder>         │  │  │
-│  │  │    CLAUDE.md context, skill_listing                         │  │  │
-│  │  │    </system-reminder>" }]                                   │  │  │
+│  │  ┌─ [1] { role: "user" } (isMeta) → RE-INJECTED ───────────────┐  │  │
+│  │  │  content: [{ type: "text", text: "<system-reminder>           │  │  │
+│  │  │    # claudeMd                                                 │  │  │
+│  │  │    Contents of CLAUDE.md hierarchy                            │  │  │
+│  │  │    # memory                                                   │  │  │
+│  │  │    Memory index                                               │  │  │
+│  │  │    # currentDate                                              │  │  │
+│  │  │    Today's date is 2026-03-14.                                │  │  │
+│  │  │    </system-reminder>" }]                                     │  │  │
 │  │  └────────────────────────────────────────────────────────────┘  │  │
 │  │  ┌─ [2] { role: "user" } (SUMMARY) ───────────────────────────┐  │  │
 │  │  │  content: [{ type: "text", text:                            │  │  │
@@ -272,6 +267,19 @@
 │  │  │     ~/.claude/projects/.../session.jsonl                    │  │  │
 │  │  │     Continue without asking further questions." }]          │  │  │
 │  │  └────────────────────────────────────────────────────────────┘  │  │
+│  └────────────────────────────────────────────────────────────────────┘  │
+│  ┌────────────────────────────────────────────────────────────────────┐  │
+│  │ "system": [...] → UNCHANGED — kept 100%                            │  │
+│  │  [0] { type: "text", text: "<billing header>" }                   │  │
+│  │  [1] { type: "text", text: "You are a Claude agent..." }          │  │
+│  │  [2] { type: "text", text: "<instructions>" }                     │  │
+│  │  ⚠️  NO CLAUDE.md — it's in messages via <system-reminder>        │  │
+│  └────────────────────────────────────────────────────────────────────┘  │
+│  ┌────────────────────────────────────────────────────────────────────┐  │
+│  │ "tools": [...] → UNCHANGED — kept 100%                             │  │
+│  │  { name: "Agent",  description: "...", input_schema: {...} }      │  │
+│  │  { name: "Bash",   description: "...", input_schema: {...} }      │  │
+│  │  ... + ToolSearch, MCP tools                                      │  │
 │  └────────────────────────────────────────────────────────────────────┘  │
 │                                                                          │
 │  ┌────────────────────────────────────────────────────────────────────┐  │
@@ -299,10 +307,10 @@
 │  │  ❌ LOST: thinking blocks                                         │  │
 │  │  ❌ LOST: original isMeta messages                                │  │
 │  │  ❌ LOST: exact code snippets (unless AI included them)           │  │
-│  │  ✅ KEPT: "system" — full system prompt + CLAUDE.md               │  │
+│  │  ✅ KEPT: "system" — full instructions (NO CLAUDE.md)             │  │
 │  │  ✅ KEPT: "tools" — all tool definitions                          │  │
-│  │  ✅ KEPT: skill listing (re-injected into "messages")             │  │
-│  │  ✅ KEPT: deferred tools list (re-injected into "messages")       │  │
+│  │  ✅ KEPT: CLAUDE.md + memory (re-injected via <system-reminder>)  │  │
+│  │  ✅ KEPT: deferred tool names (re-injected via messages)          │  │
 │  │  ✅ KEPT: summary of entire conversation history                  │  │
 │  └────────────────────────────────────────────────────────────────────┘  │
 └──────────────────────────────────────────────────────────────────────────┘

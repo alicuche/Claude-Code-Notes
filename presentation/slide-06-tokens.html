@@ -9,72 +9,184 @@
     .snowball-visual {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin: 24px 0;
+      gap: 6px;
+      margin: 16px 0;
     }
-    .snowball-turn {
+    .snowball-section {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .snowball-section-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--purple);
+      padding: 6px 0 2px;
+      border-top: 1px dashed var(--purple-border);
+    }
+    .snowball-section:first-child .snowball-section-label {
+      border-top: none;
+      padding-top: 0;
+    }
+    .snowball-row {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
     }
-    .snowball-label {
-      font-size: 13px;
-      font-weight: 600;
+    .snowball-step {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      min-width: 20px;
+      text-align: center;
+    }
+    .snowball-event {
+      font-size: 11px;
       color: var(--text-secondary);
-      min-width: 60px;
+      min-width: 140px;
+      white-space: nowrap;
+    }
+    .snowball-event .ev-icon {
+      display: inline-block;
+      width: 14px;
+      text-align: center;
+      margin-right: 2px;
     }
     .snowball-bar-track {
       flex: 1;
-      height: 28px;
+      height: 24px;
       background: #F1F5F9;
-      border-radius: 6px;
+      border-radius: 4px;
       overflow: hidden;
       display: flex;
     }
-    .snowball-bar-system {
-      background: #D4D4D8;
+    /* Shared bar segment styling */
+    .snowball-bar-track > div {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
-      font-weight: 500;
-      color: var(--text-secondary);
-    }
-    .snowball-bar-tools {
-      background: #A78BFA;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 500;
-      color: white;
-    }
-    .snowball-bar-messages {
-      background: var(--purple);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 500;
-      color: white;
-    }
-    .snowball-tokens {
-      font-size: 13px;
+      font-size: 9px;
       font-weight: 600;
+      min-width: 28px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .bar-sys { background: #D4D4D8; color: #52525B; }
+    .bar-tools { background: #A78BFA; color: white; }
+    .bar-user { background: #60A5FA; color: white; }
+    .bar-asst { background: #34D399; color: #065F46; }
+    .bar-tool-result { background: #F59E0B; color: white; }
+    .bar-new {
+      animation: pulse-new 1.5s ease-in-out;
+    }
+    @keyframes pulse-new {
+      0% { opacity: 0.3; }
+      50% { opacity: 1; }
+      100% { opacity: 1; }
+    }
+    .snowball-total {
+      font-size: 12px;
+      font-weight: 700;
       color: var(--text-primary);
-      min-width: 80px;
+      min-width: 50px;
       text-align: right;
       font-variant-numeric: tabular-nums;
+    }
+    .snowball-legend {
+      display: flex;
+      gap: 16px;
+      margin: 8px 0 12px;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+    .snowball-summary {
+      display: flex;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .summary-card {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .summary-card.total-new {
+      background: rgba(124,58,237,0.06);
+      border: 1px solid var(--purple-border);
+    }
+    .summary-card.total-sent {
+      background: rgba(239,68,68,0.06);
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+    .summary-card.ratio {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.25);
+    }
+    .summary-number {
+      font-size: 22px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .summary-card.total-new .summary-number { color: var(--purple); }
+    .summary-card.total-sent .summary-number { color: #DC2626; }
+    .summary-card.ratio .summary-number { color: #D97706; }
+    .summary-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .response-arrow {
+      flex: 1;
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      height: 24px;
+    }
+    .response-arrow .arrow-line {
+      flex: 1;
+      height: 2px;
+      background: #D4D4D8;
+      position: relative;
+    }
+    .response-arrow .arrow-line::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 5px solid transparent;
+      border-right: 7px solid #A1A1AA;
+    }
+    .response-arrow .arrow-label {
+      position: relative;
+      z-index: 1;
+      font-size: 11px;
+      font-weight: 700;
+      color: #52525B;
+      background: #F8FAFC;
+      padding: 0 8px;
+      white-space: nowrap;
     }
     .callout-box {
       background: rgba(124,58,237,0.06);
       border: 1px solid var(--purple-border);
       border-radius: 8px;
-      padding: 16px 20px;
-      margin: 20px 0;
+      padding: 14px 20px;
+      margin: 16px 0;
     }
     .callout-box p {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-secondary);
       line-height: 1.6;
     }
@@ -92,129 +204,166 @@
         <h1 class="slide-title animate-in">Tokens &mdash; Snowball Effect</h1>
         <p class="slide-subtitle animate-in">API is stateless &mdash; every turn resends the ENTIRE history</p>
 
+        <div class="snowball-legend animate-in">
+          <div class="legend-item"><div class="legend-swatch" style="background:#D4D4D8"></div>System prompt</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#A78BFA"></div>Tools (JSON schema)</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#60A5FA"></div>User message</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#34D399"></div>AI output</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#F59E0B"></div>Tool result</div>
+        </div>
+
+        <!--
+          Token values (rounded for readability, sized so every segment shows its label):
+          System: 25K | Tools: 8K | User msg: 3K | AI tool_use: 3K | Tool result: 5K each | AI response: 3K
+          Max bar (API Call 4) = 58K = 100%
+          Each 1K ≈ 1.72% width
+        -->
         <div class="snowball-visual animate-in">
-          <div class="snowball-turn">
-            <span class="snowball-label">Turn 1</span>
-            <div class="snowball-bar-track">
-              <div class="snowball-bar-system" style="width:37%">System 25K</div>
-              <div class="snowball-bar-tools" style="width:12%">Tools 8K</div>
-              <div class="snowball-bar-messages" style="width:1%"></div>
+
+          <!-- ===== API CALL 1 ===== -->
+          <div class="snowball-section">
+            <div class="snowball-section-label">API Call 1 &mdash; User: &ldquo;Review my code&rdquo;</div>
+
+            <div class="snowball-row">
+              <span class="snowball-step">1</span>
+              <span class="snowball-event"><span class="ev-icon">&#9654;</span> Send to API</span>
+              <div class="snowball-bar-track">
+                <div class="bar-sys" style="width:43.1%">25K</div>
+                <div class="bar-tools" style="width:13.8%">8K</div>
+                <div class="bar-user bar-new" style="width:5.2%">3K</div>
+              </div>
+              <span class="snowball-total">36K</span>
             </div>
-            <span class="snowball-tokens">33,500</span>
+
+            <div class="snowball-row">
+              <span class="snowball-step">2</span>
+              <span class="snowball-event"><span class="ev-icon">&#9664;</span> AI: Read(file.ts)</span>
+              <div class="response-arrow">
+                <span class="arrow-label">tool_use 3K</span>
+                <div class="arrow-line"></div>
+              </div>
+              <span class="snowball-total" style="color:#52525B">+3K</span>
+            </div>
           </div>
-          <div class="snowball-turn">
-            <span class="snowball-label">Turn 2</span>
-            <div class="snowball-bar-track">
-              <div class="snowball-bar-system" style="width:35%">System 25K</div>
-              <div class="snowball-bar-tools" style="width:11%">Tools 8K</div>
-              <div class="snowball-bar-messages" style="width:4%">+1.5K</div>
+
+          <!-- ===== API CALL 2 ===== -->
+          <div class="snowball-section">
+            <div class="snowball-section-label">API Call 2 &mdash; Host executes Read(file.ts) &rarr; 5K file content as tool_result</div>
+
+            <div class="snowball-row">
+              <span class="snowball-step">3</span>
+              <span class="snowball-event"><span class="ev-icon">&#9654;</span> Resend ALL + result</span>
+              <div class="snowball-bar-track">
+                <div class="bar-sys" style="width:43.1%">25K</div>
+                <div class="bar-tools" style="width:13.8%">8K</div>
+                <div class="bar-user" style="width:5.2%">3K</div>
+                <div class="bar-asst" style="width:5.2%">3K</div>
+                <div class="bar-tool-result bar-new" style="width:8.6%">5K</div>
+              </div>
+              <span class="snowball-total">44K</span>
             </div>
-            <span class="snowball-tokens">35,000</span>
+
+            <div class="snowball-row">
+              <span class="snowball-step">4</span>
+              <span class="snowball-event"><span class="ev-icon">&#9664;</span> AI: Read(utils.ts)</span>
+              <div class="response-arrow">
+                <span class="arrow-label">tool_use 3K</span>
+                <div class="arrow-line"></div>
+              </div>
+              <span class="snowball-total" style="color:#52525B">+3K</span>
+            </div>
           </div>
-          <div class="snowball-turn">
-            <span class="snowball-label">Turn 3</span>
-            <div class="snowball-bar-track">
-              <div class="snowball-bar-system" style="width:33%">System 25K</div>
-              <div class="snowball-bar-tools" style="width:11%">Tools 8K</div>
-              <div class="snowball-bar-messages" style="width:7%">+4K</div>
+
+          <!-- ===== API CALL 3 ===== -->
+          <div class="snowball-section">
+            <div class="snowball-section-label">API Call 3 &mdash; Host executes Read(utils.ts) &rarr; 5K file content as tool_result</div>
+
+            <div class="snowball-row">
+              <span class="snowball-step">5</span>
+              <span class="snowball-event"><span class="ev-icon">&#9654;</span> Resend ALL + result</span>
+              <div class="snowball-bar-track">
+                <div class="bar-sys" style="width:43.1%">25K</div>
+                <div class="bar-tools" style="width:13.8%">8K</div>
+                <div class="bar-user" style="width:5.2%">3K</div>
+                <div class="bar-asst" style="width:5.2%">3K</div>
+                <div class="bar-tool-result" style="width:8.6%">5K</div>
+                <div class="bar-asst" style="width:5.2%">3K</div>
+                <div class="bar-tool-result bar-new" style="width:8.6%">5K</div>
+              </div>
+              <span class="snowball-total">52K</span>
             </div>
-            <span class="snowball-tokens">37,500</span>
+
+            <div class="snowball-row">
+              <span class="snowball-step">6</span>
+              <span class="snowball-event"><span class="ev-icon">&#9664;</span> AI: final review</span>
+              <div class="response-arrow">
+                <span class="arrow-label">response 3K</span>
+                <div class="arrow-line"></div>
+              </div>
+              <span class="snowball-total" style="color:#52525B">+3K</span>
+            </div>
+          </div>
+
+          <!-- ===== API CALL 4 ===== -->
+          <div class="snowball-section">
+            <div class="snowball-section-label">API Call 4 &mdash; User follow-up question</div>
+
+            <div class="snowball-row">
+              <span class="snowball-step">7</span>
+              <span class="snowball-event"><span class="ev-icon">&#9654;</span> Resend ALL + new msg</span>
+              <div class="snowball-bar-track">
+                <div class="bar-sys" style="width:43.1%">25K</div>
+                <div class="bar-tools" style="width:13.8%">8K</div>
+                <div class="bar-user" style="width:5.2%">3K</div>
+                <div class="bar-asst" style="width:5.2%">3K</div>
+                <div class="bar-tool-result" style="width:8.6%">5K</div>
+                <div class="bar-asst" style="width:5.2%">3K</div>
+                <div class="bar-tool-result" style="width:8.6%">5K</div>
+                <div class="bar-asst" style="width:5.2%">3K</div>
+                <div class="bar-user bar-new" style="width:5.2%">3K</div>
+              </div>
+              <span class="snowball-total">58K</span>
+            </div>
+
+            <div class="snowball-row">
+              <span class="snowball-step">8</span>
+              <span class="snowball-event"><span class="ev-icon">&#9664;</span> AI: answer</span>
+              <div class="response-arrow">
+                <span class="arrow-label">response 3K</span>
+                <div class="arrow-line"></div>
+              </div>
+              <span class="snowball-total" style="color:#52525B">+3K</span>
+            </div>
           </div>
         </div>
 
-        <div class="mermaid-container animate-in" id="snowball-diagram"></div>
+        <div class="snowball-summary animate-in">
+          <div class="summary-card total-new">
+            <div class="summary-number">28K</div>
+            <div class="summary-label">NEW content (input + output combined)</div>
+          </div>
+          <div class="summary-card total-sent">
+            <div class="summary-number">190K</div>
+            <div class="summary-label">TOTAL input tokens sent to API</div>
+          </div>
+          <div class="summary-card ratio">
+            <div class="summary-number">~7x</div>
+            <div class="summary-label">190K / 28K = overhead ratio</div>
+          </div>
+        </div>
 
         <div class="callout-box animate-in">
           <p>
-            <strong>THIS</strong> is why context window matters &mdash; not "AI forgets" but "cumulative cost".<br>
-            Tool results are especially dangerous: reading 1 file at 5K tokens = 5K resent EVERY subsequent turn.<br>
-            Example: 10 file reads &times; 5K = <strong>50K tokens permanent</strong> in history.
+            <strong>Every token persists:</strong> user messages, AI output (including tool_use JSON), AND tool results &mdash; all resent every turn.<br>
+            Read 1 file = 5K tokens stuck <strong>for the rest of the conversation</strong>. 10 file reads = <strong>50K tokens resent EVERY subsequent call</strong>.<br>
+            <strong>&rarr;</strong> This is why context window matters &mdash; not &ldquo;AI forgets&rdquo; but &ldquo;cumulative cost explodes&rdquo;.<br>
+            <em>Note: Prompt caching reduces cost but does NOT reduce context window consumption.</em>
           </p>
         </div>
       </div>
     </main>
     <footer class="footer" role="contentinfo"></footer>
   </div>
-  <style>
-    .mermaid-container {
-      background: rgba(255,255,255,0.9);
-      border: 1px solid var(--purple-border);
-      border-radius: 12px;
-      padding: 16px 12px;
-      margin: 16px 0;
-      overflow-x: auto;
-      text-align: center;
-    }
-    .mermaid-container svg {
-      max-width: 100%;
-      height: auto;
-      display: inline-block;
-    }
-  </style>
-  <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: 'base',
-      themeVariables: {
-        primaryColor: '#F3F0FF',
-        primaryTextColor: '#18181B',
-        primaryBorderColor: '#7C3AED',
-        lineColor: '#7C3AED',
-        secondaryColor: '#F8FAFC',
-        tertiaryColor: '#FFFFFF',
-        fontFamily: 'Inter, sans-serif',
-        fontSize: '12px',
-        actorBkg: '#7C3AED',
-        actorTextColor: '#FFFFFF',
-        actorBorder: '#6D28D9',
-        signalColor: '#18181B',
-        signalTextColor: '#18181B',
-        noteBkgColor: '#F3F0FF',
-        noteTextColor: '#18181B',
-        noteBorderColor: '#7C3AED',
-        activationBkgColor: '#EDE9FE',
-        activationBorderColor: '#7C3AED'
-      },
-      sequence: {
-        diagramMarginX: 16,
-        diagramMarginY: 16,
-        actorMargin: 60,
-        width: 150,
-        height: 40,
-        messageMargin: 30,
-        mirrorActors: false,
-        useMaxWidth: true
-      }
-    });
-
-    const snowballDiagram = `sequenceDiagram
-    participant C as Client
-    participant A as Claude API
-
-    Note over C,A: Turn 1: System 25K + Tools 8K + User₁ 500 = 33,500 tokens
-    C->>A: [33.5K tokens sent]
-    activate A
-    A-->>C: Asst₁ (1K tokens)
-    deactivate A
-
-    Note over C,A: Turn 2: RESENDS 33.5K + new 1.5K = 35,000 tokens
-    C->>A: [35K tokens sent]
-    activate A
-    A-->>C: Asst₂ (2K tokens)
-    deactivate A
-
-    Note over C,A: Turn 3: RESENDS 35K + new 2.5K = 37,500 tokens
-    C->>A: [37.5K tokens sent]
-    activate A
-    A-->>C: Asst₃ (1.5K tokens)
-    deactivate A
-
-    Note over C,A: 4,500 tokens NEW → 106,000 tokens SENT = 23x!`;
-
-    const r = await mermaid.render('snowball-svg', snowballDiagram);
-    document.getElementById('snowball-diagram').innerHTML = r.svg;
-  </script>
   <script src="shared/navigation.js"></script>
 </body>
 </html>
