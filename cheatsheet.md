@@ -16,7 +16,6 @@
 
 **Core Reference**
 - [Configuration](#configuration)
-- [Multiple Profiles](#multiple-profiles-claude_config_dir)
 - [Status Line Setup](#status-line-setup)
 - [CLAUDE.md & Memory](#claudemd--project-memory)
 - [Slash Commands](#slash-commands)
@@ -35,6 +34,7 @@
 - [Git Worktrees](#git-worktrees)
 - [Permissions & Security](#permissions--security)
 - [Hooks & Automation](#hooks--automation)
+- [Multiple Profiles](#multiple-profiles-claude_config_dir)
 
 </td>
 <td width="33%" valign="top">
@@ -69,46 +69,6 @@
 | 2 | `.claude/settings.local.json` | Project local (gitignored) |
 | 3 | `.claude/settings.json` | Project shared (committed) |
 | 4 | `~/.claude/settings.json` | User global |
-
-<sup>[Back to top](#quick-navigation)</sup>
-
----
-
-## Multiple Profiles (CLAUDE_CONFIG_DIR)
-
-Run multiple Claude Code accounts or isolated configurations side by side using the `CLAUDE_CONFIG_DIR` environment variable. Each profile gets its own settings, sessions, and usage limits.
-
-```bash
-# Set up shell aliases for different accounts
-alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work claude'
-alias claude-personal='CLAUDE_CONFIG_DIR=~/.claude-personal claude'
-
-# Or export for the current shell session
-export CLAUDE_CONFIG_DIR="$HOME/.claude-work"
-claude
-```
-
-**How it works:**
-- `CLAUDE_CONFIG_DIR` tells Claude Code where to store config, sessions, and memory
-- Default location: `~/.claude/` (or `~/.config/claude/` on newer versions)
-- Each directory is fully isolated -- separate settings, MCP configs, and conversation history
-- Requires separate Anthropic accounts (different emails) for separate usage limits
-
-**Parallel usage:**
-
-```bash
-# Terminal 1 -- work account
-CLAUDE_CONFIG_DIR=~/.claude-work claude
-
-# Terminal 2 -- personal account
-CLAUDE_CONFIG_DIR=~/.claude-personal claude
-```
-
-**Community tools for profile management:**
-- [claude-code-profiles](https://github.com/pegasusheavy/claude-code-profiles) -- profile switcher
-- [clausona](https://github.com/larcane97/clausona) -- CLI profile manager
-
-> **Note:** This is an unofficial/undocumented feature. The `/ide` command may not work with custom config dirs. Claude may still create local `.claude/` directories in project workspaces.
 
 <sup>[Back to top](#quick-navigation)</sup>
 
@@ -206,31 +166,115 @@ Use `/memory` to quickly open and edit your `CLAUDE.md` files from within a Clau
 
 ## Slash Commands
 
-| Command | Purpose |
-|---|---|
-| `/add-dir` | Add directory to session context |
-| `/agents` | List available subagents |
-| `/bug` | Report a bug to Anthropic |
-| `/clear` | Clear conversation history |
-| `/compact [focus]` | Compress conversation to save context |
-| `/config` | View/modify settings |
-| `/cost` | Show token usage & cost |
-| `/doctor` | Run setup diagnostics |
-| `/help` | Show available commands |
-| `/init` | Create `CLAUDE.md` for project |
-| `/login` / `/logout` | Account management |
-| `/mcp` | Manage MCP servers |
-| `/memory` | Edit `CLAUDE.md` memory files |
-| `/model` | Switch active model |
-| `/permissions` | View/update tool permissions |
-| `/pr_comments` | View PR comments |
-| `/review` | Request code review |
-| `/rewind` | Roll back to checkpoint |
-| `/sandbox` | Toggle sandboxed execution |
-| `/status` | Session info |
-| `/terminal-setup` | Configure terminal integration |
-| `/usage` | Show API usage & quota |
-| `/vim` | Toggle vim keybindings |
+### Session & Navigation
+
+| Command | Alias(es) | Purpose |
+|---|---|---|
+| `/help` | | Show available commands |
+| `/clear` | `/reset`, `/new` | Clear conversation history |
+| `/compact [focus]` | | Compress conversation to save context |
+| `/exit` | `/quit` | Exit the CLI |
+| `/fork [name]` | | Create a fork of the current conversation |
+| `/resume [session]` | `/continue` | Resume a previous conversation by ID or name |
+| `/rename [name]` | | Rename the current session |
+| `/rewind` | `/checkpoint` | Roll back to a previous checkpoint |
+| `/add-dir <path>` | | Add a directory to session context |
+| `/context` | | Visualize current context usage |
+| `/copy` | | Copy last response to clipboard |
+| `/diff` | | Open interactive diff viewer for uncommitted changes |
+| `/export [filename]` | | Export conversation as plain text |
+| `/plan` | | Enter plan mode |
+| `/tasks` | | List and manage background tasks |
+
+### Model & Performance
+
+| Command | Alias(es) | Purpose |
+|---|---|---|
+| `/model [model]` | | Switch active model |
+| `/fast [on\|off]` | | Toggle fast mode |
+| `/effort [low\|medium\|high\|max\|auto]` | | Set model effort level |
+
+### Configuration & Settings
+
+| Command | Alias(es) | Purpose |
+|---|---|---|
+| `/config` | `/settings` | View/modify settings |
+| `/permissions` | `/allowed-tools` | View/update tool permissions |
+| `/sandbox` | | Toggle sandboxed execution |
+| `/color [color]` | | Set the prompt bar color |
+| `/theme` | | Change color theme (light, dark, colorblind, ANSI) |
+| `/vim` | | Toggle vim keybindings |
+| `/keybindings` | | Open keybindings configuration file |
+| `/statusline` | | Configure Claude Code status line |
+| `/terminal-setup` | | Configure terminal keybindings (Shift+Enter, etc.) |
+| `/hooks` | | View hook configurations |
+| `/privacy-settings` | | View/update privacy settings (Pro/Max only) |
+| `/extra-usage` | | Configure extra usage when rate limits are hit |
+
+### Account & Auth
+
+| Command | Alias(es) | Purpose |
+|---|---|---|
+| `/login` | | Sign in to Anthropic account |
+| `/logout` | | Sign out from Anthropic account |
+| `/usage` | | Show plan usage & rate limits |
+| `/cost` | | Show token usage & cost for current session |
+| `/stats` | | Visualize daily usage, session history, and streaks |
+| `/upgrade` | | Open upgrade page to switch to a higher plan |
+| `/passes` | | Share a free week of Claude Code (if eligible) |
+
+### Project & Memory
+
+| Command | Alias(es) | Purpose |
+|---|---|---|
+| `/init` | | Create `CLAUDE.md` for project |
+| `/memory` | | Edit `CLAUDE.md` memory files |
+| `/doctor` | | Run setup diagnostics |
+| `/insights` | | Generate a report analyzing sessions and patterns |
+
+### Extensions & Integrations
+
+| Command | Alias(es) | Purpose |
+|---|---|---|
+| `/mcp` | | Manage MCP server connections and OAuth |
+| `/agents` | | List available subagents |
+| `/skills` | | List available skills |
+| `/plugin` | | Manage Claude Code plugins |
+| `/reload-plugins` | | Reload all active plugins |
+| `/ide` | | Manage IDE integrations |
+
+### GitHub & Code
+
+| Command | Alias(es) | Purpose |
+|---|---|---|
+| `/pr-comments [PR]` | | Fetch and display GitHub PR comments |
+| `/review` | | Request code review (deprecated -- use plugin) |
+| `/security-review` | | Analyze pending changes for security vulnerabilities |
+| `/install-github-app` | | Set up Claude GitHub Actions app |
+
+### Communication & Sharing
+
+| Command | Alias(es) | Purpose |
+|---|---|---|
+| `/feedback` | `/bug` | Submit feedback or report a bug |
+| `/btw <question>` | | Ask a quick side question without adding to conversation |
+| `/remote-control` | `/rc` | Make session available for remote control from claude.ai |
+| `/remote-env` | | Configure default remote environment for web sessions |
+| `/install-slack-app` | | Install the Claude Slack app |
+
+### Platform & Misc
+
+| Command | Alias(es) | Purpose |
+|---|---|---|
+| `/desktop` | `/app` | Continue session in Claude Code Desktop (macOS/Windows) |
+| `/mobile` | `/ios`, `/android` | Show QR code to download Claude mobile app |
+| `/chrome` | | Configure Claude in Chrome settings |
+| `/release-notes` | | View the full changelog |
+| `/stickers` | | Order Claude Code stickers |
+
+> **Notes:**
+> - Not all commands are visible to every user. Some depend on platform (e.g., `/desktop` on macOS/Windows), plan tier (e.g., `/privacy-settings` on Pro/Max), or eligibility (e.g., `/passes`).
+> - MCP servers can expose dynamic commands with the format `/mcp__<server>__<prompt>`.
 
 ### Custom Slash Commands
 
@@ -1005,5 +1049,45 @@ Connection string: `postgresql://user:pass@host:5432/dbname`
 | Blender MCP | 3D model generation | Blender + MCP plugin |
 
 > "Create a simple 3D model of a coffee mug with handle, export as .glb file."
+
+<sup>[Back to top](#quick-navigation)</sup>
+
+---
+
+## Multiple Profiles (CLAUDE_CONFIG_DIR)
+
+Run multiple Claude Code accounts or isolated configurations side by side using the `CLAUDE_CONFIG_DIR` environment variable. Each profile gets its own settings, sessions, and usage limits.
+
+```bash
+# Set up shell aliases for different accounts
+alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work claude'
+alias claude-personal='CLAUDE_CONFIG_DIR=~/.claude-personal claude'
+
+# Or export for the current shell session
+export CLAUDE_CONFIG_DIR="$HOME/.claude-work"
+claude
+```
+
+**How it works:**
+- `CLAUDE_CONFIG_DIR` tells Claude Code where to store config, sessions, and memory
+- Default location: `~/.claude/` (or `~/.config/claude/` on newer versions)
+- Each directory is fully isolated -- separate settings, MCP configs, and conversation history
+- Requires separate Anthropic accounts (different emails) for separate usage limits
+
+**Parallel usage:**
+
+```bash
+# Terminal 1 -- work account
+CLAUDE_CONFIG_DIR=~/.claude-work claude
+
+# Terminal 2 -- personal account
+CLAUDE_CONFIG_DIR=~/.claude-personal claude
+```
+
+**Community tools for profile management:**
+- [claude-code-profiles](https://github.com/pegasusheavy/claude-code-profiles) -- profile switcher
+- [clausona](https://github.com/larcane97/clausona) -- CLI profile manager
+
+> **Note:** This is an unofficial/undocumented feature. The `/ide` command may not work with custom config dirs. Claude may still create local `.claude/` directories in project workspaces.
 
 <sup>[Back to top](#quick-navigation)</sup>
