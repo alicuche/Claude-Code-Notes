@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — Context Optimization</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .problems-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .problem-card {
+      background: rgba(254,242,242,0.7);
+      border: 1px solid #FCA5A5;
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .problem-card h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #DC2626;
+      margin-bottom: 4px;
+    }
+    .problem-card p {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .rules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .rule-card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--purple-border);
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+    }
+    .rule-number {
+      position: absolute;
+      top: -8px;
+      left: 16px;
+      background: var(--purple);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 10px;
+    }
+    .rule-card h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 8px 0 8px;
+    }
+    .rule-bad, .rule-good {
+      font-size: 13px;
+      padding: 4px 0;
+      display: flex;
+      gap: 8px;
+    }
+    .rule-bad { color: #DC2626; }
+    .rule-good { color: #16A34A; }
+    .delegation-visual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 20px 0;
+    }
+    .delegation-card {
+      background: rgba(255,255,255,0.85);
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid var(--border-light);
+    }
+    .delegation-card h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .delegation-card.before h4 { color: #DC2626; }
+    .delegation-card.after h4 { color: #16A34A; }
+    .delegation-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .delegation-row .val {
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .delegation-total {
+      border-top: 2px solid var(--border-light);
+      margin-top: 8px;
+      padding-top: 8px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .delegation-total.bad { color: #DC2626; }
+    .delegation-total.good { color: #16A34A; }
+    .reduction-badge {
+      text-align: center;
+      margin-top: 12px;
+      padding: 8px;
+      background: rgba(22,163,106,0.08);
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #16A34A;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">④ Context Optimization</h1>
+        <p class="slide-subtitle animate-in">When context gets TOO LARGE &mdash; What happens?</p>
+
+        <div class="problems-grid animate-in">
+          <div class="problem-card">
+            <h4>"Lost in the Middle"</h4>
+            <p>LLM attends to beginning + end, SKIPS the middle</p>
+          </div>
+          <div class="problem-card">
+            <h4>Hallucination increases</h4>
+            <p>50+ tools &rarr; &lt;60% accuracy (vs 95% with 5 tools)</p>
+          </div>
+          <div class="problem-card">
+            <h4>Unexpected auto-compact</h4>
+            <p>LOSES code in progress, files read, decisions</p>
+          </div>
+          <div class="problem-card">
+            <h4>Cost explodes</h4>
+            <p>30 turns = 56x cost of first turn (quadratic)</p>
+          </div>
+        </div>
+
+        <h2 class="slide-heading animate-in">4 Rules to keep context clean</h2>
+
+        <div class="rules-grid animate-in">
+          <div class="rule-card">
+            <span class="rule-number">#1</span>
+            <h4>INJECT ENOUGH, NOT EVERYTHING</h4>
+            <div class="rule-bad">&#10007; 58 MCP tools "just in case" &rarr; 55K wasted</div>
+            <div class="rule-good">&#10003; 5 needed tools + defer the rest &rarr; 5K used</div>
+          </div>
+          <div class="rule-card">
+            <span class="rule-number">#2</span>
+            <h4>USE CLI WHEN POSSIBLE</h4>
+            <div class="rule-bad">&#10007; MCP tool "list_files" = 500 tokens definition</div>
+            <div class="rule-good">&#10003; Bash: ls -la = 0 tokens definition (built-in)</div>
+          </div>
+          <div class="rule-card">
+            <span class="rule-number">#3</span>
+            <h4>DELEGATE &rarr; SUBAGENT</h4>
+            <div class="rule-bad">&#10007; File reads, greps in main &rarr; 70K context</div>
+            <div class="rule-good">&#10003; SubAgent does it, returns summary &rarr; 35K</div>
+          </div>
+          <div class="rule-card">
+            <span class="rule-number">#4</span>
+            <h4>COMPACT AT THE RIGHT TIME</h4>
+            <div class="rule-bad">&#10007; Auto-compact mid-task &rarr; loses critical context</div>
+            <div class="rule-good">&#10003; /compact after milestones &rarr; clean break</div>
+          </div>
+        </div>
+
+        <h2 class="slide-heading animate-in">SubAgent &mdash; Separate Context, Clean Main</h2>
+
+        <div class="delegation-visual animate-in">
+          <div class="delegation-card before">
+            <h4>BEFORE delegation</h4>
+            <div class="delegation-row"><span>Overhead</span><span class="val">30K</span></div>
+            <div class="delegation-row"><span>File reads</span><span class="val">18K</span></div>
+            <div class="delegation-row"><span>Grep</span><span class="val">8K</span></div>
+            <div class="delegation-row"><span>Tests</span><span class="val">4K</span></div>
+            <div class="delegation-row"><span>Chat</span><span class="val">10K</span></div>
+            <div class="delegation-row delegation-total bad"><span>TOTAL</span><span class="val">70K</span></div>
+          </div>
+          <div class="delegation-card after">
+            <h4>AFTER delegation</h4>
+            <div class="delegation-row"><span>Overhead</span><span class="val">30K</span></div>
+            <div class="delegation-row"><span>Summaries</span><span class="val">5K</span></div>
+            <div class="delegation-row delegation-total good"><span>TOTAL</span><span class="val">35K</span></div>
+            <div class="reduction-badge">84% reduction &mdash; 600K working context!</div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

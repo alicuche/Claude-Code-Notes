@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — CLAUDE.md</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .tree-visual {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--purple-border);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 20px 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 2;
+    }
+    .tree-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tree-indent { padding-left: 24px; }
+    .tree-indent-2 { padding-left: 48px; }
+    .tree-file {
+      color: var(--purple);
+      font-weight: 600;
+    }
+    .tree-folder {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .tree-comment {
+      color: var(--text-faint);
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    .tree-content {
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 12px;
+      padding-left: 24px;
+    }
+    .behavior-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .behavior-card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .behavior-card h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--purple);
+      margin-bottom: 4px;
+    }
+    .behavior-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .warning-box {
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 14px;
+      color: #92400E;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">CLAUDE.md &mdash; Parent &rarr; Child Inheritance</h1>
+
+        <div class="tree-visual animate-in">
+          <div class="tree-line">
+            <span class="tree-file">~/.claude/CLAUDE.md</span>
+            <span class="tree-comment">&larr; Global (all projects)</span>
+          </div>
+          <div class="tree-line tree-indent">|</div>
+          <div class="tree-line">
+            <span class="tree-folder">my-monorepo/</span>
+          </div>
+          <div class="tree-line tree-indent">
+            <span class="tree-file">CLAUDE.md</span>
+            <span class="tree-comment">&larr; Project root (git shared)</span>
+          </div>
+          <div class="tree-content">"Use TypeScript. Follow ESLint."</div>
+          <div class="tree-line tree-indent">|</div>
+          <div class="tree-line tree-indent">
+            <span class="tree-folder">packages/frontend/</span>
+          </div>
+          <div class="tree-line tree-indent-2">
+            <span class="tree-file">CLAUDE.md</span>
+            <span class="tree-comment">&larr; Subdirectory (LAZY load)</span>
+          </div>
+          <div class="tree-content" style="padding-left:48px">"Use React 19. Server components."</div>
+          <div class="tree-line tree-indent">|</div>
+          <div class="tree-line tree-indent">
+            <span class="tree-folder">packages/backend/</span>
+          </div>
+          <div class="tree-line tree-indent-2">
+            <span class="tree-file">CLAUDE.md</span>
+            <span class="tree-comment">&larr; Subdirectory (LAZY load)</span>
+          </div>
+          <div class="tree-content" style="padding-left:48px">"Use Hono. APIs must have OpenAPI."</div>
+        </div>
+
+        <h2 class="slide-heading animate-in">Key behaviors</h2>
+
+        <div class="behavior-grid animate-in">
+          <div class="behavior-card">
+            <h4>Precedence</h4>
+            <p>Child &gt; Parent (specific overrides general)</p>
+          </div>
+          <div class="behavior-card">
+            <h4>Subdirectory</h4>
+            <p>Lazy-loaded &mdash; only when Claude reads files in that directory</p>
+          </div>
+          <div class="behavior-card">
+            <h4>Compaction</h4>
+            <p><strong>SURVIVES</strong> &mdash; one of the few things NOT lost during compact</p>
+          </div>
+          <div class="behavior-card">
+            <h4>Size</h4>
+            <p>Keep &lt; 200 lines &mdash; every token is "permanent"</p>
+          </div>
+        </div>
+
+        <div class="warning-box animate-in">
+          <strong>Warning:</strong> Skills do NOT have inheritance &mdash; only 2-tier (global + project)
+        </div>
+
+        <div class="callout-box animate-in" style="background: rgba(124,58,237,0.06); border: 1px solid var(--purple-border); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: var(--text-secondary);">
+          <strong>Tips:</strong> CLAUDE.local.md for personal settings (gitignored) &bull; claudeMdExcludes in settings to exclude patterns
+        </div>
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

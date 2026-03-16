@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — Agenda</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .agenda-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 32px;
+    }
+    .agenda-column {
+      background: rgba(255,255,255,0.8);
+      border: 1px solid var(--purple-border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .agenda-column:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(124,58,237,0.08);
+    }
+    .agenda-column-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--purple);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--purple);
+    }
+    .agenda-item {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .agenda-item:last-child {
+      border-bottom: none;
+    }
+    .agenda-item-num {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--purple);
+      margin-right: 8px;
+    }
+    .agenda-item-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .agenda-item-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      padding-left: 28px;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">Agenda</h1>
+        <p class="slide-subtitle animate-in">Foundation (how it works) &rarr; Optimization (keep it clean) &rarr; Advanced (when tools explode)</p>
+
+        <div class="agenda-grid">
+          <div class="agenda-column animate-in">
+            <div class="agenda-column-title">Foundation</div>
+            <div class="agenda-item">
+              <span class="agenda-item-num">&oplus;</span>
+              <span class="agenda-item-title">Tool Use</span>
+              <div class="agenda-item-desc">The only primitive LLM actually speaks</div>
+            </div>
+            <div class="agenda-item">
+              <span class="agenda-item-num">&otimes;</span>
+              <span class="agenda-item-title">MCP & Skills</span>
+              <div class="agenda-item-desc">Everything is a tool call underneath</div>
+            </div>
+            <div class="agenda-item">
+              <span class="agenda-item-num">&odot;</span>
+              <span class="agenda-item-title">Tokens & Cost</span>
+              <div class="agenda-item-desc">Why every turn gets more expensive (quadratic)</div>
+            </div>
+          </div>
+
+          <div class="agenda-column animate-in">
+            <div class="agenda-column-title">Optimization</div>
+            <div class="agenda-item">
+              <span class="agenda-item-num">&oplus;</span>
+              <span class="agenda-item-title">4 Rules for Clean Context</span>
+              <div class="agenda-item-desc">Inject enough, not everything</div>
+            </div>
+            <div class="agenda-item">
+              <span class="agenda-item-num">&otimes;</span>
+              <span class="agenda-item-title">CLAUDE.md &amp; SubAgent</span>
+              <div class="agenda-item-desc">Inheritance, delegation, isolated context</div>
+            </div>
+            <div class="agenda-item">
+              <span class="agenda-item-num">&odot;</span>
+              <span class="agenda-item-title">Skill Loading</span>
+              <div class="agenda-item-desc">Lazy load: 100 tokens at startup, full body on invoke</div>
+            </div>
+          </div>
+
+          <div class="agenda-column animate-in">
+            <div class="agenda-column-title">Advanced</div>
+            <div class="agenda-item">
+              <span class="agenda-item-num">&oplus;</span>
+              <span class="agenda-item-title">Skill Explosion</span>
+              <div class="agenda-item-desc">Over 2% of context &rarr; skills completely hidden</div>
+            </div>
+            <div class="agenda-item">
+              <span class="agenda-item-num">&otimes;</span>
+              <span class="agenda-item-title">Top 5 Techniques</span>
+              <div class="agenda-item-desc">Highest-impact wins for your agent</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — SubAgent</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .compare-table-wrap {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+    .gotcha-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .gotcha-card {
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .gotcha-card h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #92400E;
+      margin-bottom: 8px;
+    }
+    .gotcha-card .gotcha-example {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      background: rgba(254,243,199,0.5);
+      border-radius: 6px;
+      padding: 12px;
+      margin: 8px 0;
+      color: #78350F;
+    }
+    .gotcha-card p {
+      font-size: 13px;
+      color: #92400E;
+    }
+    .config-example {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">⑤ SubAgent &mdash; Comparison & Gotchas</h1>
+
+        <h2 class="slide-heading animate-in">Main Agent vs SubAgent</h2>
+
+        <div class="compare-table-wrap animate-in">
+          <table class="slide-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Main Agent</th>
+                <th>SubAgent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Context</strong></td>
+                <td>Shared session (entire conversation)</td>
+                <td>Fresh, isolated (separate)</td>
+              </tr>
+              <tr>
+                <td><strong>Spawn agents</strong></td>
+                <td><span style="color:#16A34A">Yes</span> (no hard limit)</td>
+                <td><span style="color:#DC2626">Cannot</span></td>
+              </tr>
+              <tr>
+                <td><strong>Tools</strong></td>
+                <td>All built-in + MCP</td>
+                <td>Inherit all. Restrict via tools/disallowedTools</td>
+              </tr>
+              <tr>
+                <td><strong>MCP Servers</strong></td>
+                <td>All configured</td>
+                <td>Inherit all. Can scope via mcpServers</td>
+              </tr>
+              <tr>
+                <td><strong>Skills</strong></td>
+                <td>Lazy &mdash; description only, full on invoke</td>
+                <td>Must explicitly list via skills &rarr; injects full body immediately</td>
+              </tr>
+              <tr>
+                <td><strong>CLAUDE.md</strong></td>
+                <td>Full hierarchy (ancestor + lazy child)</td>
+                <td>Not received. Only custom system prompt</td>
+              </tr>
+              <tr>
+                <td><strong>Deferred loading</strong></td>
+                <td><span style="color:#16A34A">ToolSearch available</span></td>
+                <td><span style="color:#DC2626">Not available</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="gotcha-grid animate-in">
+          <div class="gotcha-card">
+            <h4>Gotcha #1: Eager Skill Loading</h4>
+            <div class="gotcha-example">20 skills x 5K = 100K tokens consumed immediately on spawn!</div>
+            <p>Only 60K left for the task &rarr; <strong>ONLY ASSIGN NEEDED SKILLS</strong></p>
+          </div>
+          <div class="gotcha-card">
+            <h4>Gotcha #2: Cannot Nest</h4>
+            <div class="gotcha-example">Main -> SubAgent  OK
+Main -> SubAgent -> SubAgent  NOT OK</div>
+            <p>Workaround: chain subagents sequentially from main</p>
+          </div>
+        </div>
+
+        <div class="config-example animate-in">
+          <div class="code-block"># .claude/agents/payroll-agent.md
+---
+name: payroll-agent
+tools: Bash, Read, Edit
+skills: payroll-calc, salary-report  # ONLY 2 skills!
+---</div>
+        </div>
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

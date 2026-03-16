@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — Tool Use</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+    .comparison-card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .comparison-card.negative {
+      border-color: #FCA5A5;
+      background: rgba(254,242,242,0.8);
+    }
+    .comparison-card.positive {
+      border-color: #86EFAC;
+      background: rgba(240,253,244,0.8);
+    }
+    .comparison-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .comparison-card.negative h3 { color: #DC2626; }
+    .comparison-card.positive h3 { color: #16A34A; }
+    .comparison-card ul {
+      list-style: none;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .comparison-card ul li {
+      padding: 4px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .comparison-card ul li .icon {
+      flex-shrink: 0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .flow-connector {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--purple);
+      padding: 12px 0;
+    }
+    .insight-table {
+      margin-top: 24px;
+    }
+    .flow-duo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .flow-panel {
+      position: relative;
+    }
+    .flow-panel-label {
+      position: absolute;
+      top: -10px;
+      left: 16px;
+      background: var(--purple);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 12px;
+      border-radius: 10px;
+      z-index: 1;
+    }
+    .tool-flow {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--purple-border);
+      border-radius: 12px;
+      padding: 20px 8px 12px;
+      overflow-x: auto;
+    }
+    .tool-flow svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">① Tool Use &mdash; The Foundation</h1>
+
+        <div class="slide-quote animate-in">
+          "Tool access is one of the highest-leverage primitives you can give an agent."
+          <cite>&mdash; Anthropic</cite>
+        </div>
+
+        <h2 class="slide-heading animate-in">Why do we need Tools?</h2>
+
+        <div class="comparison-grid animate-in">
+          <div class="comparison-card negative">
+            <h3>WITHOUT Tools</h3>
+            <ul>
+              <li><span class="icon">&#10007;</span> Doesn't know today's BTC price</li>
+              <li><span class="icon">&#10007;</span> Can't read databases</li>
+              <li><span class="icon">&#10007;</span> Can't call APIs</li>
+              <li><span class="icon">&#10007;</span> "I don't have real-time info"</li>
+            </ul>
+          </div>
+          <div class="comparison-card positive">
+            <h3>WITH Tools</h3>
+            <ul>
+              <li><span class="icon">&#10003;</span> APIs, Database, Files, Web, Services</li>
+              <li><span class="icon">&#10003;</span> Real-time data</li>
+              <li><span class="icon">&#10003;</span> Live data access</li>
+              <li><span class="icon">&#10003;</span> Can take action!</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="flow-connector animate-in">Tool = THE BRIDGE between LLM and THE OUTSIDE WORLD</div>
+
+        <h2 class="slide-heading animate-in">How it works</h2>
+
+        <div class="flow-duo animate-in">
+          <div class="flow-panel">
+            <div class="flow-panel-label">Weather &mdash; API</div>
+            <div class="tool-flow" id="flow-weather"></div>
+          </div>
+          <div class="flow-panel">
+            <div class="flow-panel-label">Skill Loading &mdash; local filesystem</div>
+            <div class="tool-flow" id="flow-skill"></div>
+          </div>
+        </div>
+
+        <h2 class="slide-heading animate-in">3 Key Insights</h2>
+
+        <table class="slide-table insight-table animate-in">
+          <thead>
+            <tr>
+              <th>Insight</th>
+              <th>Impact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>LLM <strong>does not execute</strong> &mdash; only outputs JSON</td>
+              <td>Host = executor, LLM = decision maker</td>
+            </tr>
+            <tr>
+              <td>Tool result <strong>must be sent back</strong> to LLM</td>
+              <td>Context grows with every tool call</td>
+            </tr>
+            <tr>
+              <td>Tool definition = JSON schema <strong>eats tokens</strong></td>
+              <td>1 tool = 300-1,500 tokens!</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#F3F0FF',
+        primaryTextColor: '#18181B',
+        primaryBorderColor: '#7C3AED',
+        lineColor: '#7C3AED',
+        secondaryColor: '#F8FAFC',
+        tertiaryColor: '#FFFFFF',
+        actorBkg: '#7C3AED',
+        actorTextColor: '#FFFFFF',
+        actorBorder: '#6D28D9',
+        actorLineColor: '#7C3AED',
+        signalColor: '#18181B',
+        signalTextColor: '#18181B',
+        noteBkgColor: '#F3F0FF',
+        noteTextColor: '#18181B',
+        noteBorderColor: '#7C3AED',
+        activationBkgColor: '#EDE9FE',
+        activationBorderColor: '#7C3AED',
+        sequenceNumberColor: '#FFFFFF',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '13px'
+      },
+      sequence: {
+        diagramMarginX: 16,
+        diagramMarginY: 16,
+        actorMargin: 80,
+        width: 180,
+        height: 40,
+        boxMargin: 8,
+        boxTextMargin: 5,
+        noteMargin: 10,
+        messageMargin: 30,
+        mirrorActors: false,
+        useMaxWidth: true
+      }
+    });
+
+    const weatherDiagram = `sequenceDiagram
+    participant H as Host
+    participant L as LLM
+
+    H->>L: ① tool definitions (JSON)
+    activate L
+    L-->>H: ② tool_use: get_weather
+    deactivate L
+    activate H
+    Note over H: ③ calls Weather API
+    H->>L: ④ result: "Hanoi 32°C"
+    deactivate H
+    activate L
+    L-->>H: ⑤ "It's 32°C in Hanoi"
+    deactivate L`;
+
+    const skillDiagram = `sequenceDiagram
+    participant H as Claude Code
+    participant L as LLM
+
+    H->>L: ① tool definitions (JSON)
+    activate L
+    L-->>H: ② tool_use: Skill
+    deactivate L
+    activate H
+    Note over H: ③ reads review-pr.md
+    H->>L: ④ result: [5K skill body]
+    deactivate H
+    activate L
+    L-->>H: ⑤ "Now I know how to review PRs"
+    deactivate L`;
+
+    const r1 = await mermaid.render('flow-weather-svg', weatherDiagram);
+    document.getElementById('flow-weather').innerHTML = r1.svg;
+    const r2 = await mermaid.render('flow-skill-svg', skillDiagram);
+    document.getElementById('flow-skill').innerHTML = r2.svg;
+  </script>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

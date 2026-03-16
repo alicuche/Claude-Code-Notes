@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — 10K Skills</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .challenge-banner {
+      background: rgba(254,242,242,0.8);
+      border: 1px solid #FCA5A5;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .challenge-banner .big-num {
+      font-size: 36px;
+      font-weight: 700;
+      color: #DC2626;
+    }
+    .challenge-banner .vs {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin: 8px 0;
+    }
+    .challenge-banner .context-num {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .challenge-banner .result {
+      font-size: 16px;
+      font-weight: 600;
+      color: #DC2626;
+      margin-top: 8px;
+    }
+    .architecture-visual {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--purple-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .arch-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0;
+    }
+    .arch-label {
+      min-width: 140px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .arch-bar {
+      flex: 1;
+      height: 28px;
+      background: #F1F5F9;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+    .arch-bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+    }
+    .arch-bar-fill.general { background: var(--purple); }
+    .arch-bar-fill.finder { background: #A78BFA; }
+    .arch-bar-fill.scoped { background: #16A34A; }
+    .arch-value {
+      min-width: 80px;
+      text-align: right;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+    }
+    .tag-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+    .scope-tag {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+    }
+    .scope-tag.active {
+      background: var(--purple-light);
+      border-color: var(--purple);
+      color: var(--purple);
+      font-weight: 600;
+    }
+    .scope-tag .count {
+      font-weight: 700;
+      margin-left: 4px;
+    }
+    .quote-highlight {
+      text-align: center;
+      margin: 24px 0;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--purple);
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">⑦ Scale &mdash; 10K Skills Problem</h1>
+
+        <div class="challenge-banner animate-in">
+          <div class="big-num">10,000 skills &times; 300 tokens = 3,000,000 tokens</div>
+          <div class="vs">vs</div>
+          <div class="context-num">Context Window = 200,000 tokens</div>
+          <div class="result">15x over the limit</div>
+        </div>
+
+        <h2 class="slide-heading animate-in">Skill Finder + Tag/Scope Architecture</h2>
+
+        <div class="architecture-visual animate-in">
+          <p style="font-size:14px; font-weight:600; color:var(--text-primary); margin-bottom:12px;">System Prompt (~2.2K tokens total)</p>
+          <div class="arch-row">
+            <span class="arch-label">General Skills (20)</span>
+            <div class="arch-bar"><div class="arch-bar-fill general" style="width:90%">Always loaded</div></div>
+            <span class="arch-value">~2K tokens</span>
+          </div>
+          <div class="arch-row">
+            <span class="arch-label">Skill Finder</span>
+            <div class="arch-bar"><div class="arch-bar-fill finder" style="width:10%">Meta-tool</div></div>
+            <span class="arch-value">~200 tokens</span>
+          </div>
+        </div>
+
+        <h2 class="slide-heading animate-in">Tags/Scopes</h2>
+
+        <div class="tag-grid animate-in">
+          <span class="scope-tag active">general<span class="count">20</span></span>
+          <span class="scope-tag active">payroll<span class="count">50</span></span>
+          <span class="scope-tag">hr<span class="count">80</span></span>
+          <span class="scope-tag">engineering<span class="count">200</span></span>
+          <span class="scope-tag">finance<span class="count">120</span></span>
+          <span class="scope-tag">...<span class="count">10K total</span></span>
+        </div>
+
+        <div class="callout-box animate-in" style="background: rgba(124,58,237,0.06); border: 1px solid var(--purple-border); border-radius: 8px; padding: 16px 20px;">
+          <p style="font-size:14px; color:var(--text-secondary);">
+            <strong>Payroll user loads:</strong> general(20) + payroll(50) = 70 skills<br>
+            <strong>Cost:</strong> 70 &times; 100 = <span class="highlight">7K tokens</span> vs ALL: 10K &times; 300 = <span style="color:#DC2626; font-weight:600;">3M tokens</span>
+          </p>
+        </div>
+
+        <div class="quote-highlight animate-in">
+          "Agentic AI is a routing problem, not an intelligence problem"
+        </div>
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

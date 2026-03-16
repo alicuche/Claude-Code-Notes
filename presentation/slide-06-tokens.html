@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — Tokens</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .snowball-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .snowball-turn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .snowball-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      min-width: 60px;
+    }
+    .snowball-bar-track {
+      flex: 1;
+      height: 28px;
+      background: #F1F5F9;
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+    }
+    .snowball-bar-system {
+      background: #D4D4D8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .snowball-bar-tools {
+      background: #A78BFA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 500;
+      color: white;
+    }
+    .snowball-bar-messages {
+      background: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 500;
+      color: white;
+    }
+    .snowball-tokens {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      min-width: 80px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .callout-box {
+      background: rgba(124,58,237,0.06);
+      border: 1px solid var(--purple-border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+    .callout-box p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .callout-box strong {
+      color: var(--purple);
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">③ Tokens &mdash; Snowball Effect</h1>
+        <p class="slide-subtitle animate-in">API is stateless &mdash; every turn resends the ENTIRE history</p>
+
+        <div class="snowball-visual animate-in">
+          <div class="snowball-turn">
+            <span class="snowball-label">Turn 1</span>
+            <div class="snowball-bar-track">
+              <div class="snowball-bar-system" style="width:37%">System 25K</div>
+              <div class="snowball-bar-tools" style="width:12%">Tools 8K</div>
+              <div class="snowball-bar-messages" style="width:1%"></div>
+            </div>
+            <span class="snowball-tokens">33,500</span>
+          </div>
+          <div class="snowball-turn">
+            <span class="snowball-label">Turn 2</span>
+            <div class="snowball-bar-track">
+              <div class="snowball-bar-system" style="width:35%">System 25K</div>
+              <div class="snowball-bar-tools" style="width:11%">Tools 8K</div>
+              <div class="snowball-bar-messages" style="width:4%">+1.5K</div>
+            </div>
+            <span class="snowball-tokens">35,000</span>
+          </div>
+          <div class="snowball-turn">
+            <span class="snowball-label">Turn 3</span>
+            <div class="snowball-bar-track">
+              <div class="snowball-bar-system" style="width:33%">System 25K</div>
+              <div class="snowball-bar-tools" style="width:11%">Tools 8K</div>
+              <div class="snowball-bar-messages" style="width:7%">+4K</div>
+            </div>
+            <span class="snowball-tokens">37,500</span>
+          </div>
+        </div>
+
+        <div class="diagram-block animate-in">Turn 1: | System 25K | Tools 8K | User1 500 |                            -> 33,500 tokens
+         v Claude responds (Asst1: 1K)
+Turn 2: | System 25K | Tools 8K | User1 | Asst1 | User2 |                -> 35,000 tokens
+         (+1.5K new, RESENDS 33.5K!)
+Turn 3: | System 25K | Tools 8K | User1 | Asst1 | User2 | Asst2 | User3 -> 37,500 tokens
+         (+2.5K new, RESENDS 35K!)
+
+ACCUMULATED: 4,500 tokens new content -> 106,000 tokens SENT = 23x the new content!</div>
+
+        <div class="callout-box animate-in">
+          <p>
+            <strong>THIS</strong> is why context window matters &mdash; not "AI forgets" but "cumulative cost".<br>
+            Tool results are especially dangerous: reading 1 file at 5K tokens = 5K resent EVERY subsequent turn.<br>
+            Example: 10 file reads &times; 5K = <strong>50K tokens permanent</strong> in history.
+          </p>
+        </div>
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>
