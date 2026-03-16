@@ -1,15 +1,4 @@
 # CONTEXT AI — AI Context Window
-### Slide Deck for Presentation (~12 slides, 30-40 min)
-
----
-
-<!-- ============================================================ -->
-## Page 1 — Title Slide
-<!-- ============================================================ -->
-
-# CONTEXT AI
-
-### AI Context Window
 
 > From Tool Use primitives to scaling 10K skills
 > How to optimize the context window for maximum AI agent effectiveness
@@ -19,13 +8,10 @@
 **NOTE:**
 - Target audience: AI engineers, developers building or using AI agents
 - Flow: Foundation → Optimization → Scale
-- Total ~12 core slides
 
 ---
 
-<!-- ============================================================ -->
-## Page 2 — Agenda
-<!-- ============================================================ -->
+## Agenda
 
 # Agenda
 
@@ -50,9 +36,7 @@ FOUNDATION                      OPTIMIZATION                    SCALE
 
 ---
 
-<!-- ============================================================ -->
-## Page 3 — The Problem (Narrative Hook)
-<!-- ============================================================ -->
+## The Problem
 
 # The Problem
 
@@ -78,21 +62,19 @@ FOUNDATION                      OPTIMIZATION                    SCALE
 └──────────────────────────────────────────────────────────┘
 ```
 
-### This presentation will explain WHY and HOW TO FIX it
+### This document will explain WHY and HOW TO FIX it
 
 ---
 
 **NOTE:**
 - This is a documented real case — not hypothetical
 - Goal: create an "aha moment" right away — audience needs to FEEL the problem before learning the solution
-- After this slide, audience will want to know: what are tool definitions? why so expensive?
+- After this section, the reader will want to know: what are tool definitions? why so expensive?
 - Evidence: https://claudefa.st/blog/guide/mechanics/context-buffer-management
 
 ---
 
-<!-- ============================================================ -->
-## Page 4 — Tool Use: Foundation + How It Works
-<!-- ============================================================ -->
+## ① Tool Use — The Foundation
 
 # ① Tool Use — The Foundation
 
@@ -163,9 +145,7 @@ Tool = THE BRIDGE between LLM and THE OUTSIDE WORLD
 
 ---
 
-<!-- ============================================================ -->
-## Page 5 — MCP & Skills: Fan-out from Tool
-<!-- ============================================================ -->
+## ② MCP & Skills — Fan-out from Tool
 
 # ② MCP & Skills — Everything builds on Tool
 
@@ -232,9 +212,7 @@ Agent spawn:      tool_use → { name: "Agent", args: {prompt: "find tests"} }
 
 ---
 
-<!-- ============================================================ -->
-## Page 6 — Tokens: Snowball Effect
-<!-- ============================================================ -->
+## ③ Tokens — Snowball Effect
 
 # ③ Tokens — Snowball Effect
 
@@ -282,9 +260,7 @@ ACCUMULATED after 3 turns:
 
 ---
 
-<!-- ============================================================ -->
-## Page 7 — Cost: Grows with every turn
-<!-- ============================================================ -->
+## ③ Cost — Quadratic Accumulation
 
 # ③ Cost — Quadratic Accumulation
 
@@ -345,9 +321,7 @@ WITH cache:    System+Tools 33K × $0.5/1M = $0.017/turn  ← 10x cheaper!
 
 ---
 
-<!-- ============================================================ -->
-## Page 8 — Context Optimization: Principles + SubAgent + Consequences
-<!-- ============================================================ -->
+## ④ Context Optimization
 
 # ④ Context Optimization
 
@@ -445,9 +419,7 @@ BEFORE delegation:                  AFTER delegation:
 
 ---
 
-<!-- ============================================================ -->
-## Page 9 — CLAUDE.md Hierarchy
-<!-- ============================================================ -->
+## CLAUDE.md Hierarchy
 
 # CLAUDE.md — Parent → Child Inheritance
 
@@ -490,9 +462,7 @@ my-monorepo/
 
 ---
 
-<!-- ============================================================ -->
-## Page 10 — SubAgent vs Main Agent + Gotchas
-<!-- ============================================================ -->
+## ⑤ SubAgent vs Main Agent
 
 # SubAgent — Comparison & Gotchas
 
@@ -545,9 +515,7 @@ skills: payroll-calc, salary-report  # ONLY 2 skills!
 
 ---
 
-<!-- ============================================================ -->
-## Page 11 — Skill Loading: How It Actually Works
-<!-- ============================================================ -->
+## ⑥ Skill Loading — Progressive Disclosure
 
 # ⑥ Skill Loading — Progressive Disclosure
 
@@ -616,9 +584,7 @@ SUMMARY:
 
 ---
 
-<!-- ============================================================ -->
-## Page 12 — Scale: 10K Skills Problem
-<!-- ============================================================ -->
+## ⑦ Scale — 10K Skills Problem
 
 # ⑦ Scale — 10K Skills Problem
 
@@ -675,9 +641,7 @@ System Prompt (~2.2K tokens total)
 
 ---
 
-<!-- ============================================================ -->
-## Page 13 — Top Best Practices
-<!-- ============================================================ -->
+## ⑧ Top Best Practices
 
 # ⑧ Top 6 Highest-Impact Techniques
 
