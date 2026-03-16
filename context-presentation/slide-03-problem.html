@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — The Problem</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .problem-stat {
+      font-size: 64px;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .problem-stat-label {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+    .progress-bar-visual {
+      width: 100%;
+      max-width: 640px;
+      margin: 24px 0;
+    }
+    .progress-bar-track {
+      width: 100%;
+      height: 32px;
+      background: #E5E7EB;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+    }
+    .progress-bar-filled {
+      width: 67%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple), #9333EA);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .progress-bar-empty {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 640px;
+    }
+    .impact-list {
+      list-style: none;
+      margin-top: 24px;
+    }
+    .impact-list li {
+      padding: 8px 0;
+      font-size: 15px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .impact-list li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--purple);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">The Problem</h1>
+
+        <div class="animate-in">
+          <div class="problem-stat">67%</div>
+          <div class="problem-stat-label">of context window consumed before you type anything</div>
+        </div>
+
+        <div class="diagram-block animate-in">A real Claude Code session:
+58 MCP tools across 5 servers = 134,000 tokens
+
+Context Window = 200,000 tokens</div>
+
+        <div class="progress-bar-visual animate-in">
+          <div class="progress-bar-track">
+            <div class="progress-bar-filled">134K tool definitions</div>
+            <div class="progress-bar-empty">66K remaining</div>
+          </div>
+          <div class="progress-labels">
+            <span>0</span>
+            <span>134K (67%)</span>
+            <span>200K tokens</span>
+          </div>
+        </div>
+
+        <ul class="impact-list animate-in">
+          <li>67% context <strong>WASTED</strong> before conversation even starts</li>
+          <li>Session runs a few turns &rarr; auto-compact &rarr; loses context</li>
+          <li>Cost spikes due to snowball effect</li>
+        </ul>
+
+        <div class="animate-in" style="margin-top: 24px; padding: 14px 20px; background: rgba(124,58,237,0.06); border: 1px solid var(--purple-border); border-radius: 8px; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+          <strong style="color: var(--purple);">Update:</strong> Claude Code now supports <strong>1M tokens</strong> context window &mdash; the 67% figure above is outdated. But the core problem remains: wasted tokens dilute attention, increase cost.
+        </div>
+
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

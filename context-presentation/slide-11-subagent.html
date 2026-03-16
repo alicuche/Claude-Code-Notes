@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — SubAgent</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .compare-table-wrap {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+    .gotcha-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .gotcha-card {
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .gotcha-card h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #92400E;
+      margin-bottom: 8px;
+    }
+    .gotcha-card .gotcha-example {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      background: rgba(254,243,199,0.5);
+      border-radius: 6px;
+      padding: 12px;
+      margin: 8px 0;
+      color: #78350F;
+    }
+    .gotcha-card p {
+      font-size: 13px;
+      color: #92400E;
+    }
+    .config-example {
+      margin-top: 10px;
+    }
+    .workaround-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .wa-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(240,253,244,0.6);
+      border: 1px solid #86EFAC;
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .wa-card.wa-hack {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+    }
+    .wa-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      background: #22C55E;
+      flex-shrink: 0;
+    }
+    .wa-hack .wa-num { background: #F59E0B; }
+    .wa-body { flex: 1; }
+    .wa-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .wa-title code {
+      font-size: 11px;
+      background: rgba(254,243,199,0.5);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .wa-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .wa-badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
+    }
+    .wa-badge.official { background: #DCFCE7; color: #166534; }
+    .wa-badge.unofficial { background: #FEE2E2; color: #991B1B; }
+    .wa-warning {
+      background: rgba(254,242,242,0.6);
+      border: 1px solid #FCA5A5;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #991B1B;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">SubAgent &mdash; Comparison &amp; Gotchas</h1>
+
+        <h2 class="slide-heading animate-in">Main Agent vs SubAgent</h2>
+
+        <div class="compare-table-wrap animate-in">
+          <table class="slide-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Main Agent</th>
+                <th>SubAgent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Context</strong></td>
+                <td>Shared session (entire conversation)</td>
+                <td>Fresh, isolated (separate)</td>
+              </tr>
+              <tr>
+                <td><strong>Spawn agents</strong></td>
+                <td><span style="color:#16A34A">Yes</span></td>
+                <td><span style="color:#DC2626">No</span></td>
+              </tr>
+              <tr>
+                <td><strong>Tools</strong></td>
+                <td>All built-in + MCP</td>
+                <td>Inherit all OR Restrict via tools/disallowedTools</td>
+              </tr>
+              <tr>
+                <td><strong>MCP Servers</strong></td>
+                <td>All configured</td>
+                <td>Inherit all OR Can scope via mcpServers</td>
+              </tr>
+              <tr>
+                <td><strong>Skills</strong></td>
+                <td>Lazy &mdash; description only, full on invoke</td>
+                <td>Must explicitly list via <code>skills</code> &rarr; injects full body immediately<br><span style="font-size:12px; color:#DC2626; font-weight:600;">If omitted &rarr; no skills loaded at all</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="gotcha-grid animate-in">
+          <div class="gotcha-card">
+            <h4>Gotcha #1: Eager Skill Loading</h4>
+            <div class="gotcha-example">20 skills x 5K = 100K tokens consumed immediately on spawn!</div>
+            <p>Only 60K left for the task &rarr; <strong>ONLY ASSIGN NEEDED SKILLS</strong></p>
+            <div class="config-example">
+              <div class="code-block"># .claude/agents/payroll-agent.md
+---
+name: payroll-agent
+tools: Bash, Read, Edit
+skills: payroll-calc, salary-report  # ONLY 2 skills!
+---</div>
+            </div>
+          </div>
+          <div class="gotcha-card">
+            <h4>Gotcha #2: Cannot Nest</h4>
+            <div class="mermaid-container" id="nesting-diagram"></div>
+
+            <h4 style="margin-top:12px">Workarounds</h4>
+            <div class="workaround-grid">
+              <div class="wa-card">
+                <div class="wa-num">1</div>
+                <div class="wa-body">
+                  <div class="wa-title">Chain from Main</div>
+                  <div class="wa-desc">Main spawns A, gets result, then spawns B with A's output</div>
+                  <div class="wa-badge official">Official</div>
+                </div>
+              </div>
+              <div class="wa-card">
+                <div class="wa-num">2</div>
+                <div class="wa-body">
+                  <div class="wa-title">Use Skills instead</div>
+                  <div class="wa-desc">Skills run in main context &mdash; no nesting needed</div>
+                  <div class="wa-badge official">Official</div>
+                </div>
+              </div>
+              <div class="wa-card wa-hack">
+                <div class="wa-num">3</div>
+                <div class="wa-body">
+                  <div class="wa-title">Bash: <code>claude -p "task" --agent C</code></div>
+                  <div class="wa-desc">SubAgent runs CLI subprocess &rarr; output returns via Bash tool result. Tested: works (exit 0, output captured)</div>
+                  <div class="wa-badge unofficial">Unofficial hack</div>
+                </div>
+              </div>
+            </div>
+            <div class="wa-warning">
+              <strong>&#9888;</strong> Option 3 is NOT officially supported &mdash; separate session (no shared context, extra API cost). Use at your own risk.
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <style>
+    .mermaid-container {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--purple-border);
+      border-radius: 8px;
+      padding: 16px 16px;
+      margin: 8px 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid-container svg {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+    }
+    .mermaid-container svg .edgeLabel:last-of-type span {
+      font-size: 18px !important;
+      font-weight: 700 !important;
+      color: #DC2626 !important;
+    }
+  </style>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#F3F0FF',
+        primaryTextColor: '#18181B',
+        primaryBorderColor: '#7C3AED',
+        lineColor: '#7C3AED',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '12px'
+      },
+      flowchart: {
+        curve: 'basis',
+        padding: 20,
+        nodeSpacing: 60,
+        rankSpacing: 60,
+        useMaxWidth: true
+      }
+    });
+
+    const nestingDiagram = `flowchart LR
+    M["&nbsp;&nbsp;Main Agent&nbsp;&nbsp;"]
+    S1["&nbsp;&nbsp;SubAgent A&nbsp;&nbsp;"]
+    S2["&nbsp;&nbsp;SubAgent B&nbsp;&nbsp;"]
+    S3["&nbsp;&nbsp;SubAgent C&nbsp;&nbsp;"]
+
+    M --> S1
+    M --> S2
+    S2 -.->|"✗"| S3
+
+    style M fill:#EDE9FE,stroke:#7C3AED,color:#5B21B6
+    style S1 fill:#DCFCE7,stroke:#22C55E,color:#166534
+    style S2 fill:#DCFCE7,stroke:#22C55E,color:#166534
+    style S3 fill:#FEE2E2,stroke:#EF4444,color:#991B1B
+
+    linkStyle 2 stroke:#EF4444,stroke-dasharray:5`;
+
+    const r = await mermaid.render('nesting-svg', nestingDiagram);
+    document.getElementById('nesting-diagram').innerHTML = r.svg;
+  </script>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

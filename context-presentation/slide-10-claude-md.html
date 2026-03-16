@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — CLAUDE.md Inheritance</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    /* ── Hierarchy Tiers ── */
+    .tier-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 16px auto;
+      max-width: 480px;
+    }
+    .tier-card {
+      border-radius: 8px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .tier-card .tier-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+    .tier-card .tier-body { flex: 1; }
+    .tier-card .tier-name {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 1px;
+    }
+    .tier-card .tier-path {
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+    .tier-card .tier-desc {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+    .tier-card.tier-global {
+      background: rgba(124,58,237,0.06);
+      border: 1px solid rgba(124,58,237,0.2);
+    }
+    .tier-card.tier-global .tier-num { background: #7C3AED; }
+    .tier-card.tier-global .tier-name { color: #7C3AED; }
+    .tier-card.tier-global .tier-path { color: #7C3AED; }
+    .tier-card.tier-project {
+      background: rgba(37,99,235,0.05);
+      border: 1px solid rgba(37,99,235,0.2);
+    }
+    .tier-card.tier-project .tier-num { background: #2563EB; }
+    .tier-card.tier-project .tier-name { color: #2563EB; }
+    .tier-card.tier-project .tier-path { color: #2563EB; }
+    .tier-card.tier-subdir {
+      background: rgba(34,197,94,0.05);
+      border: 1px solid rgba(34,197,94,0.2);
+    }
+    .tier-card.tier-subdir .tier-num { background: #22C55E; }
+    .tier-card.tier-subdir .tier-name { color: #166534; }
+    .tier-card.tier-subdir .tier-path { color: #166534; }
+    .tier-arrow {
+      text-align: center;
+      font-size: 16px;
+      color: var(--purple);
+      line-height: 1;
+      margin: -4px 0;
+    }
+
+    /* ── Behavior Grid ── */
+    .behavior-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .behavior-card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .behavior-card h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--purple);
+      margin-bottom: 4px;
+    }
+    .behavior-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Loading Flow (snake grid) ── */
+    .lf-section { margin: 16px 0; }
+    .lf-row {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .lf-row.rtl { flex-direction: row-reverse; }
+    .lf-card {
+      flex: 1;
+      border-radius: 8px;
+      padding: 10px 12px;
+      min-height: 70px;
+    }
+    .lf-card-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 4px;
+    }
+    .lf-card-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 3px;
+    }
+    .lf-card-detail {
+      font-size: 9px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      font-family: var(--font-mono);
+    }
+    /* Card colors */
+    .lf-start { background: #DCFCE7; border: 1px solid #86EFAC; }
+    .lf-start .lf-card-num { background: #22C55E; }
+    .lf-load-global { background: rgba(124,58,237,0.05); border: 1px solid rgba(124,58,237,0.2); }
+    .lf-load-global .lf-card-num { background: #7C3AED; }
+    .lf-load-project { background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.2); }
+    .lf-load-project .lf-card-num { background: #2563EB; }
+    .lf-inject { background: #F3F0FF; border: 1px solid rgba(124,58,237,0.3); }
+    .lf-inject .lf-card-num { background: #7C3AED; }
+    .lf-runtime { background: rgba(255,255,255,0.85); border: 1px solid var(--border-light); }
+    .lf-runtime .lf-card-num { background: #9CA3AF; }
+    .lf-lazy { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.25); }
+    .lf-lazy .lf-card-num { background: #22C55E; }
+    .lf-compact { background: #FEF3C7; border: 1px solid #FDE68A; }
+    .lf-compact .lf-card-num { background: #F59E0B; }
+    .lf-done { background: #DCFCE7; border: 1px solid #86EFAC; }
+    .lf-done .lf-card-num { background: #22C55E; }
+
+    /* Arrows — horizontal */
+    .lf-arrow-h {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      width: 32px;
+      position: relative;
+    }
+    .lf-arrow-h::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 2px;
+      right: 10px;
+      height: 3px;
+      background: var(--purple);
+      border-radius: 2px;
+    }
+    .lf-arrow-h::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 2px;
+      transform: translateY(-50%);
+      border: 6px solid transparent;
+      border-left: 8px solid var(--purple);
+    }
+    .lf-arrow-h.left::before { left: 10px; right: 2px; }
+    .lf-arrow-h.left::after {
+      right: auto;
+      left: 2px;
+      border-left: none;
+      border-right: 8px solid var(--purple);
+    }
+
+    /* Turn arrows — vertical connectors */
+    .lf-turn {
+      display: flex;
+      padding: 0;
+      height: 28px;
+      position: relative;
+    }
+    .lf-turn.right { justify-content: flex-end; padding-right: 48px; }
+    .lf-turn.left { justify-content: flex-start; padding-left: 48px; }
+    .lf-turn-connector {
+      width: 3px;
+      height: 100%;
+      background: var(--purple);
+      border-radius: 2px;
+      position: relative;
+    }
+    .lf-turn-connector::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top: 8px solid var(--purple);
+    }
+
+    /* ── Tip / Warning Boxes ── */
+    .warning-box {
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 12px 0;
+      font-size: 13px;
+      color: #92400E;
+    }
+    .tip-box {
+      background: rgba(124,58,237,0.06);
+      border: 1px solid var(--purple-border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 12px;
+    }
+    .tip-box strong { color: var(--purple); }
+    .tip-box code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: rgba(124,58,237,0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">CLAUDE.md Inheritance</h1>
+        <p class="slide-subtitle animate-in">3-tier hierarchy &mdash; additive loading, child wins on conflict</p>
+
+        <h2 class="slide-heading animate-in">Hierarchy</h2>
+
+        <div class="tier-stack animate-in">
+          <div class="tier-card tier-global">
+            <div class="tier-num">1</div>
+            <div class="tier-body">
+              <div class="tier-name">User (Global)</div>
+              <div class="tier-path">~/.claude/CLAUDE.md</div>
+              <div class="tier-desc">Personal preferences, all projects &mdash; always loaded</div>
+            </div>
+          </div>
+          <div class="tier-arrow">&darr;</div>
+          <div class="tier-card tier-project">
+            <div class="tier-num">2</div>
+            <div class="tier-body">
+              <div class="tier-name">Project Root</div>
+              <div class="tier-path">./CLAUDE.md <span style="color:var(--text-muted)">or</span> ./.claude/CLAUDE.md</div>
+              <div class="tier-desc">Git-shared, team conventions &mdash; loaded at session start</div>
+            </div>
+          </div>
+          <div class="tier-arrow">&darr;</div>
+          <div class="tier-card tier-subdir">
+            <div class="tier-num">3</div>
+            <div class="tier-body">
+              <div class="tier-name">Subdirectory</div>
+              <div class="tier-path">packages/frontend/CLAUDE.md &bull; packages/backend/CLAUDE.md</div>
+              <div class="tier-desc">Lazy-loaded &mdash; only when Claude reads files in that directory</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

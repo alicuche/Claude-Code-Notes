@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — Best Practices</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .practices-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .practice-card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--purple-border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 48px 1fr 120px 100px;
+      align-items: center;
+      gap: 16px;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+      cursor: default;
+    }
+    .practice-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(124,58,237,0.08);
+    }
+    .practice-rank {
+      width: 40px;
+      height: 40px;
+      background: var(--purple);
+      color: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .practice-info h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .practice-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .practice-savings {
+      text-align: center;
+    }
+    .practice-savings .value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #16A34A;
+    }
+    .practice-savings .label {
+      font-size: 11px;
+      color: var(--text-faint);
+    }
+    .practice-effort {
+      text-align: center;
+    }
+    .practice-effort .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .practice-effort .badge.easy {
+      background: rgba(22,163,106,0.1);
+      color: #16A34A;
+    }
+    .practice-effort .badge.medium {
+      background: rgba(234,179,8,0.1);
+      color: #CA8A04;
+    }
+    .closing-message {
+      text-align: center;
+      margin-top: 40px;
+      padding: 32px;
+      background: var(--purple);
+      border-radius: 16px;
+      color: white;
+    }
+    .closing-message h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .closing-message p {
+      font-size: 15px;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">Top 6 Highest-Impact Techniques</h1>
+
+        <div class="practices-list">
+          <div class="practice-card animate-in">
+            <div class="practice-rank">1</div>
+            <div class="practice-info">
+              <h3>Deferred Tool Loading</h3>
+              <p>Only load tool schemas on demand, not all upfront</p>
+            </div>
+            <div class="practice-savings">
+              <div class="value">85%+</div>
+              <div class="label">tool tokens saved</div>
+            </div>
+            <div class="practice-effort">
+              <span class="badge easy">1 line</span>
+            </div>
+          </div>
+
+          <div class="practice-card animate-in">
+            <div class="practice-rank">2</div>
+            <div class="practice-info">
+              <h3>Use CLI instead of MCP</h3>
+              <p>Bash/Read/Grep are already loaded &mdash; no extra cost</p>
+            </div>
+            <div class="practice-savings">
+              <div class="value">0 extra</div>
+              <div class="label">marginal tokens</div>
+            </div>
+            <div class="practice-effort">
+              <span class="badge easy">Use built-in</span>
+            </div>
+          </div>
+
+          <div class="practice-card animate-in">
+            <div class="practice-rank">3</div>
+            <div class="practice-info">
+              <h3>Delegate to SubAgent</h3>
+              <p>Separate context for heavy operations, main stays clean</p>
+            </div>
+            <div class="practice-savings">
+              <div class="value">Isolated</div>
+              <div class="label">separate context</div>
+            </div>
+            <div class="practice-effort">
+              <span class="badge medium">.claude/agents/</span>
+            </div>
+          </div>
+
+          <div class="practice-card animate-in">
+            <div class="practice-rank">4</div>
+            <div class="practice-info">
+              <h3>/compact at milestones</h3>
+              <p>Manual compact is better than auto &mdash; you choose the timing</p>
+            </div>
+            <div class="practice-savings">
+              <div class="value">50-70%</div>
+              <div class="label">context freed</div>
+            </div>
+            <div class="practice-effort">
+              <span class="badge easy">Type /compact</span>
+            </div>
+          </div>
+
+          <div class="practice-card animate-in">
+            <div class="practice-rank">5</div>
+            <div class="practice-info">
+              <h3>CLAUDE.md &lt; 200 lines</h3>
+              <p>Every token is permanent &mdash; survives compaction</p>
+            </div>
+            <div class="practice-savings">
+              <div class="value">Permanent</div>
+              <div class="label">savings</div>
+            </div>
+            <div class="practice-effort">
+              <span class="badge easy">Edit file</span>
+            </div>
+          </div>
+
+          <div class="practice-card animate-in">
+            <div class="practice-rank">6</div>
+            <div class="practice-info">
+              <h3>disable-model-invocation: true</h3>
+              <p>Skill hidden from AI context &mdash; only loads when user triggers /command</p>
+            </div>
+            <div class="practice-savings">
+              <div class="value">On-demand</div>
+              <div class="label">zero cost until invoked</div>
+            </div>
+            <div class="practice-effort">
+              <span class="badge easy">1 line</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="closing-message animate-in">
+          <h2>Context is the new bottleneck.</h2>
+          <p>Every tool must justify its existence. Inject enough, not everything.</p>
+        </div>
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

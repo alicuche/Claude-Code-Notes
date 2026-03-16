@@ -1,0 +1,105 @@
+/* ============================================
+   CONTEXT AI — Animations
+   Consistent slide-in animation system
+   ============================================ */
+
+/* --- Page Transition: Fade + Slide Up --- */
+/* This is the SINGLE consistent animation used for all page transitions */
+
+.slide-content {
+  animation: pageEnter 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Stagger animation for child elements --- */
+.animate-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fadeSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger delays */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+.delay-7 { animation-delay: 0.7s; }
+.delay-8 { animation-delay: 0.8s; }
+
+/* --- Subtle hover animations --- */
+.hover-lift {
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Progress bar animation --- */
+.progress-fill {
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --- Typing cursor blink --- */
+.cursor-blink::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: var(--accent-cyan);
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* --- Pulse glow for emphasis --- */
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+}
+
+/* --- Count-up number animation helper --- */
+.count-up {
+  display: inline-block;
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --- Bar chart grow --- */
+.bar-grow {
+  transform-origin: left center;
+  animation: barGrow 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes barGrow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* --- Diagram line draw --- */
+.line-draw {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}

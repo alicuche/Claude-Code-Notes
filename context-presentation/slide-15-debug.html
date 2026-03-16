@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — Debug</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .debug-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .debug-card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--purple-border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .debug-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(124,58,237,0.08);
+    }
+    .debug-card h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--purple);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .debug-card h3 .icon {
+      width: 28px;
+      height: 28px;
+      background: var(--purple);
+      color: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* Full-width command block */
+    .cmd-full {
+      grid-column: 1 / -1;
+    }
+    .cmd-full h3 {
+      font-size: 15px;
+      margin-bottom: 14px;
+    }
+    .cmd-block {
+      background: #1E1E2E;
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: #CDD6F4;
+      overflow-x: auto;
+      white-space: pre;
+      position: relative;
+    }
+    .cmd-block .prompt {
+      color: #A6E3A1;
+      user-select: none;
+    }
+    .cmd-block .flag {
+      color: #89B4FA;
+    }
+    .cmd-block .value {
+      color: #F9E2AF;
+    }
+    .cmd-block .arg {
+      color: #F38BA8;
+    }
+
+    /* Flag explanation table */
+    .flag-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      margin-top: 6px;
+    }
+    .flag-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: top;
+    }
+    .flag-table td:first-child {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--purple);
+      white-space: nowrap;
+      width: 36%;
+    }
+    .flag-table td:last-child {
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+    .flag-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* JSON sample */
+    .json-block {
+      background: #1E1E2E;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      line-height: 1.65;
+      color: #CDD6F4;
+      overflow-x: auto;
+      white-space: pre;
+      max-height: 320px;
+    }
+    .json-block .key {
+      color: #89B4FA;
+    }
+    .json-block .str {
+      color: #A6E3A1;
+    }
+    .json-block .num {
+      color: #F9E2AF;
+    }
+    .json-block .bool {
+      color: #F38BA8;
+    }
+    .json-block .comment {
+      color: #6C7086;
+      font-style: italic;
+    }
+
+    /* Badge labels */
+    .env-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+    .env-badge.sdk {
+      background: rgba(22,163,106,0.1);
+      color: #16A34A;
+    }
+    .env-badge.cli {
+      background: rgba(124,58,237,0.1);
+      color: #7C3AED;
+    }
+    .env-badge.output {
+      background: rgba(234,179,8,0.1);
+      color: #CA8A04;
+    }
+
+    /* Subtitle note */
+    .slide-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">Debug</h1>
+        <p class="slide-note animate-in">Inspect API calls, internal state, and performance traces</p>
+
+        <!-- Full command -->
+        <div class="debug-grid">
+          <div class="debug-card cmd-full animate-in">
+            <h3><span class="icon">$</span> Full Debug Command</h3>
+            <div class="cmd-block"><span class="prompt">$ </span><span class="value">ANTHROPIC_LOG</span>=<span class="arg">debug</span> claude \
+    <span class="flag">--debug</span> \
+    <span class="flag">--verbose</span> \
+    <span class="flag">-p</span> <span class="str">"how are you?"</span> \
+    <span class="flag">--output-format</span> <span class="arg">stream-json</span></div>
+          </div>
+
+          <!-- Flag explanations -->
+          <div class="debug-card animate-in">
+            <h3><span class="icon">?</span> Flag Reference</h3>
+            <table class="flag-table">
+              <tr>
+                <td>ANTHROPIC_LOG=debug</td>
+                <td><span class="env-badge sdk">Anthropic SDK</span><br>Dumps full HTTP request/response to stderr</td>
+              </tr>
+              <tr>
+                <td>--verbose</td>
+                <td>Show detailed output including tool calls</td>
+              </tr>
+              <tr>
+                <td>-p "prompt"</td>
+                <td>Non-interactive mode &mdash; run single prompt and exit</td>
+              </tr>
+              <tr>
+                <td>--output-format stream-json</td>
+                <td><span class="env-badge output">Output</span><br>Stream NDJSON events (init, tool, assistant, result)</td>
+              </tr>
+              <tr>
+                <td>--debug</td>
+                <td><span class="env-badge cli">Claude CLI</span><br>Write debug log to <code>~/.claude/debug/</code></td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- JSON sample response -->
+          <div class="debug-card animate-in">
+            <h3><span class="icon">{}</span> Sample stream-json Response</h3>
+            <div class="json-block"><span class="comment">// Each line = 1 JSON event (NDJSON)</span>
+
+{<span class="key">"type"</span>: <span class="str">"system"</span>,  <span class="key">"subtype"</span>: <span class="str">"init"</span>,
+ <span class="key">"tools"</span>: [<span class="str">"Read"</span>, <span class="str">"Edit"</span>, <span class="str">"Bash"</span>, ...],
+ <span class="key">"model"</span>: <span class="str">"claude-sonnet-4-20250514"</span>}
+
+{<span class="key">"type"</span>: <span class="str">"assistant"</span>,  <span class="key">"subtype"</span>: <span class="str">"text"</span>,
+ <span class="key">"text"</span>: <span class="str">"I'm doing well, thanks!"</span>}
+
+{<span class="key">"type"</span>: <span class="str">"result"</span>,
+ <span class="key">"subtype"</span>: <span class="str">"success"</span>,
+ <span class="key">"cost_usd"</span>: <span class="num">0.003</span>,
+ <span class="key">"duration_ms"</span>: <span class="num">1635</span>,
+ <span class="key">"num_turns"</span>: <span class="num">1</span>,
+ <span class="key">"session_id"</span>: <span class="str">"abc-123..."</span>}</div>
+          </div>
+
+          <!-- Comparison table -->
+          <div class="debug-card cmd-full animate-in">
+            <h3><span class="icon">vs</span> --debug vs ANTHROPIC_LOG=debug</h3>
+            <table class="flag-table" style="margin-top:2px">
+              <tr>
+                <td style="width:28%"></td>
+                <td style="font-weight:700; color:var(--purple); font-size:13px"><code>--debug</code></td>
+                <td style="font-weight:700; color:#16A34A; font-size:13px"><code>ANTHROPIC_LOG=debug</code></td>
+              </tr>
+              <tr>
+                <td>Source</td>
+                <td><span class="env-badge cli">Claude CLI</span></td>
+                <td><span class="env-badge sdk">Anthropic SDK</span></td>
+              </tr>
+              <tr>
+                <td>Output</td>
+                <td>File <code>~/.claude/debug/&lt;id&gt;.txt</code></td>
+                <td>stderr (terminal)</td>
+              </tr>
+              <tr>
+                <td>Content</td>
+                <td>Internal state: settings, MCP, skills, plugins, hooks, LSP, startup timing</td>
+                <td>HTTP layer: full API request/response (URL, headers, body, rate limits)</td>
+              </tr>
+              <tr>
+                <td>Use when</td>
+                <td>Debug CLI behavior (skill not loading, MCP failed...)</td>
+                <td>Debug API calls (what model received, token counts, latency)</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

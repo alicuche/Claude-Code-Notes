@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — MCP / Skills / Agents</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .definition-row {
+      display: flex;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .definition-card {
+      flex: 1;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .definition-card h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--purple);
+      margin-bottom: 4px;
+    }
+    .definition-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .mermaid-container {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--purple-border);
+      border-radius: 12px;
+      padding: 20px 12px 12px;
+      margin: 16px 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid-container svg {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+    }
+    .flow-trio {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .flow-panel {
+      position: relative;
+    }
+    .flow-panel-label {
+      position: absolute;
+      top: -10px;
+      left: 16px;
+      background: var(--purple);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 12px;
+      border-radius: 10px;
+      z-index: 1;
+    }
+    .flow-panel .mermaid-container {
+      padding-top: 24px;
+    }
+    .common-thread {
+      margin-top: 16px;
+      padding: 14px 20px;
+      background: rgba(124,58,237,0.06);
+      border: 1px solid var(--purple-border);
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+    .common-thread strong {
+      color: var(--purple);
+    }
+    .common-thread code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: rgba(124,58,237,0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">MCP / Skills / Agents</h1>
+        <p class="slide-subtitle animate-in">Tool is the only primitive LLM understands &mdash; MCP, Skill, Agent all use it</p>
+
+        <h2 class="slide-heading animate-in">Fan-out from Tool Use</h2>
+
+        <div class="mermaid-container animate-in" id="fanout-diagram"></div>
+
+        <div class="definition-row animate-in">
+          <div class="definition-card">
+            <h4>MCP</h4>
+            <p>Standardized CONNECTION to external &amp; local services (JSON-RPC 2.0)<br>
+            <em>Load: deferred via ToolSearch &mdash; name only &rarr; full schema on demand</em></p>
+          </div>
+          <div class="definition-card">
+            <h4>Skill</h4>
+            <p>Lazy-loaded DOMAIN KNOWLEDGE (prompt expansion)<br>
+            <em>Load: metadata at startup (2% budget) &rarr; full .md on invoke &rarr; injected back into SAME conversation</em></p>
+          </div>
+          <div class="definition-card">
+            <h4>Agent</h4>
+            <p>DELEGATION &mdash; separate context, separate task<br>
+            <em>Load: summary in prompt, full system prompt in host memory &rarr; spawns NEW API call</em></p>
+          </div>
+        </div>
+
+        <h2 class="slide-heading animate-in">Same primitive, different packaging</h2>
+
+        <div class="flow-trio animate-in">
+          <div class="flow-panel">
+            <div class="flow-panel-label">MCP &mdash; external API</div>
+            <div class="mermaid-container" id="flow-mcp"></div>
+          </div>
+          <div class="flow-panel">
+            <div class="flow-panel-label">Skill &mdash; local filesystem</div>
+            <div class="mermaid-container" id="flow-skill"></div>
+          </div>
+          <div class="flow-panel">
+            <div class="flow-panel-label">Agent &mdash; delegation</div>
+            <div class="mermaid-container" id="flow-agent"></div>
+          </div>
+        </div>
+
+        <div class="common-thread animate-in">
+          <strong>Common thread:</strong> LLM commands via Tool Use &rarr; Host executes<br>
+          <code>MCP: deferred name &rarr; ToolSearch &rarr; full schema &rarr; call</code><br>
+          <code>Skill: metadata in prompt &rarr; Skill tool &rarr; full .md injected back into SAME context</code><br>
+          <code>Agent: summary in prompt &rarr; Agent tool &rarr; host builds NEW context from memory &rarr; separate API call</code><br>
+          <strong>&rarr; Key difference: Skill expands current context, Agent creates isolated context</strong>
+        </div>
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#F3F0FF',
+        primaryTextColor: '#18181B',
+        primaryBorderColor: '#7C3AED',
+        lineColor: '#7C3AED',
+        secondaryColor: '#F8FAFC',
+        tertiaryColor: '#FFFFFF',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '12px'
+      },
+      flowchart: {
+        curve: 'basis',
+        padding: 12,
+        nodeSpacing: 30,
+        rankSpacing: 40,
+        useMaxWidth: true
+      },
+      sequence: {
+        diagramMarginX: 8,
+        diagramMarginY: 8,
+        actorMargin: 50,
+        width: 120,
+        height: 36,
+        boxMargin: 4,
+        boxTextMargin: 4,
+        noteMargin: 6,
+        messageMargin: 25,
+        mirrorActors: false,
+        useMaxWidth: true,
+        actorFontSize: '11px',
+        messageFontSize: '11px'
+      }
+    });
+
+    // Fan-out diagram: LLM -> tool_use JSON -> Host -> MCP / Skill / Agent
+    const fanoutDiagram = `flowchart TD
+    LLM["LLM (Claude)<br/><i>understands only ONE thing:<br/>Tool Use JSON</i>"]
+    TU["tool_use JSON<br/><b>{ name: '...', args: {...} }</b>"]
+    HOST["Host (executor)"]
+    MCP["MCP Client → Server"]
+    SK["Skill Loader"]
+    AG["Agent Spawner"]
+    EXT["External APIs / DB"]
+    FS["Local Filesystem"]
+    OA["SubAgent"]
+
+    LLM --> TU
+    TU --> HOST
+    HOST --> MCP
+    HOST --> SK
+    HOST --> AG
+    MCP --> EXT
+    MCP --> FS
+    SK --> FS
+    AG --> OA
+
+    style LLM fill:#7C3AED,stroke:#6D28D9,color:#FFFFFF
+    style TU fill:#F3F0FF,stroke:#7C3AED,color:#18181B
+    style HOST fill:#7C3AED,stroke:#6D28D9,color:#FFFFFF
+    style MCP fill:#FFFFFF,stroke:#7C3AED,color:#18181B
+    style SK fill:#FFFFFF,stroke:#7C3AED,color:#18181B
+    style AG fill:#FFFFFF,stroke:#7C3AED,color:#18181B
+    style EXT fill:#F8FAFC,stroke:#D4D4D8,color:#71717A
+    style FS fill:#F8FAFC,stroke:#D4D4D8,color:#71717A
+    style OA fill:#F8FAFC,stroke:#D4D4D8,color:#71717A`;
+
+    // MCP flow
+    const mcpDiagram = `sequenceDiagram
+    participant H as Host
+    participant L as LLM
+    participant S as MCP Server
+
+    Note over H,L: Startup: name only in deferred list
+    L-->>H: ToolSearch("jira")
+    H-->>L: full schema via tool_reference
+    activate L
+    L-->>H: mcp__jira__search
+    deactivate L
+    activate H
+    H->>S: JSON-RPC request
+    activate S
+    Note over S: calls Jira API
+    S-->>H: result: [issues]
+    deactivate S
+    H->>L: tool result
+    deactivate H
+    activate L
+    L-->>H: "Found 3 bugs"
+    deactivate L`;
+
+    // Skill flow
+    const skillDiagram = `sequenceDiagram
+    participant H as Claude Code
+    participant L as LLM
+
+    Note over H,L: Startup: name + desc (2% budget)
+    H->>L: Skill tool + skill list
+    activate L
+    L-->>H: Skill("review-pr")
+    deactivate L
+    activate H
+    Note over H: reads .md from filesystem
+    H->>L: full body injected back
+    deactivate H
+    Note over L: content now in THIS context
+    activate L
+    L-->>H: follows instructions
+    deactivate L`;
+
+    // Agent flow
+    const agentDiagram = `sequenceDiagram
+    participant H as Host
+    participant L as Parent LLM
+    participant S as Sub LLM
+
+    Note over H,L: Startup: summary in Agent tool desc
+    H->>L: Agent tool (name+whenToUse)
+    activate L
+    L-->>H: Agent("Explore", "find tests")
+    deactivate L
+    activate H
+    Note over H: builds system prompt<br/>from host memory
+    H->>S: NEW API call + full prompt
+    activate S
+    S-->>H: findings
+    deactivate S
+    H->>L: summary only
+    deactivate H
+    Note over L: sub-agent context isolated
+    activate L
+    L-->>H: uses sub-results
+    deactivate L`;
+
+    const r1 = await mermaid.render('fanout-svg', fanoutDiagram);
+    document.getElementById('fanout-diagram').innerHTML = r1.svg;
+
+    const r2 = await mermaid.render('flow-mcp-svg', mcpDiagram);
+    document.getElementById('flow-mcp').innerHTML = r2.svg;
+
+    const r3 = await mermaid.render('flow-skill-svg', skillDiagram);
+    document.getElementById('flow-skill').innerHTML = r3.svg;
+
+    const r4 = await mermaid.render('flow-agent-svg', agentDiagram);
+    document.getElementById('flow-agent').innerHTML = r4.svg;
+  </script>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — Cost</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .cost-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+    .cost-chart {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--purple-border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .cost-chart h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--purple);
+      margin-bottom: 16px;
+    }
+    .bar-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .bar-label {
+      font-size: 12px;
+      min-width: 50px;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .bar-track {
+      flex: 1;
+      height: 20px;
+      background: #F1F5F9;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #A78BFA, var(--purple));
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+      min-width: fit-content;
+    }
+    .formula-box {
+      background: var(--purple);
+      color: white;
+      border-radius: 8px;
+      padding: 16px 24px;
+      text-align: center;
+      margin: 24px 0;
+    }
+    .formula-box .formula {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .formula-box .formula-desc {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 4px;
+    }
+    .cache-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .cache-card {
+      background: rgba(255,255,255,0.85);
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid var(--border-light);
+    }
+    .cache-card.good {
+      border-color: #86EFAC;
+    }
+    .cache-card h4 {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .cache-card .price {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .cache-card.good .price { color: #16A34A; }
+    .cache-card .price-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">Cost &mdash; Quadratic Accumulation</h1>
+        <p class="slide-subtitle animate-in">Cost per turn increases because input grows larger each time</p>
+
+        <div class="cost-grid animate-in">
+          <div class="cost-chart">
+            <h3>Cost per Turn (Opus 4.6: $5/1M input)</h3>
+            <div class="bar-chart">
+              <div class="bar-row">
+                <span class="bar-label">Turn 1</span>
+                <div class="bar-track"><div class="bar-fill" style="width:37%">$0.168</div></div>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Turn 5</span>
+                <div class="bar-track"><div class="bar-fill" style="width:45%">$0.208</div></div>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Turn 10</span>
+                <div class="bar-track"><div class="bar-fill" style="width:56%">$0.258</div></div>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Turn 20</span>
+                <div class="bar-track"><div class="bar-fill" style="width:78%">$0.358</div></div>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Turn 30</span>
+                <div class="bar-track"><div class="bar-fill" style="width:100%">$0.458</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="cost-chart">
+            <h3>Cumulative Cost</h3>
+            <div class="bar-chart">
+              <div class="bar-row">
+                <span class="bar-label">Turn 1</span>
+                <div class="bar-track"><div class="bar-fill" style="width:2%">$0.17</div></div>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Turn 5</span>
+                <div class="bar-track"><div class="bar-fill" style="width:10%">$0.94</div></div>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Turn 10</span>
+                <div class="bar-track"><div class="bar-fill" style="width:23%">$2.13</div></div>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Turn 20</span>
+                <div class="bar-track"><div class="bar-fill" style="width:56%">$5.26</div></div>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Turn 30</span>
+                <div class="bar-track"><div class="bar-fill" style="width:100%">$9.39</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="formula-box animate-in">
+          <div class="formula">Total &asymp; N &times; fixed + N(N+1)/2 &times; delta</div>
+          <div class="formula-desc">QUADRATIC, not linear! &mdash; 30 turns = 56x cost of first turn</div>
+        </div>
+
+        <h2 class="slide-heading animate-in">Prompt Caching saves 90% on static content</h2>
+
+        <div class="cache-comparison animate-in">
+          <div class="cache-card">
+            <h4>WITHOUT cache</h4>
+            <div class="price" style="color: #DC2626;">$0.165</div>
+            <div class="price-desc">System+Tools 33K &times; $5/1M per turn</div>
+          </div>
+          <div class="cache-card good">
+            <h4>WITH cache</h4>
+            <div class="price">$0.017</div>
+            <div class="price-desc">System+Tools 33K &times; $0.5/1M per turn &mdash; 10x cheaper!</div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>
