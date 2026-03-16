@@ -12,7 +12,7 @@
     }
     .gotcha-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 2fr 3fr;
       gap: 16px;
       margin: 20px 0;
     }
@@ -156,9 +156,9 @@ skills: payroll-calc, salary-report  # ONLY 2 skills!
       },
       flowchart: {
         curve: 'basis',
-        padding: 10,
-        nodeSpacing: 20,
-        rankSpacing: 30,
+        padding: 16,
+        nodeSpacing: 40,
+        rankSpacing: 50,
         useMaxWidth: true
       }
     });
@@ -169,9 +169,9 @@ skills: payroll-calc, salary-report  # ONLY 2 skills!
     S2["SubAgent B"]
     S3["SubAgent C"]
 
-    M -->|"spawn"| S1
-    M -->|"spawn"| S2
-    S2 -.->|"spawn"| S3
+    M --> S1
+    M --> S2
+    S2 -.-> S3
 
     style M fill:#7C3AED,stroke:#6D28D9,color:#FFFFFF
     style S1 fill:#DCFCE7,stroke:#22C55E,color:#166534

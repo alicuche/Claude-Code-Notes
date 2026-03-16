@@ -66,54 +66,239 @@
     }
     .rule-bad { color: #DC2626; }
     .rule-good { color: #16A34A; }
-    .delegation-visual {
+    /* ── Delegation Flow ── */
+    .deleg-flow {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      grid-template-columns: 1fr 32px 1fr;
+      gap: 0;
       margin: 20px 0;
+      align-items: start;
     }
-    .delegation-card {
-      background: rgba(255,255,255,0.85);
+    .deleg-arrow-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 60px;
+      font-size: 20px;
+      color: var(--purple);
+      font-weight: 700;
+    }
+    /* Before card */
+    .deleg-before {
+      background: rgba(254,242,242,0.5);
+      border: 1px solid #FCA5A5;
       border-radius: 10px;
-      padding: 20px;
-      border: 1px solid var(--border-light);
+      padding: 16px;
     }
-    .delegation-card h4 {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 12px;
+    .deleg-before-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #DC2626;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
     }
-    .delegation-card.before h4 { color: #DC2626; }
-    .delegation-card.after h4 { color: #16A34A; }
-    .delegation-row {
+    .deleg-context-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--purple);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .deleg-task {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding: 4px 0;
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-secondary);
     }
-    .delegation-row .val {
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
+    .deleg-task .task-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .delegation-total {
-      border-top: 2px solid var(--border-light);
-      margin-top: 8px;
+    .deleg-task .task-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .deleg-task .task-tokens {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      font-size: 11px;
+    }
+    .deleg-total-bar {
+      margin-top: 10px;
       padding-top: 8px;
+      border-top: 2px solid rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
       font-weight: 700;
       font-size: 14px;
     }
-    .delegation-total.bad { color: #DC2626; }
-    .delegation-total.good { color: #16A34A; }
-    .reduction-badge {
-      text-align: center;
-      margin-top: 12px;
-      padding: 8px;
-      background: rgba(22,163,106,0.08);
-      border-radius: 6px;
-      font-size: 16px;
+    /* After section — 3-column layout */
+    .deleg-after {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .deleg-after-title {
+      font-size: 12px;
       font-weight: 700;
       color: #16A34A;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: -2px;
+    }
+    .deleg-3col {
+      display: grid;
+      grid-template-columns: 5fr 2fr 4fr;
+      gap: 0;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #86EFAC;
+    }
+    /* Column headers */
+    .d3-header {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 8px 10px;
+      border-bottom: 2px solid rgba(0,0,0,0.06);
+    }
+    .d3-header.main-h {
+      background: rgba(240,253,244,0.8);
+      color: #16A34A;
+    }
+    .d3-header.arrow-h {
+      background: rgba(0,0,0,0.02);
+      color: var(--text-muted);
+      border-left: 1px solid rgba(0,0,0,0.06);
+      text-align: center;
+      font-size: 9px;
+    }
+    .d3-header.subagent-h {
+      background: rgba(124,58,237,0.06);
+      color: var(--purple);
+      border-left: 1px solid rgba(0,0,0,0.06);
+    }
+    /* Row cells */
+    .d3-row-main, .d3-row-delegate, .d3-row-receive {
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      font-size: 11px;
+    }
+    .d3-row-main {
+      background: rgba(240,253,244,0.4);
+      gap: 6px;
+    }
+    .d3-row-arrow {
+      background: rgba(0,0,0,0.01);
+      border-left: 1px solid rgba(0,0,0,0.06);
+      justify-content: center;
+      text-align: center;
+      font-size: 9px;
+      color: var(--purple);
+      font-weight: 600;
+      line-height: 1.6;
+    }
+    .d3-row-subagent {
+      background: rgba(124,58,237,0.03);
+      border-left: 1px solid rgba(0,0,0,0.06);
+      justify-content: center;
+      text-align: center;
+    }
+    .d3-row-main .task-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .d3-row-main .task-name {
+      flex: 1;
+      color: var(--text-secondary);
+    }
+    .d3-row-main .task-tokens {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+    /* Delegate pill */
+    .d3-agent-pill {
+      font-size: 9px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .d3-agent-pill.explorer { background: rgba(245,158,11,0.12); color: #B45309; }
+    .d3-agent-pill.backend { background: rgba(37,99,235,0.1); color: #1D4ED8; }
+    .d3-agent-pill.frontend { background: rgba(6,182,212,0.1); color: #0E7490; }
+    /* Receive summary */
+    .d3-summary {
+      font-size: 9px;
+      font-weight: 600;
+      color: #16A34A;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .d3-summary .arrow-icon { font-size: 11px; }
+    /* Arrows between delegate/receive */
+    .d3-delegate-detail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+    }
+    .d3-delegate-detail .agent-label {
+      font-size: 9px;
+      font-weight: 600;
+    }
+    .d3-delegate-detail .agent-ctx {
+      font-size: 8px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+    /* Empty cells for non-delegated rows */
+    .d3-empty { color: var(--text-muted); font-size: 9px; }
+    /* Total row */
+    .d3-total {
+      padding: 8px 10px;
+      font-weight: 700;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .d3-total.main-t {
+      background: rgba(240,253,244,0.6);
+      color: #16A34A;
+    }
+    .d3-total.sub-t {
+      border-left: 1px solid rgba(0,0,0,0.06);
+      background: rgba(124,58,237,0.04);
+      color: var(--purple);
+      justify-content: center;
+      font-size: 10px;
+    }
+    .deleg-savings {
+      text-align: center;
+      margin-top: 8px;
+      padding: 6px 12px;
+      background: #DCFCE7;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #166534;
     }
   </style>
 </head>
@@ -129,11 +314,11 @@
         <div class="problems-grid animate-in">
           <div class="problem-card">
             <h4>"Lost in the Middle"</h4>
-            <p>LLM attends to beginning + end, SKIPS the middle</p>
+            <p>LLM pays less attention to information in the middle of long contexts</p>
           </div>
           <div class="problem-card">
             <h4>Hallucination increases</h4>
-            <p>50+ tools &rarr; &lt;60% accuracy (vs 95% with 5 tools)</p>
+            <p>More tools &rarr; more tokens &rarr; accuracy decreases</p>
           </div>
           <div class="problem-card">
             <h4>Unexpected auto-compact</h4>
@@ -176,22 +361,131 @@
 
         <h2 class="slide-heading animate-in">SubAgent &mdash; Separate Context, Clean Main</h2>
 
-        <div class="delegation-visual animate-in">
-          <div class="delegation-card before">
-            <h4>BEFORE delegation</h4>
-            <div class="delegation-row"><span>Overhead</span><span class="val">30K</span></div>
-            <div class="delegation-row"><span>File reads</span><span class="val">18K</span></div>
-            <div class="delegation-row"><span>Grep</span><span class="val">8K</span></div>
-            <div class="delegation-row"><span>Tests</span><span class="val">4K</span></div>
-            <div class="delegation-row"><span>Chat</span><span class="val">10K</span></div>
-            <div class="delegation-row delegation-total bad"><span>TOTAL</span><span class="val">70K</span></div>
+        <div class="deleg-flow animate-in">
+          <!-- ── BEFORE: Everything in Main ── -->
+          <div>
+            <div class="deleg-before-title">Before &mdash; All in Main Context</div>
+            <div class="deleg-before">
+              <div class="deleg-context-label">Main Agent Context</div>
+
+            <div class="deleg-task">
+              <span class="task-name"><span class="task-dot" style="background:#7C3AED"></span> Overhead (system + tools)</span>
+              <span class="task-tokens">30K</span>
+            </div>
+            <div class="deleg-task">
+              <span class="task-name"><span class="task-dot" style="background:#F59E0B"></span> Explore codebase (Read 5 files + Grep)</span>
+              <span class="task-tokens">17K</span>
+            </div>
+            <div class="deleg-task">
+              <span class="task-name"><span class="task-dot" style="background:#2563EB"></span> Backend task (Read + Edit + tests)</span>
+              <span class="task-tokens">15K</span>
+            </div>
+            <div class="deleg-task">
+              <span class="task-name"><span class="task-dot" style="background:#06B6D4"></span> Frontend task (Read + Edit + tests)</span>
+              <span class="task-tokens">15K</span>
+            </div>
+            <div class="deleg-task">
+              <span class="task-name"><span class="task-dot" style="background:#9CA3AF"></span> Chat (user + assistant)</span>
+              <span class="task-tokens">8K</span>
+            </div>
+
+            <div class="deleg-total-bar" style="color:#DC2626">
+              <span>TOTAL</span><span>85K</span>
+            </div>
+            </div>
           </div>
-          <div class="delegation-card after">
-            <h4>AFTER delegation</h4>
-            <div class="delegation-row"><span>Overhead</span><span class="val">30K</span></div>
-            <div class="delegation-row"><span>Summaries</span><span class="val">5K</span></div>
-            <div class="delegation-row delegation-total good"><span>TOTAL</span><span class="val">35K</span></div>
-            <div class="reduction-badge">84% reduction &mdash; 600K working context!</div>
+
+          <!-- Arrow -->
+          <div class="deleg-arrow-center">&rarr;</div>
+
+          <!-- ── AFTER: 3-column Delegation Flow ── -->
+          <div class="deleg-after">
+            <div class="deleg-after-title">After &mdash; Delegate to SubAgents</div>
+
+            <div class="deleg-3col">
+              <!-- Headers -->
+              <div class="d3-header main-h">Main Agent Context (clean)</div>
+              <div class="d3-header arrow-h">&larr; Delegate / Receive &rarr;</div>
+              <div class="d3-header subagent-h">Sub-Agent</div>
+
+              <!-- Row: Overhead (no delegation) -->
+              <div class="d3-row-main">
+                <span class="task-dot" style="background:#7C3AED"></span>
+                <span class="task-name">Overhead (system + tools)</span>
+                <span class="task-tokens">30K</span>
+              </div>
+              <div class="d3-row-arrow"><span class="d3-empty">&mdash;</span></div>
+              <div class="d3-row-subagent"><span class="d3-empty">&mdash;</span></div>
+
+              <!-- Row: Explore codebase ↔ Explorer Agent -->
+              <div class="d3-row-main">
+                <span class="task-dot" style="background:#F59E0B"></span>
+                <span class="task-name">Explore codebase</span>
+                <span class="task-tokens"><span style="text-decoration:line-through; color:#DC2626">17K</span> <span style="color:#16A34A">~1K</span></span>
+              </div>
+              <div class="d3-row-arrow">
+                <span>&rarr; task<br>&larr; summary</span>
+              </div>
+              <div class="d3-row-subagent">
+                <div class="d3-delegate-detail">
+                  <span class="d3-agent-pill explorer">Explorer Agent</span>
+                  <span class="agent-ctx">~20K own ctx</span>
+                </div>
+              </div>
+
+              <!-- Row: Backend task ↔ Backend Agent -->
+              <div class="d3-row-main">
+                <span class="task-dot" style="background:#2563EB"></span>
+                <span class="task-name">Backend task</span>
+                <span class="task-tokens"><span style="text-decoration:line-through; color:#DC2626">15K</span> <span style="color:#16A34A">~1K</span></span>
+              </div>
+              <div class="d3-row-arrow">
+                <span>&rarr; task<br>&larr; summary</span>
+              </div>
+              <div class="d3-row-subagent">
+                <div class="d3-delegate-detail">
+                  <span class="d3-agent-pill backend">Backend Agent</span>
+                  <span class="agent-ctx">~20K own ctx</span>
+                </div>
+              </div>
+
+              <!-- Row: Frontend task ↔ Frontend Agent -->
+              <div class="d3-row-main">
+                <span class="task-dot" style="background:#06B6D4"></span>
+                <span class="task-name">Frontend task</span>
+                <span class="task-tokens"><span style="text-decoration:line-through; color:#DC2626">15K</span> <span style="color:#16A34A">~1K</span></span>
+              </div>
+              <div class="d3-row-arrow">
+                <span>&rarr; task<br>&larr; summary</span>
+              </div>
+              <div class="d3-row-subagent">
+                <div class="d3-delegate-detail">
+                  <span class="d3-agent-pill frontend">Frontend Agent</span>
+                  <span class="agent-ctx">~20K own ctx</span>
+                </div>
+              </div>
+
+              <!-- Row: Chat (no delegation) -->
+              <div class="d3-row-main" style="border-bottom:none">
+                <span class="task-dot" style="background:#9CA3AF"></span>
+                <span class="task-name">Chat (user + assistant)</span>
+                <span class="task-tokens">8K</span>
+              </div>
+              <div class="d3-row-arrow" style="border-bottom:none"><span class="d3-empty">&mdash;</span></div>
+              <div class="d3-row-subagent" style="border-bottom:none"><span class="d3-empty">&mdash;</span></div>
+
+              <!-- Total row -->
+              <div class="d3-total main-t">
+                <span>TOTAL</span><span>~41K</span>
+              </div>
+              <div class="d3-total sub-t" style="grid-column: span 2;">
+                isolated &mdash; discarded after
+              </div>
+            </div>
+
+            <div class="deleg-savings">
+              Main: 85K &rarr; 41K = 52% reduction &mdash; sub-agent contexts don't pollute main
+            </div>
           </div>
         </div>
       </div>

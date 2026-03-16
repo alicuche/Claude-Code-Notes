@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Context AI — 10K Skills</title>
+  <title>Context AI — 1K Skills</title>
   <link rel="stylesheet" href="shared/styles.css">
   <style>
     .challenge-banner {
@@ -116,6 +116,31 @@
       color: var(--purple);
       font-style: italic;
     }
+    .question-banner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background: rgba(124,58,237,0.06);
+      border: 1px solid var(--purple-border);
+      border-radius: 12px;
+      padding: 48px 40px;
+      margin: 24px 0;
+      min-height: 300px;
+    }
+    .question-banner h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--purple);
+      margin: 0;
+      line-height: 1.4;
+    }
+    .question-icon {
+      width: 48px;
+      height: 48px;
+      color: var(--purple);
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
@@ -124,13 +149,18 @@
     <header class="header" role="banner"></header>
     <main class="content" role="main">
       <div class="slide-container">
-        <h1 class="slide-title animate-in">Scale &mdash; 10K Skills Problem</h1>
+        <h1 class="slide-title animate-in">Scale &mdash; 1K Skills Problem</h1>
 
         <div class="challenge-banner animate-in">
-          <div class="big-num">10,000 skills &times; 300 tokens = 3,000,000 tokens</div>
+          <div class="big-num">1,000 skills &times; 300 tokens = 300,000 tokens</div>
           <div class="vs">vs</div>
           <div class="context-num">Context Window = 200,000 tokens</div>
-          <div class="result">15x over the limit</div>
+          <div class="result">1.5x over the limit</div>
+        </div>
+
+        <div class="question-banner animate-in">
+          <span style="font-size:64px;line-height:1;">🤔</span>
+          <h2>How do we load 1K skills into a 200K token window?</h2>
         </div>
 
         <h2 class="slide-heading animate-in">Skill Finder + Tag/Scope Architecture</h2>
@@ -157,13 +187,13 @@
           <span class="scope-tag">hr<span class="count">80</span></span>
           <span class="scope-tag">engineering<span class="count">200</span></span>
           <span class="scope-tag">finance<span class="count">120</span></span>
-          <span class="scope-tag">...<span class="count">10K total</span></span>
+          <span class="scope-tag">...<span class="count">1K total</span></span>
         </div>
 
         <div class="callout-box animate-in" style="background: rgba(124,58,237,0.06); border: 1px solid var(--purple-border); border-radius: 8px; padding: 16px 20px;">
           <p style="font-size:14px; color:var(--text-secondary);">
             <strong>Payroll user loads:</strong> general(20) + payroll(50) = 70 skills<br>
-            <strong>Cost:</strong> 70 &times; 100 = <span class="highlight">7K tokens</span> vs ALL: 10K &times; 300 = <span style="color:#DC2626; font-weight:600;">3M tokens</span>
+            <strong>Cost:</strong> 70 &times; 100 = <span class="highlight">7K tokens</span> vs ALL: 1K &times; 300 = <span style="color:#DC2626; font-weight:600;">300K tokens</span>
           </p>
         </div>
 
