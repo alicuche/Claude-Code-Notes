@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context AI — Multiple Accounts</title>
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 16px 0 24px;
+    }
+    .problem-card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid #FECACA;
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .problem-card .icon {
+      width: 24px;
+      height: 24px;
+      background: #FEE2E2;
+      color: #DC2626;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+    .problem-card p {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .problem-card strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Solution section */
+    .solution-section {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--purple-border);
+      border-radius: 12px;
+      padding: 22px 26px;
+      margin: 16px 0;
+    }
+    .solution-section h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--purple);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .solution-section h3 .badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(234,179,8,0.12);
+      color: #CA8A04;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cmd-block {
+      background: #1E1E2E;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      color: #CDD6F4;
+      overflow-x: auto;
+      white-space: pre;
+      margin: 10px 0;
+    }
+    .cmd-block .comment {
+      color: #6C7086;
+      font-style: italic;
+    }
+    .cmd-block .env {
+      color: #F9E2AF;
+    }
+    .cmd-block .val {
+      color: #A6E3A1;
+    }
+    .cmd-block .cmd {
+      color: #89B4FA;
+    }
+    .cmd-block .prompt {
+      color: #A6E3A1;
+      user-select: none;
+    }
+    .cmd-block .file {
+      color: #F38BA8;
+    }
+
+    /* Before/After comparison */
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr;
+      gap: 0;
+      align-items: center;
+      margin: 20px 0 10px;
+    }
+    .compare-col {
+      background: rgba(255,255,255,0.85);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .compare-col.before {
+      border: 1px solid #FECACA;
+    }
+    .compare-col.after {
+      border: 1px solid #BBF7D0;
+    }
+    .compare-col h4 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+    .compare-col.before h4 { color: #DC2626; }
+    .compare-col.after h4 { color: #16A34A; }
+    .compare-arrow {
+      text-align: center;
+      font-size: 20px;
+      color: var(--text-faint);
+    }
+
+    .dir-tree {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+    .dir-tree .folder {
+      color: #CA8A04;
+      font-weight: 600;
+    }
+    .dir-tree .file {
+      color: var(--text-muted);
+    }
+    .dir-tree .highlight {
+      color: var(--purple);
+      font-weight: 600;
+    }
+    .dir-tree .green {
+      color: #16A34A;
+      font-weight: 600;
+    }
+
+    /* Usage summary */
+    .usage-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .usage-card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--purple-border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+    .usage-card .label {
+      font-size: 11px;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .usage-card .command {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+    .usage-card.work .command {
+      background: var(--purple-light);
+      color: var(--purple);
+    }
+    .usage-card.personal .command {
+      background: rgba(22,163,106,0.08);
+      color: #16A34A;
+    }
+
+    .slide-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation-layout">
+    <aside class="sidebar" role="navigation" aria-label="Slide navigation"></aside>
+    <header class="header" role="banner"></header>
+    <main class="content" role="main">
+      <div class="slide-container">
+        <h1 class="slide-title animate-in">Multiple Accounts</h1>
+        <p class="slide-note animate-in">CLAUDE_CONFIG_DIR &mdash; isolate work &amp; personal profiles</p>
+
+        <!-- Problems -->
+        <div class="problem-grid animate-in">
+          <div class="problem-card">
+            <span class="icon">1</span>
+            <p><strong>Skill/plugin conflicts</strong> &mdash; personal vibe coding triggers company conventions, hooks blocking push to main</p>
+          </div>
+          <div class="problem-card">
+            <span class="icon">2</span>
+            <p><strong>Credential conflict</strong> &mdash; <code>~/.claude</code> stores shared credentials, login/logout in one session affects all others</p>
+          </div>
+          <div class="problem-card">
+            <span class="icon">3</span>
+            <p><strong>Context bloat</strong> &mdash; personal skills/MCPs inflate context when using the work account</p>
+          </div>
+          <div class="problem-card">
+            <span class="icon">4</span>
+            <p><strong>Login/logout hell</strong> &mdash; constantly switching between accounts wastes time</p>
+          </div>
+        </div>
+
+        <!-- Solution -->
+        <div class="solution-section animate-in">
+          <h3>Solution: CLAUDE_CONFIG_DIR <span class="badge">undocumented</span></h3>
+
+          <div class="cmd-block"><span class="comment"># ~/.zshrc — alias for personal profile</span>
+<span class="cmd">alias</span> <span class="env">claude-personal</span>=<span class="val">"CLAUDE_CONFIG_DIR=~/.claude-personal claude"</span>
+
+<span class="comment"># First run will prompt login for personal account</span>
+<span class="prompt">$ </span><span class="env">claude-personal</span>
+
+<span class="comment"># Configure personal profile separately</span>
+<span class="prompt">$ </span>vim <span class="file">~/.claude-personal/settings.json</span></div>
+        </div>
+
+        <!-- Before / After -->
+        <div class="compare-row animate-in">
+          <div class="compare-col before">
+            <h4>Before &mdash; shared ~/.claude</h4>
+            <div class="dir-tree">
+<span class="folder">~/.claude/</span>
+  <span class="file">credentials.json</span>    <span class="comment" style="color:#DC2626">← both accounts compete</span>
+  <span class="file">settings.json</span>       <span class="comment" style="color:#DC2626">← skills/hooks mixed up</span>
+  <span class="file">projects/</span>
+            </div>
+          </div>
+          <div class="compare-arrow">&rarr;</div>
+          <div class="compare-col after">
+            <h4>After &mdash; isolated</h4>
+            <div class="dir-tree">
+<span class="highlight">~/.claude/</span>              <span style="color:var(--text-faint)">work profile</span>
+  <span class="file">credentials.json</span>
+  <span class="file">settings.json</span>      <span style="color:var(--text-faint)">hooks, conventions...</span>
+
+<span class="green">~/.claude-personal/</span>    <span style="color:var(--text-faint)">personal profile</span>
+  <span class="file">credentials.json</span>
+  <span class="file">settings.json</span>      <span style="color:var(--text-faint)">custom skills, no hooks</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Usage -->
+        <div class="usage-row animate-in">
+          <div class="usage-card work">
+            <div class="label">Work (default)</div>
+            <div class="command">claude</div>
+          </div>
+          <div class="usage-card personal">
+            <div class="label">Personal</div>
+            <div class="command">claude-personal</div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+    <footer class="footer" role="contentinfo"></footer>
+  </div>
+  <script src="shared/navigation.js"></script>
+</body>
+</html>

@@ -16,14 +16,18 @@ const SLIDES = [
   { id: 'slide-10', file: 'slide-10-claude-md.html', title: 'CLAUDE.md Inheritance', section: 'OPTIMIZATION', label: '\u2467 CLAUDE.md Inheritance' },
   { id: 'slide-11', file: 'slide-11-subagent.html', title: 'SubAgent', section: 'OPTIMIZATION', label: '\u2468 SubAgent' },
   { id: 'slide-13', file: 'slide-13-scale.html', title: 'Skill Explosion', section: 'SCALE', label: '\u2469 Skill Explosion' },
-  { id: 'slide-14', file: 'slide-14-best-practices.html', title: 'Best Practices', section: 'SCALE', label: '\u246A Best Practices' }
+  { id: 'slide-14', file: 'slide-14-best-practices.html', title: 'Best Practices', section: 'SCALE', label: '\u246A Best Practices' },
+  { id: 'slide-15', file: 'slide-15-debug.html', title: 'Debug', section: 'TIPS', label: 'Debug' },
+  { id: 'slide-16', file: 'slide-16-cheatsheet.html', title: 'Cheatsheet', section: 'TIPS', label: 'Cheatsheet' },
+  { id: 'slide-17', file: 'slide-17-multi-account.html', title: 'Multiple Accounts', section: 'TIPS', label: 'Multiple Accounts' }
 ];
 
 const SECTIONS = {
   INTRO: { label: '', slides: [0, 1] },
   FOUNDATION: { label: 'Foundation', slides: [2, 3, 4, 5, 6, 7] },
   OPTIMIZATION: { label: 'Optimization', slides: [8, 9, 10] },
-  SCALE: { label: 'Advanced', slides: [11, 12] }
+  SCALE: { label: 'Advanced', slides: [11, 12] },
+  TIPS: { label: 'Tips', slides: [13, 14, 15] }
 };
 
 /**
