@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code – Tips & Tricks</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --border: #1e1e2e;
+    --accent: #cc785c;
+    --accent2: #7c9ddc;
+    --accent3: #6fcf8e;
+    --warn: #e5c07b;
+    --text: #e8e6f0;
+    --muted: #6b6b80;
+    --code-bg: #0d1117;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+  .slides { width: 100%; }
+  .slide {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 60px 80px; border-bottom: 1px solid var(--border); position: relative; overflow: hidden;
+  }
+  .slide::before {
+    content:''; position:absolute; inset:0;
+    background-image: linear-gradient(var(--border) 1px,transparent 1px), linear-gradient(90deg,var(--border) 1px,transparent 1px);
+    background-size:60px 60px; opacity:0.4; pointer-events:none;
+  }
+  .eyebrow { font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.3em; text-transform:uppercase; color:var(--accent); margin-bottom:24px; }
+  .cover-title { font-size:clamp(52px,8vw,100px); font-weight:800; line-height:0.95; letter-spacing:-0.03em; }
+  .cover-title .hl { color:var(--accent); }
+  .cover-sub { margin-top:32px; font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--muted); max-width:520px; line-height:1.8; }
+  .cover-sub span { color:var(--accent2); }
+  .tag-row { display:flex; gap:10px; margin-top:40px; flex-wrap:wrap; }
+  .tag { font-family:'JetBrains Mono',monospace; font-size:11px; padding:6px 14px; border:1px solid var(--border); border-radius:4px; color:var(--muted); letter-spacing:0.1em; }
+  .tag.on { border-color:var(--accent); color:var(--accent); }
+
+  .section-num { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.3em; color:var(--accent); text-transform:uppercase; margin-bottom:16px; }
+  .slide-title { font-size:clamp(34px,5vw,56px); font-weight:800; line-height:1.05; letter-spacing:-0.02em; margin-bottom:36px; }
+  .slide-title em { color:var(--accent); font-style:normal; }
+  .divider { width:60px; height:2px; background:var(--accent); margin-bottom:32px; }
+  .big-num { font-size:clamp(80px,15vw,180px); font-weight:800; color:var(--border); position:absolute; right:60px; top:50%; transform:translateY(-50%); line-height:1; letter-spacing:-0.05em; user-select:none; }
+
+  /* cards */
+  .card-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-bottom:20px; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:22px; }
+  .ca  { border-top:2px solid var(--accent); }
+  .ca2 { border-top:2px solid var(--accent2); }
+  .ca3 { border-top:2px solid var(--accent3); }
+  .cw  { border-top:2px solid var(--warn); }
+  .card-icon { font-size:20px; margin-bottom:10px; }
+  .card-title { font-size:12px; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; margin-bottom:8px; color:var(--accent); }
+  .ca2 .card-title { color:var(--accent2); }
+  .ca3 .card-title { color:var(--accent3); }
+  .cw  .card-title { color:var(--warn); }
+  .card-body { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); line-height:1.75; }
+  .card-body strong { color:var(--text); }
+
+  /* table */
+  .tbl { width:100%; border-collapse:collapse; font-family:'JetBrains Mono',monospace; font-size:12px; margin-bottom:20px; }
+  .tbl th { text-align:left; padding:12px 16px; background:var(--surface); color:var(--accent); font-size:11px; letter-spacing:0.15em; text-transform:uppercase; border-bottom:1px solid var(--border); }
+  .tbl td { padding:13px 16px; border-bottom:1px solid var(--border); color:var(--muted); line-height:1.6; vertical-align:top; }
+  .tbl td:first-child { color:var(--accent2); font-weight:600; }
+  .tbl tr.hl td { background:rgba(111,207,142,0.04); }
+  .tbl tr.hl td:first-child { color:var(--accent3); }
+
+  /* callout */
+  .callout { display:flex; gap:14px; align-items:flex-start; border-radius:8px; padding:16px 20px; margin-bottom:14px; }
+  .callout-icon { font-size:15px; flex-shrink:0; margin-top:2px; }
+  .callout-body { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); line-height:1.75; }
+  .callout-body strong { color:var(--text); }
+  .co  { background:rgba(204,120,92,0.08);  border:1px solid rgba(204,120,92,0.28); }
+  .co2 { background:rgba(124,157,220,0.08); border:1px solid rgba(124,157,220,0.28); }
+  .co3 { background:rgba(111,207,142,0.08); border:1px solid rgba(111,207,142,0.28); }
+  .cow { background:rgba(229,192,123,0.08); border:1px solid rgba(229,192,123,0.28); }
+
+  /* code */
+  .code-block { background:var(--code-bg); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:8px; padding:22px 26px; font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.85; position:relative; overflow-x:auto; margin-bottom:18px; }
+  .code-block .cm  { color:var(--muted); }
+  .code-block .cmd { color:var(--accent2); }
+  .code-block .arg { color:var(--accent); }
+  .code-block .str { color:var(--accent3); }
+  .code-block .val { color:var(--warn); }
+  .code-label { position:absolute; top:10px; right:14px; font-size:10px; letter-spacing:0.2em; color:var(--muted); text-transform:uppercase; }
+
+  /* formula */
+  .formula-box { background:var(--code-bg); border:1px solid var(--accent); border-radius:10px; padding:24px 28px; margin-bottom:16px; }
+  .formula { font-family:'JetBrains Mono',monospace; font-size:13px; line-height:2.5; }
+  .formula .plus  { color:var(--muted); margin:0 8px; }
+  .formula .eq    { color:var(--accent); margin:0 8px; font-weight:700; }
+  .formula .price { color:var(--accent3); }
+  .formula .tok   { color:var(--accent2); }
+
+  /* verify */
+  .verify-box { background:rgba(229,192,123,0.06); border:1px solid rgba(229,192,123,0.28); border-radius:8px; padding:16px 20px; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:2.1; color:var(--muted); }
+  .verify-box strong { color:var(--text); }
+  .verify-box .tot { color:var(--accent3); font-weight:700; font-size:13px; }
+
+  /* JSON sample */
+  .cmd-line { background:#0d1117; border:1px solid #30363d; border-radius:6px; padding:14px 20px; font-family:'JetBrains Mono',monospace; font-size:13px; margin-bottom:18px; overflow-x:auto; white-space:nowrap; }
+  .cmd-line .cp { color:#7ee787; }
+  .cmd-line .cf { color:#79c0ff; }
+  .cmd-line .cs { color:#a5d6ff; }
+  .cmd-line .ca { color:#ffa657; }
+
+  .json-block { background:#0d1117; border:1px solid #30363d; border-radius:8px; padding:18px 22px; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:2; overflow-x:auto; }
+  .dim  { color:#444; }
+  .jk   { color:#79c0ff; }
+  .jstr { color:#a5d6ff; }
+  .jnum { color:#ffa657; }
+
+  .hl-result { display:inline-block; background:rgba(111,207,142,0.18); border:1.5px solid #6fcf8e; border-radius:4px; padding:0 6px; color:#6fcf8e; font-weight:700; }
+  .hl-cost   { display:inline-block; background:rgba(229,192,123,0.18); border:1.5px solid #e5c07b; border-radius:4px; padding:0 6px; color:#e5c07b; font-weight:700; }
+
+  .legend-row { display:flex; gap:20px; margin-top:14px; flex-wrap:wrap; }
+  .legend-item { font-family:'JetBrains Mono',monospace; font-size:11px; display:flex; align-items:center; gap:8px; color:var(--muted); }
+  .ld-r { width:10px; height:10px; border-radius:2px; background:rgba(111,207,142,0.4); border:1px solid #6fcf8e; }
+  .ld-c { width:10px; height:10px; border-radius:2px; background:rgba(229,192,123,0.3); border:1px solid #e5c07b; }
+
+  /* nav */
+  .nav { position:fixed; right:24px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:8px; z-index:100; }
+  .dot { width:6px; height:6px; border-radius:50%; background:var(--border); cursor:pointer; transition:all 0.2s; }
+  .dot.active { background:var(--accent); transform:scale(1.5); }
+</style>
+</head>
+<body>
+
+<div class="nav" id="nav"></div>
+<div class="slides" id="slides">
+
+<!-- ── 0 COVER ── -->
+<div class="slide" id="s0">
+  <div class="eyebrow">// internal sharing · 2026</div>
+  <h1 class="cover-title">Claude<br><span class="hl">Code</span><br>Tips</h1>
+  <p class="cover-sub">Two small but useful tips when using <span>claude -p</span> in scripts & CI/CD pipelines.</p>
+  <div class="tag-row">
+    <div class="tag on">--append-system-prompt</div>
+    <div class="tag on">costUSD</div>
+    <div class="tag">claude -p</div>
+    <div class="tag">--output-format json</div>
+  </div>
+</div>
+
+<!-- ── 1 WHAT IS -p ── -->
+<div class="slide" id="s1">
+  <div class="section-num">// quick clarification · -p flag</div>
+  <h2 class="slide-title">What does<br><em>-p mean?</em></h2>
+  <div class="divider"></div>
+
+  <div class="card-grid">
+    <div class="card ca">
+      <div class="card-icon">📌</div>
+      <div class="card-title">-p = --print</div>
+      <div class="card-body">Short for <strong>--print</strong>, not "prompt".<br><br>Runs Claude Code <strong>non-interactively</strong> — processes the query, prints output to stdout, then exits. No session opened.</div>
+    </div>
+    <div class="card ca2">
+      <div class="card-icon">🔄</div>
+      <div class="card-title">vs Interactive mode</div>
+      <div class="card-body">
+        Without <code>-p</code>: opens a persistent REPL session.<br><br>
+        With <code>-p</code>: one-shot execution. Output piped to stdout. Process exits when done.
+      </div>
+    </div>
+    <div class="card ca3">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Also known as</div>
+      <div class="card-body">Previously called <strong>"headless mode"</strong> in older docs. The flag and behavior are the same — only the name changed.</div>
+    </div>
+  </div>
+
+  <div class="callout co2">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">All CLI flags — including <strong>--append-system-prompt</strong> and <strong>--output-format</strong> — work with <code>-p</code>. It's the standard entry point for scripting and automation.</div>
+  </div>
+</div>
+
+<!-- ── 2 APPEND OVERVIEW ── -->
+<div class="slide" id="s2">
+  <div class="section-num">// tip 01 · system prompt customization</div>
+  <h2 class="slide-title"><em>--append-system-prompt</em></h2>
+  <div class="divider"></div>
+
+  <div class="card-grid">
+    <div class="card ca">
+      <div class="card-icon">📌</div>
+      <div class="card-title">What it does</div>
+      <div class="card-body">Appends your custom instructions to the <strong>end</strong> of Claude Code's default system prompt.<br><br>Does not replace — preserves all built-in capabilities.</div>
+    </div>
+    <div class="card ca2">
+      <div class="card-icon">📅</div>
+      <div class="card-title">Interactive mode support</div>
+      <div class="card-body">The flag existed before, but from <strong>v1.0.51 (July 8, 2025)</strong> it also works in <strong>interactive mode</strong>.<br><br>Non-interactive (<code>-p</code>) was supported earlier.</div>
+    </div>
+    <div class="card ca3">
+      <div class="card-icon">💡</div>
+      <div class="card-title">Official recommendation</div>
+      <div class="card-body"><em>"For most use cases, use an append flag. Appending preserves Claude Code's built-in capabilities while adding your requirements."</em></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 3 4 FLAGS ── -->
+<div class="slide" id="s3">
+  <div class="section-num">// tip 01 · all 4 system prompt flags</div>
+  <h2 class="slide-title">4 flags,<br><em>4 use cases</em></h2>
+  <div class="divider"></div>
+
+  <table class="tbl">
+    <thead><tr><th>Flag</th><th>Behavior</th><th>Mode</th></tr></thead>
+    <tbody>
+      <tr><td>--system-prompt</td><td><strong style="color:var(--warn)">Replaces</strong> the entire default system prompt</td><td style="color:var(--accent3)">interactive + non-interactive ✓</td></tr>
+      <tr><td>--system-prompt-file</td><td>Replaces with contents from a file</td><td style="color:var(--accent3)">interactive + non-interactive ✓</td></tr>
+      <tr class="hl"><td>--append-system-prompt</td><td><strong>Appends</strong> to the default prompt — <strong>recommended</strong></td><td style="color:var(--accent3)">interactive + non-interactive ✓</td></tr>
+      <tr class="hl"><td>--append-system-prompt-file</td><td>Appends from a file</td><td style="color:var(--accent3)">interactive + non-interactive ✓</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout co">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-body"><strong>--system-prompt</strong> and <strong>--system-prompt-file</strong> are mutually exclusive. Append flags can be combined with either replacement flag.</div>
+  </div>
+
+  <div class="callout cow">
+    <div class="callout-icon">📝</div>
+    <div class="callout-body">All 4 flags work in both interactive and non-interactive mode. Earlier docs incorrectly stated the <code>-file</code> variants were non-interactive only — this has since been corrected.</div>
+  </div>
+</div>
+
+<!-- ── 4 CLAUDE.md vs append ── -->
+<div class="slide" id="s4">
+  <div class="section-num">// tip 01 · CLAUDE.md vs --append-system-prompt</div>
+  <h2 class="slide-title">Two different<br><em>inject mechanisms</em></h2>
+  <div class="divider"></div>
+
+  <div class="card-grid">
+    <div class="card ca2">
+      <div class="card-icon">📄</div>
+      <div class="card-title">CLAUDE.md</div>
+      <div class="card-body">
+        Injected as the <strong>first user message</strong> — placed after the default system prompt.<br><br>
+        Persistent. Auto-loaded from project root or global (<code>~/.claude/CLAUDE.md</code>).
+      </div>
+    </div>
+    <div class="card ca">
+      <div class="card-icon">🔧</div>
+      <div class="card-title">--append-system-prompt</div>
+      <div class="card-body">
+        Appended <strong>directly into the system prompt</strong> — not a user message.<br><br>
+        Per-session. Must be passed on every invocation.
+      </div>
+    </div>
+  </div>
+
+  <div class="callout co2">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">Neither CLAUDE.md nor --append-system-prompt modifies Claude Code's default system prompt — they are two different ways to inject additional content at different positions in the context.</div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card ca3">
+      <div class="card-icon">✅</div>
+      <div class="card-title">Use CLAUDE.md for</div>
+      <div class="card-body">Persistent project conventions, coding standards, team rules that apply across all sessions.</div>
+    </div>
+    <div class="card ca">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Use --append for</div>
+      <div class="card-body">Task-specific behavior for a single run — CI/CD pipelines, specialized scripts, one-off instructions.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 5 EXAMPLES ── -->
+<div class="slide" id="s5">
+  <div class="section-num">// tip 01 · examples</div>
+  <h2 class="slide-title">Real-world<br><em>examples</em></h2>
+  <div class="divider"></div>
+
+  <div class="code-block">
+    <div class="code-label">bash</div>
+    <span class="cm"># Add security focus for a single review run</span><br>
+    <span class="cmd">claude</span> <span class="arg">-p</span> <span class="str">"Review this auth code"</span> \<br>
+    &nbsp;&nbsp;<span class="arg">--append-system-prompt</span> <span class="str">"Check for: SQL injection, XSS, insecure token handling."</span>
+  </div>
+
+  <div class="code-block">
+    <div class="code-label">bash</div>
+    <span class="cm"># Load role instructions from a file</span><br>
+    <span class="cmd">claude</span> <span class="arg">-p</span> <span class="str">"$(cat prompt.txt)"</span> \<br>
+    &nbsp;&nbsp;<span class="arg">--append-system-prompt</span> <span class="str">"$(cat ROLE.md)"</span> \<br>
+    &nbsp;&nbsp;<span class="arg">--permission-mode</span> acceptEdits
+  </div>
+
+  <div class="code-block">
+    <div class="code-label">bash</div>
+    <span class="cm"># Interactive mode: persistent focus across the whole session</span><br>
+    <span class="cmd">claude</span> <span class="arg">--append-system-prompt</span> <span class="str">"Always analyze time & space complexity when writing code."</span>
+  </div>
+</div>
+
+<!-- ── 6 SAMPLE JSON ── -->
+<div class="slide" id="s6">
+  <div class="section-num">// tip 01+02 · live sample</div>
+  <h2 class="slide-title">JSON output<br><em>walkthrough</em></h2>
+  <div class="divider"></div>
+
+  <div class="cmd-line">
+    <span class="cp">claude</span>
+    <span class="cf"> -p </span><span class="cs">"Do you know my name?"</span>
+    <span class="cf"> --output-format</span> <span class="cs">json</span>
+    <span class="cf"> --append-system-prompt</span> <span class="ca">"My name is Viet Tran"</span>
+  </div>
+
+  <div class="json-block">
+    <div class="dim">{</div>
+    <div>&nbsp;&nbsp;<span class="jk">"type"</span>: <span class="jstr">"result"</span>, <span class="jk">"subtype"</span>: <span class="jstr">"success"</span>,</div>
+    <div>&nbsp;&nbsp;<span class="jk">"num_turns"</span>: <span class="jnum">1</span>,</div>
+    <div>&nbsp;&nbsp;<span class="jk">"result"</span>: <span class="hl-result">"Yes, your name is Viet Tran."</span></div>
+    <div>&nbsp;&nbsp;<span class="jk">"total_cost_usd"</span>: <span class="hl-cost">0.07367</span> <span class="dim">← total cost for this turn</span></div>
+    <div>&nbsp;&nbsp;<span class="jk">"usage"</span>: {</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="jk">"input_tokens"</span>: <span class="jnum">3</span>, <span class="jk">"output_tokens"</span>: <span class="jnum">15</span>,</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="jk">"cache_creation_input_tokens"</span>: <span class="jnum">11222</span>, <span class="dim">← cache write</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="jk">"cache_read_input_tokens"</span>: <span class="jnum">6285</span> <span class="dim">← cache read</span></div>
+    <div>&nbsp;&nbsp;},</div>
+    <div>&nbsp;&nbsp;<span class="jk">"modelUsage"</span>: { <span class="jk">"claude-opus-4-6[1m]"</span>: {</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="jk">"costUSD"</span>: <span class="hl-cost">0.07367</span> <span class="dim">← per-model breakdown</span></div>
+    <div>&nbsp;&nbsp;} }</div>
+    <div class="dim">}</div>
+  </div>
+
+  <div class="legend-row">
+    <div class="legend-item"><div class="ld-r"></div> result — Claude's answer (confirms --append-system-prompt injected the name into context)</div>
+    <div class="legend-item"><div class="ld-c"></div> total_cost_usd / costUSD — cost for this turn</div>
+  </div>
+</div>
+
+<!-- ── 7 COST FORMULA ── -->
+<div class="slide" id="s7">
+  <div class="section-num">// tip 02 · how costUSD is calculated</div>
+  <h2 class="slide-title">How is<br><em>costUSD</em> computed?</h2>
+  <div class="divider"></div>
+
+  <div class="formula-box">
+    <div class="formula">
+      <span class="tok">input_tokens</span> × <span class="price">$5 / MTok</span><br>
+      <span class="plus">+</span> <span class="tok">output_tokens</span> × <span class="price">$25 / MTok</span><br>
+      <span class="plus">+</span> <span class="tok">cache_creation_input_tokens</span> × <span class="price">$6.25 / MTok</span> <span style="color:var(--muted);font-size:11px">(5‑min write)</span><br>
+      <span class="plus">+</span> <span class="tok">cache_read_input_tokens</span> × <span class="price">$0.50 / MTok</span><br>
+      <span class="eq">= costUSD</span>
+    </div>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:14px;">* Opus 4.6 pricing. Sonnet / Haiku have different rates.</p>
+  </div>
+
+  <div class="verify-box">
+    <strong>Verified against the sample above (Opus 4.6):</strong><br>
+    &nbsp;&nbsp;3 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× $5 / MTok &nbsp;&nbsp;&nbsp;&nbsp;= $0.000015 &nbsp;&nbsp;(input)<br>
+    &nbsp;&nbsp;15 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;× $25 / MTok &nbsp;&nbsp;&nbsp;= $0.000375 &nbsp;&nbsp;(output)<br>
+    &nbsp;&nbsp;11,222 × $6.25 / MTok &nbsp;= $0.070138 &nbsp;&nbsp;(cache write)<br>
+    &nbsp;&nbsp;6,285 &nbsp;× $0.50 / MTok &nbsp;= $0.003143 &nbsp;&nbsp;(cache read)<br>
+    <span class="tot">→ Total = $0.07367 ✓ exact match with reported costUSD</span>
+  </div>
+</div>
+
+<!-- ── 8 WHY SO EXPENSIVE ── -->
+<div class="slide" id="s8">
+  <div class="section-num">// tip 02 · why does a tiny query cost so much?</div>
+  <h2 class="slide-title">Cache drives<br><em>>95% of cost</em></h2>
+  <div class="divider"></div>
+
+  <div class="card-grid">
+    <div class="card cw">
+      <div class="card-icon">🧠</div>
+      <div class="card-title">Cache write — ~$0.070</div>
+      <div class="card-body">
+        <strong>11,222 tokens</strong> = Claude Code's system prompt being cached for the first time.<br><br>
+        This is the dominant cost — but subsequent calls will read from cache at 12.5× cheaper rates.
+      </div>
+    </div>
+    <div class="card ca2">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Cache read — ~$0.003</div>
+      <div class="card-body">
+        <strong>6,285 tokens</strong> = context reused from a previous session's cache.<br><br>
+        Only <strong>$0.50/MTok</strong> vs $5/MTok for fresh input — 90% cheaper.
+      </div>
+    </div>
+    <div class="card ca3">
+      <div class="card-icon">💬</div>
+      <div class="card-title">Actual query — ~$0.0004</div>
+      <div class="card-body">
+        <strong>3 input + 15 output tokens</strong> = the real question and answer.<br><br>
+        Less than 1% of total cost — the prompt itself is almost free.
+      </div>
+    </div>
+  </div>
+
+  <div class="callout co3">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body"><strong>Takeaway:</strong> Cost is front-loaded by cache writes on the first call. Subsequent calls in the same context become progressively cheaper as more tokens shift to cache reads.</div>
+  </div>
+</div>
+
+<!-- ── 9 ACCURACY ── -->
+<div class="slide" id="s9">
+  <div class="section-num">// tip 02 · is costUSD accurate?</div>
+  <h2 class="slide-title">Is<br><em>costUSD accurate?</em></h2>
+  <div class="divider"></div>
+
+  <div class="card-grid">
+    <div class="card ca3">
+      <div class="card-icon">✅</div>
+      <div class="card-title">Yes — server-side</div>
+      <div class="card-body">
+        Computed by Anthropic <strong>server-side</strong>, not a client estimate.<br><br>
+        <code>total_cost_usd</code> in the result message is the <strong>authoritative value</strong> for billing reconciliation.
+      </div>
+    </div>
+    <div class="card ca2">
+      <div class="card-icon">📊</div>
+      <div class="card-title">total_cost_usd vs costUSD</div>
+      <div class="card-body">
+        <strong>total_cost_usd</strong> — sum for the entire turn/session.<br>
+        <strong>modelUsage[...].costUSD</strong> — per-model breakdown.<br><br>
+        They match when only one model is used.
+      </div>
+    </div>
+    <div class="card ca">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Multiple calls</div>
+      <div class="card-body">Each <code>claude -p</code> invocation returns its own costUSD. The SDK does <strong>not</strong> accumulate totals — sum them yourself if you need session-level tracking.</div>
+    </div>
+  </div>
+
+  <div class="callout co3">
+    <div class="callout-icon">🎯</div>
+    <div class="callout-body"><strong>Quick extract:</strong> <code style="color:var(--accent3)">claude -p "..." --output-format json | jq '.total_cost_usd'</code></div>
+  </div>
+</div>
+
+<!-- ── 10 SCRIPT PATTERN ── -->
+<div class="slide" id="s10">
+  <div class="section-num">// combining both tips</div>
+  <h2 class="slide-title">Production<br><em>script pattern</em></h2>
+  <div class="divider"></div>
+
+  <div class="code-block">
+    <div class="code-label">bash – CI/CD</div>
+    <span class="cm">#!/bin/bash</span><br><br>
+    RESULT=$(<span class="cmd">claude</span> <span class="arg">-p</span> <span class="str">"Review PR: $(cat diff.txt)"</span> \<br>
+    &nbsp;&nbsp;<span class="arg">--append-system-prompt</span> <span class="str">"Focus: OWASP Top 10, auth issues, data leaks."</span> \<br>
+    &nbsp;&nbsp;<span class="arg">--output-format</span> json \<br>
+    &nbsp;&nbsp;<span class="arg">--bare</span>)<br><br>
+    <span class="cm"># Extract result and cost</span><br>
+    REVIEW=$(echo <span class="val">$RESULT</span> | jq <span class="str">-r '.result'</span>)<br>
+    COST=$(echo <span class="val">$RESULT</span> | jq <span class="str">'.total_cost_usd'</span>)<br><br>
+    echo <span class="str">"Done. Cost: \$${COST}"</span><br>
+    echo <span class="val">$REVIEW</span>
+  </div>
+
+  <div class="card-grid">
+    <div class="card ca">
+      <div class="card-body"><strong>--output-format json</strong><br>Parse output programmatically. Extract <code>.result</code> and <code>.total_cost_usd</code> with jq.</div>
+    </div>
+    <div class="card ca2">
+      <div class="card-body"><strong>--bare</strong><br>Skips hooks, plugins, and CLAUDE.md discovery. Recommended for CI — guarantees consistent behavior on every machine.</div>
+    </div>
+    <div class="card ca3">
+      <div class="card-body"><strong>--append-system-prompt</strong><br>Add domain-specific rules without replacing Claude Code's default capabilities.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 11 TL;DR ── -->
+<div class="slide" id="s11">
+  <div class="eyebrow">// wrap up</div>
+  <h1 class="cover-title">TL;<br><span class="hl">DR</span></h1>
+  <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px;max-width:700px;">
+    <div class="callout cow">
+      <div class="callout-icon">0️⃣</div>
+      <div class="callout-body"><strong>-p = --print</strong> (not "prompt"). Runs Claude Code non-interactively — one-shot, prints to stdout, then exits. Previously called "headless mode".</div>
+    </div>
+    <div class="callout co">
+      <div class="callout-icon">1️⃣</div>
+      <div class="callout-body"><strong>--append-system-prompt</strong> is the safe, recommended way to customize behavior per-session. All 4 system prompt flags work in both interactive and non-interactive mode.</div>
+    </div>
+    <div class="callout co2">
+      <div class="callout-icon">2️⃣</div>
+      <div class="callout-body"><strong>costUSD is computed server-side — 100% accurate.</strong> Formula: input×$5 + output×$25 + cache_write×$6.25 + cache_read×$0.50 (per MTok, Opus 4.6).</div>
+    </div>
+    <div class="callout co3">
+      <div class="callout-icon">3️⃣</div>
+      <div class="callout-body">Cache accounts for >95% of real cost. <strong>total_cost_usd</strong> is the authoritative field for billing. Use <strong>--bare</strong> in CI scripts for consistency.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const nav = document.getElementById('nav');
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => slides[i].scrollIntoView({ behavior: 'smooth' });
+    nav.appendChild(dot);
+  });
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = Array.from(slides).indexOf(e.target);
+        document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
